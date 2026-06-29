@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Aspire/Aspire.Host/Aspire.Host.csproj" />
+  <Project Path="Website/Website.Client/Website.Client.csproj" />
+</Solution>

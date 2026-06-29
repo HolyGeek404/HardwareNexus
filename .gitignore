@@ -1,0 +1,8 @@
+/Website/Website.Client/app/dist/
+/Website/Website.Client/app/node_modules
+/Website/.idea
+.idea
+*bin
+*obj
+*cache
+*wwwroot
