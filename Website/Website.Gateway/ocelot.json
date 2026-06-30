@@ -1,0 +1,65 @@
+{
+  "Routes": [
+    {
+      "UpstreamPathTemplate": "/gateway/product/{type}",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/Product/{type}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 8080 }]
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/product/{type}/filters",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/Product/{type}/filters",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "product-api", "Port": 8080 }]
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/user/signin",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/user/signin",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "user-api", "Port": 8080 }]
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/user/me",
+      "UpstreamHttpMethod": [ "GET" ],
+      "DownstreamPathTemplate": "/user/me",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "user-api", "Port": 8080 }],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/user/signout",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/user/signout",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "user-api", "Port": 8080 }],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/cart",
+      "UpstreamHttpMethod": [ "POST" ],
+      "DownstreamPathTemplate": "/cart/",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{ "Host": "cart-api", "Port": 8080 }],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    },
+    {
+      "UpstreamPathTemplate": "/gateway/cart?userId={userId}",
+      "UpstreamHttpMethod": ["GET"],
+      "DownstreamPathTemplate": "/cart?userId={userId}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [{"Host": "cart-api","Port": 8080}],
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer"
+      }
+    }
+  ]
+}
