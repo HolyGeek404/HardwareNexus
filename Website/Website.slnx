@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="Website.Client/Website.Client.csproj" />
+  <Project Path="Website.Gateway\Website.Gateway.csproj" />
 </Solution>

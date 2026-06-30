@@ -30,9 +30,4 @@
         <Folder Include="app\" />
         <Folder Include="wwwroot\" />
     </ItemGroup>
-    
-    <ItemGroup>
-      <ProjectReference Include="..\..\Aspire\Aspire.Defaults\Aspire.Defaults.csproj" />
-    </ItemGroup>
-
 </Project>

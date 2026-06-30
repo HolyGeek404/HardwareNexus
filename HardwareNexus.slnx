@@ -3,5 +3,8 @@
     <Project Path="Aspire/Aspire.Defaults/Aspire.Defaults.csproj" />
     <Project Path="Aspire/Aspire.Host/Aspire.Host.csproj" />
   </Folder>
-  <Project Path="Website/Website.Client/Website.Client.csproj" />
+  <Folder Name="/Website/">
+    <Project Path="Website/Website.Client/Website.Client.csproj" />
+    <Project Path="Website/Website.Gateway/Website.Gateway.csproj" />
+  </Folder>
 </Solution>

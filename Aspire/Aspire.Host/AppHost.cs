@@ -1,5 +1,8 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
-builder.AddProject<Projects.Website_Client>("Website");
+var gateway = builder.AddProject<Projects.Website_Gateway>("Website-Gateway");
+builder.AddProject<Projects.Website_Client>("Website-Client")
+    .WaitFor(gateway)
+    .WithParentRelationship(gateway);
 
 builder.Build().Run();
