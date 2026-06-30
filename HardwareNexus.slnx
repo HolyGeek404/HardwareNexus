@@ -5,6 +5,5 @@
   </Folder>
   <Folder Name="/Website/">
     <Project Path="Website/Website.Client/Website.Client.csproj" />
-    <Project Path="Website/Website.Gateway/Website.Gateway.csproj" />
   </Folder>
 </Solution>

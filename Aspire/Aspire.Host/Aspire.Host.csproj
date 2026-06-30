@@ -10,7 +10,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\Website\Website.Client\Website.Client.csproj" />
-      <ProjectReference Include="..\..\Website\Website.Gateway\Website.Gateway.csproj" />
     </ItemGroup>
     <PropertyGroup>
         <AspNetCoreUrl>http://localhost:5242</AspNetCoreUrl> <!-- Adjust port as needed -->
