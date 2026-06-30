@@ -8,4 +8,12 @@
         <UserSecretsId>e585301a-53f4-452c-8284-e432ce936972</UserSecretsId>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\Website\Website.Client\Website.Client.csproj" />
+    </ItemGroup>
+    <PropertyGroup>
+        <AspNetCoreUrl>http://localhost:5242</AspNetCoreUrl> <!-- Adjust port as needed -->
+    </PropertyGroup>
+    <Target Name="BeforeBuild" DependsOnTargets="BuildAngularApp" />
 </Project>
+        
