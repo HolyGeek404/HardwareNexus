@@ -1,6 +1,5 @@
 <Solution>
   <Folder Name="/Aspire/">
-    <Project Path="Aspire/Aspire.Defaults/Aspire.Defaults.csproj" />
     <Project Path="Aspire/Aspire.Host/Aspire.Host.csproj" />
   </Folder>
   <Folder Name="/Services/" />
