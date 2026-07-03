@@ -6,14 +6,14 @@
   <Folder Name="/Services/" />
   <Folder Name="/Services/User/" />
   <Folder Name="/Services/User/src/">
-    <Project Path="Services/User/src/HardwareNexus.UserApi.Application/HardwareNexus.UserApi.Application.csproj" />
-    <Project Path="Services/User/src/HardwareNexus.UserApi.Domain/HardwareNexus.UserApi.Domain.csproj" />
-    <Project Path="Services/User/src/HardwareNexus.UserApi.Infrastructure/HardwareNexus.UserApi.Infrastructure.csproj" />
-    <Project Path="Services/User/src/HardwareNexus.UserApi.Presentation/HardwareNexus.UserApi.Presentation.csproj" />
+    <Project Path="Services\User\src\UserApi.Application\UserApi.Application.csproj" />
+    <Project Path="Services\User\src\UserApi.Domain\UserApi.Domain.csproj" />
+    <Project Path="Services\User\src\UserApi.Infrastructure\UserApi.Infrastructure.csproj" />
+    <Project Path="Services\User\src\UserApi.Presentation\UserApi.Presentation.csproj" />
   </Folder>
   <Folder Name="/Services/User/tests/">
-    <Project Path="Services/User/tests/HardwareNexus.UserApi.Application.Tests/HardwareNexus.UserApi.Application.Tests.csproj" />
-    <Project Path="Services/User/tests/HardwareNexus.UserApi.Presentation.Tests/HardwareNexus.UserApi.Presentation.Tests.csproj" />
+    <Project Path="Services\User\tests\UserApi.Application.Tests\UserApi.Application.Tests.csproj" />
+    <Project Path="Services\User\tests\UserApi.Presentation.Tests\UserApi.Presentation.Tests.csproj" />
   </Folder>
   <Folder Name="/Website/">
     <Project Path="Website/Website.Client/Website.Client.csproj" />
