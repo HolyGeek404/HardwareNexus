@@ -28,6 +28,7 @@ public static class GroupResourceExtensions
             var gateway = builder.AddProject<Projects.Website_Gateway>("website-gateway")
                 .WithParentRelationship(website.Resource);
 
+            
             builder.AddProject<Projects.Website_Client>("website-client")
                 .WaitFor(gateway)
                 .WithParentRelationship(website.Resource);
