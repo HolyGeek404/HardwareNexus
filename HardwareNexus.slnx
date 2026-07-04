@@ -3,6 +3,17 @@
     <Project Path="Aspire/Aspire.Host/Aspire.Host.csproj" />
   </Folder>
   <Folder Name="/Services/" />
+  <Folder Name="/Services/Cart/" />
+  <Folder Name="/Services/Cart/src/">
+    <Project Path="Services/Cart/src/CartApi.Application/CartApi.Application.csproj" />
+    <Project Path="Services/Cart/src/CartApi.Domain/CartApi.Domain.csproj" />
+    <Project Path="Services/Cart/src/CartApi.Infrastructure/CartApi.Infrastructure.csproj" />
+    <Project Path="Services/Cart/src/CartApi.Presentation/CartApi.Presentation.csproj" />
+  </Folder>
+  <Folder Name="/Services/Cart/tests/">
+    <Project Path="Services/Cart/tests/CartApi.Application.Test/CartApi.Application.Test.csproj" />
+    <Project Path="Services/Cart/tests/CartApi.Presentation.Test/CartApi.Presentation.Test.csproj" />
+  </Folder>
   <Folder Name="/Services/Product/" />
   <Folder Name="/Services/Product/src/">
     <Project Path="Services/Product/src/ProductApi.Api/ProductApi.Api.csproj" />

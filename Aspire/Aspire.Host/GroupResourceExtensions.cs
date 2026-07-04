@@ -41,6 +41,8 @@ public static class GroupResourceExtensions
                 .WithParentRelationship(apiSection.Resource);
             builder.AddProject<Projects.ProductApi_Api>("ProductApi-Api")
                 .WithParentRelationship(apiSection.Resource);
+            builder.AddProject<Projects.CartApi_Presentation>("Cart-Api")
+                .WithParentRelationship(apiSection.Resource);
         }
     }
 }
