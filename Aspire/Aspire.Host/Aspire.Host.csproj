@@ -9,6 +9,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\Services\Product\src\ProductApi.Api\ProductApi.Api.csproj" />
       <ProjectReference Include="..\..\Services\User\src\UserApi.Presentation\UserApi.Presentation.csproj" />
       <ProjectReference Include="..\..\Website\Website.Client\Website.Client.csproj" />
       <ProjectReference Include="..\..\Website\Website.Gateway\Website.Gateway.csproj" />

@@ -23,23 +23,24 @@ public static class GroupResourceExtensions
 
         public void AddWebsiteSection()
         {
-            var website = builder.AddGroup("Website");
+            var websiteSection = builder.AddGroup("Website");
 
             var gateway = builder.AddProject<Projects.Website_Gateway>("website-gateway")
-                .WithParentRelationship(website.Resource);
+                .WithParentRelationship(websiteSection.Resource);
 
-            
             builder.AddProject<Projects.Website_Client>("website-client")
                 .WaitFor(gateway)
-                .WithParentRelationship(website.Resource);
+                .WithParentRelationship(websiteSection.Resource);
         }
         
         public void AddApiSection()
         {
-            var website = builder.AddGroup("Api");
+            var apiSection = builder.AddGroup("Api");
 
             builder.AddProject<Projects.UserApi_Presentation>("User-Api")
-                .WithParentRelationship(website.Resource);
+                .WithParentRelationship(apiSection.Resource);
+            builder.AddProject<Projects.ProductApi_Api>("ProductApi-Api")
+                .WithParentRelationship(apiSection.Resource);
         }
     }
 }

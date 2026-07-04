@@ -3,6 +3,13 @@
     <Project Path="Aspire/Aspire.Host/Aspire.Host.csproj" />
   </Folder>
   <Folder Name="/Services/" />
+  <Folder Name="/Services/Product/" />
+  <Folder Name="/Services/Product/src/">
+    <Project Path="Services/Product/src/ProductApi.Api/ProductApi.Api.csproj" />
+  </Folder>
+  <Folder Name="/Services/Product/tests/">
+    <Project Path="Services/Product/tests/ProductApi.Api.Tests/ProductApi.Api.Tests.csproj" />
+  </Folder>
   <Folder Name="/Services/User/" />
   <Folder Name="/Services/User/src/">
     <Project Path="Services\User\src\UserApi.Application\UserApi.Application.csproj" />
