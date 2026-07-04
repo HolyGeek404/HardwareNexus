@@ -2,7 +2,7 @@
 using Azure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 namespace OrderApi.Presentation.Extensions;
 
@@ -42,14 +42,11 @@ public static class ServiceCollectionExtensions
                     }
                 }
             });
-            x.AddSecurityRequirement(new OpenApiSecurityRequirement
+            x.AddSecurityRequirement(document => new OpenApiSecurityRequirement
             {
                 {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference {Type = ReferenceType.SecurityScheme, Id = "oauth2"}
-                    },
-                    new[] { $"{swaggerScope}" }
+                    new OpenApiSecuritySchemeReference("oauth2", document, null),
+                    [swaggerScope]
                 }
             });
         });

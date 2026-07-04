@@ -9,14 +9,14 @@
         <NoWarn>$(NoWarn);1591</NoWarn>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="10.0.0"/>
-        <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.5.0" />
-        <PackageReference Include="Azure.Identity" Version="1.19.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.5" />
-        <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.58.0" />
-        <PackageReference Include="Microsoft.Identity.Web" Version="4.6.0" />
+        <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="11.0.1" />
+        <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.5.1" />
+        <PackageReference Include="Azure.Identity" Version="1.21.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.9" />
+        <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.61.0" />
+        <PackageReference Include="Microsoft.Identity.Web" Version="4.12.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.6" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
     </ItemGroup>
     <PropertyGroup>
         <PreserveCompilationContext>true</PreserveCompilationContext>
