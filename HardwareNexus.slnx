@@ -14,6 +14,13 @@
     <Project Path="Services/Cart/tests/CartApi.Application.Test/CartApi.Application.Test.csproj" />
     <Project Path="Services/Cart/tests/CartApi.Presentation.Test/CartApi.Presentation.Test.csproj" />
   </Folder>
+  <Folder Name="/Services/Order/" />
+  <Folder Name="/Services/Order/src/">
+    <Project Path="Services/Order/src/OrderApi.Application/OrderApi.Application.csproj" />
+    <Project Path="Services/Order/src/OrderApi.Domain/OrderApi.Domain.csproj" />
+    <Project Path="Services/Order/src/OrderApi.Infrastructure/OrderApi.Infrastructure.csproj" />
+    <Project Path="Services/Order/src/OrderApi.Presentation/OrderApi.Presentation.csproj" />
+  </Folder>
   <Folder Name="/Services/Product/" />
   <Folder Name="/Services/Product/src/">
     <Project Path="Services/Product/src/ProductApi.Api/ProductApi.Api.csproj" />
