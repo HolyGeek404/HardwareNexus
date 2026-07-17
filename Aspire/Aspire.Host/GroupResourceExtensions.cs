@@ -33,7 +33,7 @@ public static class GroupResourceExtensions
                 .WithParentRelationship(websiteSection.Resource);
         }
         
-        public void AddApiSection(IResourceBuilder<ExecutableResource> openbaoSeed)
+        public void AddApiSection(InfrastructureResources  infrastructure)
         {
             var apiSection = builder.AddGroup("Api");
 
@@ -42,7 +42,8 @@ public static class GroupResourceExtensions
             //     .WithParentRelationship(apiSection.Resource);
             //
             builder.AddProject<Projects.ProductApi_Api>("ProductApi-Api")
-                .WaitFor(openbaoSeed)
+                .WaitFor(infrastructure.OpenBaoSeed)
+                .WaitFor(infrastructure.MongoSeed)
                 .WithParentRelationship(apiSection.Resource);
             //
             // builder.AddProject<Projects.CartApi_Presentation>("Cart-Api")
@@ -54,12 +55,50 @@ public static class GroupResourceExtensions
             //     .WithParentRelationship(apiSection.Resource);
         }
 
-        public IResourceBuilder<ExecutableResource> AddInfrastructureSection()
+        public InfrastructureResources AddInfrastructureSection()
         {
             var infraSection = builder.AddGroup("Infrastructure");
+
+            var openbao = builder.AddOpenBaoSection(infraSection);
+            var mongo = builder.AddMongoDbSection(infraSection);
+
+            return new InfrastructureResources(mongo, openbao);
+        }
+        
+        private IResourceBuilder<ExecutableResource> AddMongoDbSection(IResourceBuilder<GroupResource> infraSection)
+        {
+            var mongoSection = builder.AddGroup("MongoDB")
+                .WithParentRelationship(infraSection.Resource);
+
+            var mongoContainer = builder.AddContainer("mongodb-container", "mongo")
+                .WithContainerName("mongodb-dev")
+                .WithBindMount(
+                    "./Scripts/MongoDB/seed-mongodb.sh",
+                    "/scripts/seed-mongodb.sh")
+                .WithBindMount(
+                    "./Scripts/MongoDB/products.json",
+                    "/scripts/products.json")
+                .WithParentRelationship(mongoSection.Resource)
+                .WithEndpoint(
+                    port: 27017,
+                    targetPort: 27017,
+                    name: "mongodb");
+
+            var mongoSeed = builder.AddExecutable(
+                    "mongodb-seed",
+                    "/bin/sh",
+                    ".",
+                    "Scripts/MongoDB/start-seed-mongodb.sh")
+                .WaitFor(mongoContainer)
+                .WithParentRelationship(mongoSection.Resource);
+
+            return mongoSeed;
+        }
+        private IResourceBuilder<ExecutableResource> AddOpenBaoSection(IResourceBuilder<GroupResource> infraSection)
+        {
             var openbaoSection = builder.AddGroup("OpenBao")
                 .WithParentRelationship(infraSection.Resource);
-            
+
             var openbaoContainer = builder.AddContainer("openbao-container", "openbao/openbao")
                 .WithBindMount(
                     "./Scripts/OpenBao/seed-openbao.sh",
@@ -80,10 +119,12 @@ public static class GroupResourceExtensions
                 .WithParentRelationship(openbaoSection.Resource);
 
             return openbaoSeed;
-
         }
     }
 }
 public sealed class GroupResource(string name) : Resource(name)
 {
 }
+public record InfrastructureResources(
+    IResourceBuilder<ExecutableResource> MongoSeed,
+    IResourceBuilder<ExecutableResource> OpenBaoSeed);
