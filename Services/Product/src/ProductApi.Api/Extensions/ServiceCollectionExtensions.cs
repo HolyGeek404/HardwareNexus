@@ -1,7 +1,3 @@
-using Azure.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Azure.Cosmos;
-using Microsoft.Identity.Web;
 using Microsoft.OpenApi;
 using System.Reflection;
 using ProductApi.Api.Interfaces;
@@ -25,22 +21,14 @@ public static class ServiceCollectionExtensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
+        public void AddMongoDbConfig(WebApplicationBuilder builder)
+        {
+            
+        }
+
         public void AddServices()
         {
             services.AddScoped<IProductService, ProductServiceUnit>();
-        }
-
-        public void AddAzureConfig(IConfigurationManager configuration)
-        {
-            var azureAd = configuration.GetSection("AzureAd");
-        
-            configuration.AddAzureKeyVault(new Uri(azureAd["KvUrl"]!), new DefaultAzureCredential());
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddMicrosoftIdentityWebApi(azureAd);
-        }
-
-        public void AddDataBaseConfig(IConfigurationManager configuration)
-        {
-            services.AddSingleton(_ => new CosmosClient(configuration.GetConnectionString("CosmosDB")));
         }
 
         public void AddSwaggerConfig(IConfiguration configuration)

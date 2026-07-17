@@ -33,18 +33,54 @@ public static class GroupResourceExtensions
                 .WithParentRelationship(websiteSection.Resource);
         }
         
-        public void AddApiSection()
+        public void AddApiSection(IResourceBuilder<ExecutableResource> openbaoSeed)
         {
             var apiSection = builder.AddGroup("Api");
 
-            builder.AddProject<Projects.UserApi_Presentation>("User-Api")
-                .WithParentRelationship(apiSection.Resource);
+            // builder.AddProject<Projects.UserApi_Presentation>("User-Api")
+            //     .WaitFor(openbaoSeed)
+            //     .WithParentRelationship(apiSection.Resource);
+            //
             builder.AddProject<Projects.ProductApi_Api>("ProductApi-Api")
+                .WaitFor(openbaoSeed)
                 .WithParentRelationship(apiSection.Resource);
-            builder.AddProject<Projects.CartApi_Presentation>("Cart-Api")
-                .WithParentRelationship(apiSection.Resource);
-            builder.AddProject<Projects.OrderApi_Presentation>("Order-Api")
-                .WithParentRelationship(apiSection.Resource);
+            //
+            // builder.AddProject<Projects.CartApi_Presentation>("Cart-Api")
+            //     .WaitFor(openbaoSeed)
+            //     .WithParentRelationship(apiSection.Resource);
+            //
+            // builder.AddProject<Projects.OrderApi_Presentation>("Order-Api")
+            //     .WaitFor(openbaoSeed)
+            //     .WithParentRelationship(apiSection.Resource);
+        }
+
+        public IResourceBuilder<ExecutableResource> AddInfrastructureSection()
+        {
+            var infraSection = builder.AddGroup("Infrastructure");
+            var openbaoSection = builder.AddGroup("OpenBao")
+                .WithParentRelationship(infraSection.Resource);
+            
+            var openbaoContainer = builder.AddContainer("openbao-container", "openbao/openbao")
+                .WithBindMount(
+                    "./Scripts/OpenBao/seed-openbao.sh",
+                    "/scripts/seed-openbao.sh")
+                .WithContainerName("openbao-dev")
+                .WithParentRelationship(openbaoSection.Resource)
+                .WithEnvironment("BAO_DEV_ROOT_TOKEN_ID", "dev-root-token")
+                .WithEndpoint(
+                    targetPort: 8200,
+                    name: "http");
+
+            var openbaoSeed = builder.AddExecutable(
+                    "openbao-seed",
+                    "/bin/sh",
+                    ".",
+                    "Scripts/OpenBao/start-seed-openbao.sh")
+                .WaitFor(openbaoContainer)
+                .WithParentRelationship(openbaoSection.Resource);
+
+            return openbaoSeed;
+
         }
     }
 }

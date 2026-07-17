@@ -17,6 +17,7 @@
         <PackageReference Include="Microsoft.Identity.Web" Version="4.12.2" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="10.2.3" />
+        <PackageReference Include="VaultSharp" Version="1.17.5.1" />
     </ItemGroup>
     <PropertyGroup>
         <PreserveCompilationContext>true</PreserveCompilationContext>
