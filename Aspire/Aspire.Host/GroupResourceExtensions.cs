@@ -70,7 +70,7 @@ public static class GroupResourceExtensions
             var mongoSection = builder.AddGroup("MongoDB")
                 .WithParentRelationship(infraSection.Resource);
 
-            var mongoContainer = builder.AddContainer("mongodb-container", "mongo")
+            var mongoContainer = builder.AddContainer("mongodb-container", "mongo:7")
                 .WithContainerName("mongodb-dev")
                 .WithBindMount(
                     "./Scripts/MongoDB/seed-mongodb.sh",
