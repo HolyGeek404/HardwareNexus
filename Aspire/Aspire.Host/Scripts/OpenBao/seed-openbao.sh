@@ -80,7 +80,7 @@ USER_SECRET_ID=$(bao write -f -field=secret_id auth/approle/role/hardwarenexus-u
 PRODUCT_SECRET_ID=$(bao write -f -field=secret_id auth/approle/role/hardwarenexus-product/secret-id)
 CART_SECRET_ID=$(bao write -f -field=secret_id auth/approle/role/hardwarenexus-cart/secret-id)
 
-cat > /out/.env.local <<EOF
+cat > /output/.env.local <<EOF
 OPENBAO_USER_ROLE_ID=hardwarenexus-user-role-id
 OPENBAO_USER_SECRET_ID=${USER_SECRET_ID}
 
@@ -90,6 +90,11 @@ OPENBAO_PRODUCT_SECRET_ID=${PRODUCT_SECRET_ID}
 OPENBAO_CART_ROLE_ID=hardwarenexus-cart-role-id
 OPENBAO_CART_SECRET_ID=${CART_SECRET_ID}
 EOF
+
+if [ ! -f /output/.env.local ]; then
+  echo "ERROR: failed to write .env.local — check that /out is mounted correctly"
+  exit 1
+fi
 
 echo ""
 echo "Seed complete. Wrote fresh SecretIDs to .env.local"

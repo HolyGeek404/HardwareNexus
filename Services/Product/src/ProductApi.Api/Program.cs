@@ -3,7 +3,7 @@ using ProductApi.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-builder.Services.AddCosmosRepoConfig(builder);
+await builder.Services.AddMongoDbConfig(builder);
 builder.Services.AddControllers();
 builder.Services.AddServices();
 builder.Services.AddEndpointsApiExplorer();

@@ -42,6 +42,9 @@ public static class GroupResourceExtensions
             //     .WithParentRelationship(apiSection.Resource);
             //
             builder.AddProject<Projects.ProductApi_Api>("ProductApi-Api")
+                .WithEnvironment("OPENBAO_ADDR", "http://localhost:8200")
+                .WithEnvironment("OPENBAO_ROLE_ID", "hardwarenexus-product-role-id")
+                .WithEnvironment("OPENBAO_ENV_FILE_PATH", Path.Combine(builder.AppHostDirectory, "Scripts", "OpenBao", ".env.local"))
                 .WaitFor(infrastructure.OpenBaoSeed)
                 .WaitFor(infrastructure.MongoSeed)
                 .WithParentRelationship(apiSection.Resource);
@@ -103,10 +106,14 @@ public static class GroupResourceExtensions
                 .WithBindMount(
                     "./Scripts/OpenBao/seed-openbao.sh",
                     "/scripts/seed-openbao.sh")
+                .WithBindMount(
+                    "./Scripts/OpenBao",
+                    "/output")
                 .WithContainerName("openbao-dev")
                 .WithParentRelationship(openbaoSection.Resource)
                 .WithEnvironment("BAO_DEV_ROOT_TOKEN_ID", "dev-root-token")
                 .WithEndpoint(
+                    port: 8200,
                     targetPort: 8200,
                     name: "http");
 
