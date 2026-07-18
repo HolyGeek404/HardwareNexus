@@ -1,13 +1,13 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
-using UserApi.Presentation.Tests.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using UserApi.Application.Features.Commands.AccountVerification;
 using UserApi.Application.Features.Commands.SignUp;
 using UserApi.Application.Features.Queries.SignIn;
 using UserApi.Application.Services.Interfaces;
+using UserApi.Presentation.Tests.Helpers;
 
 namespace UserApi.Presentation.Tests.Controllers;
 

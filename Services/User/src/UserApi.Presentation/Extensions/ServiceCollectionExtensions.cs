@@ -1,21 +1,21 @@
-﻿using Azure.Identity;
+﻿using System.Reflection;
+using System.Text;
+using Azure.Identity;
 using FluentValidation;
 using FluentValidation.AspNetCore;
-using UserApi.Infrastructure;
-using UserApi.Infrastructure.DataAccess;
-using UserApi.Infrastructure.DataAccess.Context;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Web;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
-using System.Reflection;
-using System.Text;
 using UserApi.Application.Features;
 using UserApi.Application.Features.Validators.SignUp;
 using UserApi.Application.Services;
 using UserApi.Application.Services.Interfaces;
+using UserApi.Infrastructure;
+using UserApi.Infrastructure.DataAccess;
+using UserApi.Infrastructure.DataAccess.Context;
 
 namespace UserApi.Presentation.Extensions;
 
@@ -45,7 +45,7 @@ public static class ServiceCollectionExtensions
         {
             var azureAd = configuration.GetSection("AzureAd");
             configuration.AddAzureKeyVault(new Uri(azureAd["KvUrl"]!), new DefaultAzureCredential());
-            
+
             services.AddAuthentication(options =>
                 {
                     options.DefaultAuthenticateScheme = "CookieJwt";
@@ -80,7 +80,7 @@ public static class ServiceCollectionExtensions
                         }
                     };
                 })
-                .AddMicrosoftIdentityWebApi(azureAd, jwtBearerScheme: "AzureAd");
+                .AddMicrosoftIdentityWebApi(azureAd, "AzureAd");
         }
 
         public void AddDataBaseConfig(IConfigurationManager configuration)
@@ -104,7 +104,8 @@ public static class ServiceCollectionExtensions
                 {
                     Title = "GoodStuff User API",
                     Version = "v1",
-                    Description = "User management API for GoodStuff. Provides signup, signin, account verification, and profile endpoints. Use the OAuth2 flow in this UI to authorize requests.",
+                    Description =
+                        "User management API for GoodStuff. Provides signup, signin, account verification, and profile endpoints. Use the OAuth2 flow in this UI to authorize requests.",
                     TermsOfService = new Uri("https://goodstuff.example.com/terms"),
                     Contact = new OpenApiContact
                     {
@@ -115,7 +116,7 @@ public static class ServiceCollectionExtensions
                 });
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath, includeControllerXmlComments: true);
+                c.IncludeXmlComments(xmlPath, true);
                 c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
                 {
                     Description = "OAuth2.0 Auth Code with PKCE",
@@ -135,14 +136,14 @@ public static class ServiceCollectionExtensions
                         }
                     }
                 });
-            c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
-            {
+                c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
                 {
-                    new OpenApiSecuritySchemeReference("oauth2", document, null),
-                    [swaggerScope]
-                }
+                    {
+                        new OpenApiSecuritySchemeReference("oauth2", document),
+                        [swaggerScope]
+                    }
+                });
             });
-        });
+        }
     }
-}
 }

@@ -1,6 +1,8 @@
 [
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c05"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c05"
+    },
     "Category": "GPU",
     "CoolingType": "Active",
     "CoreRatio": "2359 MHz",
@@ -31,7 +33,9 @@
     "id": "24b05262-f0dc-4503-b667-c2ac879ca0ad"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c06"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c06"
+    },
     "Category": "GPU",
     "CoolingType": "Triple Fan",
     "CoreRatio": "2250 MHz",
@@ -62,7 +66,9 @@
     "id": "21e40192-bec4-4c80-ab00-dec48b9ca88b"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c07"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c07"
+    },
     "Category": "GPU",
     "CoolingType": "Active",
     "CoreRatio": "1733 MHz",
@@ -93,7 +99,9 @@
     "id": "2db725bb-cc8b-4b3f-8184-ea25a004396e"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c08"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c08"
+    },
     "Category": "GPU",
     "CoolingType": "Active",
     "CoreRatio": "1.86",
@@ -124,7 +132,9 @@
     "id": "c39507d7-3756-489e-bd20-76f1e68c366f"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c09"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c09"
+    },
     "Category": "GPU",
     "CoolingType": "Active",
     "CoreRatio": "1.73 GHz",
@@ -155,7 +165,9 @@
     "id": "d35dcad7-07db-47ba-944e-d94efc821b0e"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c0a"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c0a"
+    },
     "Category": "GPU",
     "CoolingType": "Active",
     "CoreRatio": "1285 MHz",
@@ -186,7 +198,9 @@
     "id": "7608fedc-ffeb-4cf0-89ae-523999e66277"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c0b"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c0b"
+    },
     "Category": "GPU",
     "CoolingType": "TEST",
     "CoreRatio": "TEST",
@@ -216,7 +230,9 @@
     "RecommendedPsuPower": "TEST"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c0c"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c0c"
+    },
     "Category": "CPU",
     "Name": "AMD Ryzen 7 3800X",
     "Price": "1349",
@@ -245,7 +261,9 @@
     "UnlockedMultiplayer": "Tak"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c0d"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c0d"
+    },
     "Category": "CPU",
     "Name": "Intel Core i5-12400F",
     "Price": "889",
@@ -274,7 +292,9 @@
     "UnlockedMultiplayer": "Nie"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c0e"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c0e"
+    },
     "Category": "CPU",
     "Name": "AMD Threadripper PRO 3995WX",
     "Price": "28999",
@@ -303,7 +323,9 @@
     "UnlockedMultiplayer": "Nie"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c0f"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c0f"
+    },
     "Category": "CPU",
     "Name": "Intel Core i9-9900K",
     "Price": "1699",
@@ -332,7 +354,9 @@
     "UnlockedMultiplayer": "Tak"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c10"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c10"
+    },
     "Category": "CPU",
     "Name": "Ryzen 7 5800X",
     "Price": "399",
@@ -361,7 +385,9 @@
     "UnlockedMultiplayer": "Tak"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c11"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c11"
+    },
     "Category": "CPU",
     "Name": "Ryzen 9 5900X",
     "Price": "549",
@@ -390,7 +416,9 @@
     "UnlockedMultiplayer": "Tak"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c12"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c12"
+    },
     "Category": "CPU",
     "Name": "AMD Ryzen 3 5425U",
     "Price": "179",
@@ -419,7 +447,9 @@
     "UnlockedMultiplayer": "Nie"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c13"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c13"
+    },
     "Category": "CPU",
     "Name": "AMD Ryzen 5 5500",
     "Price": "249",
@@ -448,7 +478,9 @@
     "UnlockedMultiplayer": "Tak"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c14"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c14"
+    },
     "Category": "CPU",
     "Name": "Core i7-11700K",
     "Price": "399",
@@ -477,7 +509,9 @@
     "UnlockedMultiplayer": "Tak"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c15"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c15"
+    },
     "Category": "COOLER",
     "Height": "160 mm",
     "Name": "Cooler Master Hyper 212",
@@ -508,7 +542,9 @@
     "Weight": "580 g"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c16"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c16"
+    },
     "Category": "COOLER",
     "Height": "165 mm",
     "Name": "Noctua NH-D15",
@@ -539,7 +575,9 @@
     "Weight": "1320 g"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c17"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c17"
+    },
     "Category": "COOLER",
     "Height": "277 mm",
     "Name": "Corsair H100i RGB Platinum",
@@ -570,7 +608,9 @@
     "Weight": "640 g"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c18"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c18"
+    },
     "Category": "COOLER",
     "Height": "315 mm",
     "Name": "NZXT Kraken X63Test",
@@ -601,7 +641,9 @@
     "Weight": "880 g"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c19"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c19"
+    },
     "Category": "COOLER",
     "Height": "TEST",
     "Name": "b115b2a9-9790-4b3b-928b-64249f0b95e6",
@@ -631,7 +673,9 @@
     "RpmControl": "TEST"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c1a"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c1a"
+    },
     "Category": "CPU",
     "Name": "397dfa44-8bbe-4505-9db2-d67aaa41e8a3",
     "Price": "TEST",
@@ -660,7 +704,9 @@
     "Tdp": "TEST"
   },
   {
-    "_id": {"$oid": "6a5533dd400b6a8fb1df0c1b"},
+    "_id": {
+      "$oid": "6a5533dd400b6a8fb1df0c1b"
+    },
     "Category": "GPU",
     "CoolingType": "TEST",
     "CoreRatio": "TEST",

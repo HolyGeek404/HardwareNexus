@@ -5,8 +5,13 @@ namespace UserApi.Domain.ValueObjects;
 public sealed partial record ActivationToken
 {
     private static readonly Regex Pattern = ActivationKeyRegex();
+
+    private ActivationToken(Guid value)
+    {
+        Value = value;
+    }
+
     public Guid Value { get; }
-    private ActivationToken(Guid value) => Value = value;
 
     public static ActivationToken Create(Guid value)
     {

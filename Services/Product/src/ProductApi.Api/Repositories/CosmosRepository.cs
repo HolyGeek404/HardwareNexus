@@ -6,7 +6,8 @@ using ProductApi.Api.Services;
 
 namespace ProductApi.Api.Repositories;
 
-public class CosmosRepository<TProduct>(CosmosClient cosmosClient) : IReadRepository<TProduct>, IWriteRepository<TProduct>
+public class CosmosRepository<TProduct>(CosmosClient cosmosClient)
+    : IReadRepository<TProduct>, IWriteRepository<TProduct>
 {
     protected readonly Container Container = cosmosClient.GetContainer("GoodStuff", "Products");
 

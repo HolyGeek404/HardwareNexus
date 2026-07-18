@@ -4,13 +4,14 @@ namespace UserApi.Domain.ValueObjects;
 
 public sealed partial record Name
 {
-    public string Value { get; }
     private static readonly Regex Pattern = NameRegex();
 
     private Name(string value)
     {
         Value = value;
     }
+
+    public string Value { get; }
 
     public static Name Create(string value)
     {

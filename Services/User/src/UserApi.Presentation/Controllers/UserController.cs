@@ -1,7 +1,7 @@
-﻿using MediatR;
+﻿using System.Security.Claims;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 using UserApi.Application.Features.Commands.AccountVerification;
 using UserApi.Application.Features.Commands.Delete;
 using UserApi.Application.Features.Commands.SignUp;
@@ -12,14 +12,14 @@ using UserApi.Application.Services;
 namespace UserApi.Presentation.Controllers;
 
 /// <summary>
-/// User account endpoints for registration, authentication, and profile access.
+///     User account endpoints for registration, authentication, and profile access.
 /// </summary>
 [ApiController]
 [Route("[controller]")]
 public class UserController(IMediator mediator, ILogger<UserController> logger) : ControllerBase
 {
     /// <summary>
-    /// Registers a new user account.
+    ///     Registers a new user account.
     /// </summary>
     /// <param name="signUpCommand">User registration payload.</param>
     /// <response code="201">User registered successfully.</response>
@@ -30,10 +30,7 @@ public class UserController(IMediator mediator, ILogger<UserController> logger) 
     public async Task<IActionResult> SignUp([FromBody] SignUpCommand signUpCommand)
     {
         Logs.LogCalledSignupNameByUnknown(logger, nameof(SignUp), User.FindFirst("appid")?.Value ?? "Unknown");
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
         try
         {
@@ -57,7 +54,7 @@ public class UserController(IMediator mediator, ILogger<UserController> logger) 
     }
 
     /// <summary>
-    /// Authenticates a user and issues an access token cookie.
+    ///     Authenticates a user and issues an access token cookie.
     /// </summary>
     /// <param name="signInQuery">User credentials.</param>
     /// <response code="200">Authentication succeeded.</response>
@@ -76,10 +73,7 @@ public class UserController(IMediator mediator, ILogger<UserController> logger) 
         }
 
         var token = await mediator.Send(signInQuery);
-        if (string.IsNullOrWhiteSpace(token))
-        {
-            return Unauthorized();
-        }
+        if (string.IsNullOrWhiteSpace(token)) return Unauthorized();
 
         Response.Cookies.Append("access_token", token, new CookieOptions
         {
@@ -96,7 +90,7 @@ public class UserController(IMediator mediator, ILogger<UserController> logger) 
     }
 
     /// <summary>
-    /// Gets the current authenticated user profile.
+    ///     Gets the current authenticated user profile.
     /// </summary>
     /// <response code="200">Returns the user profile.</response>
     /// <response code="401">The request is not authenticated.</response>
@@ -117,7 +111,7 @@ public class UserController(IMediator mediator, ILogger<UserController> logger) 
     }
 
     /// <summary>
-    /// Signs out the current user by clearing the access token cookie.
+    ///     Signs out the current user by clearing the access token cookie.
     /// </summary>
     /// <response code="200">Sign-out succeeded.</response>
     /// <response code="500">An unexpected error occurred.</response>
@@ -131,7 +125,6 @@ public class UserController(IMediator mediator, ILogger<UserController> logger) 
 
         try
         {
-
             Logs.LogSuccessfullySignedOutUserEmail(logger, email);
 
             Response.Cookies.Delete("access_token", new CookieOptions
@@ -152,7 +145,7 @@ public class UserController(IMediator mediator, ILogger<UserController> logger) 
     }
 
     /// <summary>
-    /// Verifies a user's account using the activation key.
+    ///     Verifies a user's account using the activation key.
     /// </summary>
     /// <param name="accountVerificationCommand">Account verification payload.</param>
     /// <response code="200">Verification succeeded.</response>
@@ -178,7 +171,7 @@ public class UserController(IMediator mediator, ILogger<UserController> logger) 
     }
 
     /// <summary>
-    /// Deletes a user account by email.
+    ///     Deletes a user account by email.
     /// </summary>
     /// <param name="email">The account email to delete.</param>
     /// <response code="204">Account deleted.</response>

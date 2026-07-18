@@ -1,4 +1,3 @@
-using Azure.Identity;
 using CartApi.Application.Features.Commands.AddCart;
 using CartApi.Application.Services;
 using CartApi.Infrastructure.Extensions;

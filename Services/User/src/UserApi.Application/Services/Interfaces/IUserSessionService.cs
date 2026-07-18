@@ -1,5 +1,5 @@
-using UserApi.Domain.Entities;
 using UserApi.Application.Models;
+using UserApi.Domain.Entities;
 
 namespace UserApi.Application.Services.Interfaces;
 

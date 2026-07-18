@@ -1,7 +1,7 @@
 using CartApi.Application.Services;
-using MediatR;
 using CartApi.Domain;
 using CartApi.Domain.ValueObjects;
+using MediatR;
 
 namespace CartApi.Application.Features.Commands.AddCart;
 

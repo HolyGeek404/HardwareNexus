@@ -10,15 +10,15 @@
 
     <ItemGroup>
         <PackageReference Include="FluentValidation" Version="12.1.1"/>
-        <PackageReference Include="MediatR" Version="14.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.11" />
-        <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.61.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
+        <PackageReference Include="MediatR" Version="14.2.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.11"/>
+        <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.61.0"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.9" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.9"/>
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.9">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -27,8 +27,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\UserApi.Application\UserApi.Application.csproj" />
-        <ProjectReference Include="..\UserApi.Domain\UserApi.Domain.csproj" />
+        <ProjectReference Include="..\UserApi.Application\UserApi.Application.csproj"/>
+        <ProjectReference Include="..\UserApi.Domain\UserApi.Domain.csproj"/>
     </ItemGroup>
 
 </Project>

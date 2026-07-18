@@ -4,23 +4,23 @@ import {RouterLink} from '@angular/router';
 import {UserSessionService} from '../../services/user-session-service';
 
 @Component({
-  selector: 'app-nav',
-  imports: [
-    NgOptimizedImage,
-    RouterLink
-  ],
-  templateUrl: './nav.html',
-  styleUrl: './nav.css'
+    selector: 'app-nav',
+    imports: [
+        NgOptimizedImage,
+        RouterLink
+    ],
+    templateUrl: './nav.html',
+    styleUrl: './nav.css'
 })
 export class Nav implements OnInit {
-  isLoggedIn = signal<boolean>(false);
+    isLoggedIn = signal<boolean>(false);
 
-  constructor(private userSessionService: UserSessionService) {
-  }
+    constructor(private userSessionService: UserSessionService) {
+    }
 
-  ngOnInit() {
-    const result = this.userSessionService.checkSession().subscribe(session => {
-      this.isLoggedIn.set(session);
-    });
-  }
+    ngOnInit() {
+        const result = this.userSessionService.checkSession().subscribe(session => {
+            this.isLoggedIn.set(session);
+        });
+    }
 }

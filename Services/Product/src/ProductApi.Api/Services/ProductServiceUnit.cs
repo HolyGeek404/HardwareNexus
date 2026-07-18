@@ -8,6 +8,7 @@ namespace ProductApi.Api.Services;
 public class ProductServiceUnit(IUnitOfWork uow) : IProductService
 {
     #region Queries
+
     public async Task<object?> GetByIdAndType(string type, string id)
     {
         return type switch
@@ -18,6 +19,7 @@ public class ProductServiceUnit(IUnitOfWork uow) : IProductService
             _ => null
         };
     }
+
     public async Task<object?> GetByType(string type)
     {
         return type switch
@@ -28,6 +30,7 @@ public class ProductServiceUnit(IUnitOfWork uow) : IProductService
             _ => null
         };
     }
+
     public async Task<object?> GetFilterByType(string type)
     {
         return type switch
@@ -36,9 +39,11 @@ public class ProductServiceUnit(IUnitOfWork uow) : IProductService
             _ => null
         };
     }
+
     #endregion
 
     #region Commands
+
     public async Task<BaseProduct?> Create(JsonElement product, string type)
     {
         switch (type.ToUpper())
@@ -56,6 +61,7 @@ public class ProductServiceUnit(IUnitOfWork uow) : IProductService
                 return null;
         }
     }
+
     public async Task<HttpStatusCode> Delete(Guid id, string type)
     {
         return type.ToUpper() switch
@@ -66,6 +72,7 @@ public class ProductServiceUnit(IUnitOfWork uow) : IProductService
             _ => HttpStatusCode.BadRequest
         };
     }
+
     public async Task<HttpStatusCode> Update(JsonElement product, string type)
     {
         switch (type.ToUpper())
@@ -83,5 +90,6 @@ public class ProductServiceUnit(IUnitOfWork uow) : IProductService
                 return HttpStatusCode.BadRequest;
         }
     }
+
     #endregion
 }

@@ -1,6 +1,6 @@
-using UserApi.Domain.ValueObjects;
 using MediatR;
 using UserApi.Application.Services.Interfaces;
+using UserApi.Domain.ValueObjects;
 
 namespace UserApi.Application.Features.Commands.Delete;
 

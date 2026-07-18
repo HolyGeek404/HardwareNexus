@@ -1,12 +1,12 @@
-﻿using UserApi.Domain.Entities;
-using UserApi.Domain.ValueObjects;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 using UserApi.Application.Services.Interfaces;
+using UserApi.Domain.Entities;
+using UserApi.Domain.ValueObjects;
 
 namespace UserApi.Application.Services;
 
@@ -138,9 +138,8 @@ public class UserService(
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyValue));
 
         var token = new JwtSecurityToken(
-            issuer: issuer,
-            audience: audience,
-            claims:
+            issuer,
+            audience,
             [
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
                 new Claim(ClaimTypes.Email, user.Email.Value),

@@ -8,25 +8,26 @@ import {NgOptimizedImage} from '@angular/common';
 import {loadProduct} from '../../../services/product-helper';
 
 @Component({
-  selector: 'app-cpu',
-  imports: [
-    NgOptimizedImage
-  ],
-  templateUrl: './cpu.html',
-  styleUrl: './cpu.css',
+    selector: 'app-cpu',
+    imports: [
+        NgOptimizedImage
+    ],
+    templateUrl: './cpu.html',
+    styleUrl: './cpu.css',
 })
 export class Cpu implements OnInit {
-  protected cpuProduct = signal<CpuModel | undefined>(undefined)
+    protected cpuProduct = signal<CpuModel | undefined>(undefined)
 
-  constructor(
-    private router: ActivatedRoute,
-    private productService: ProductService,
-    private destroyRef: DestroyRef
-  ) {}
+    constructor(
+        private router: ActivatedRoute,
+        private productService: ProductService,
+        private destroyRef: DestroyRef
+    ) {
+    }
 
-  ngOnInit() {
-    loadProduct<CpuModel>(ProductTypes.CPU, this.productService, this.router)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(product => this.cpuProduct.set(product));
-  }
+    ngOnInit() {
+        loadProduct<CpuModel>(ProductTypes.CPU, this.productService, this.router)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(product => this.cpuProduct.set(product));
+    }
 }

@@ -1,17 +1,15 @@
 using CartApi.Application.DTO;
 using CartApi.Application.Services;
-using CartApi.Infrastructure.Services;
 using StackExchange.Redis;
 using static System.Int32;
 
 namespace CartApi.Infrastructure.Repositories;
 
-public class RedisRepository(IConnectionMultiplexer connection,
+public class RedisRepository(
+    IConnectionMultiplexer connection,
     ISerializeService serializeService) : IRedisRepository
 {
     private readonly IDatabase _redis = connection.GetDatabase();
-    private static string GetCartKey(string userId) => $"cart:user:{userId}";
-    private static int CartExpirationMinutes() => TryParse(Environment.GetEnvironmentVariable("CART_EXPIRATION_MINUTES"), out var expirationTime) ? expirationTime : 60;
 
     public async Task AddCartItem(string userId, ProductDto product)
     {
@@ -28,6 +26,25 @@ public class RedisRepository(IConnectionMultiplexer connection,
         return cartItems.Select(item => serializeService.Deserialize<ProductDto>(item.Value!)).ToList();
     }
 
-    public async Task<bool> RemoveItemAsync(string userId, string productId) => await _redis.HashDeleteAsync(GetCartKey(userId), productId);
-    public async Task ClearCartAsync(string userId) => await _redis.KeyDeleteAsync(GetCartKey(userId));
+    public async Task<bool> RemoveItemAsync(string userId, string productId)
+    {
+        return await _redis.HashDeleteAsync(GetCartKey(userId), productId);
+    }
+
+    public async Task ClearCartAsync(string userId)
+    {
+        await _redis.KeyDeleteAsync(GetCartKey(userId));
+    }
+
+    private static string GetCartKey(string userId)
+    {
+        return $"cart:user:{userId}";
+    }
+
+    private static int CartExpirationMinutes()
+    {
+        return TryParse(Environment.GetEnvironmentVariable("CART_EXPIRATION_MINUTES"), out var expirationTime)
+            ? expirationTime
+            : 60;
+    }
 }

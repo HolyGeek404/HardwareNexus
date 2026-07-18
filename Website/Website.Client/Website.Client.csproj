@@ -14,20 +14,20 @@
         </PropertyGroup>
 
         <!-- Install Angular dependencies (if not already installed) -->
-        <Exec Command="npm install" WorkingDirectory="$(AngularProjectDir)" />
+        <Exec Command="npm install" WorkingDirectory="$(AngularProjectDir)"/>
 
         <!-- Build Angular app (production build) -->
-        <Exec Command="npm run build -- --configuration production" WorkingDirectory="$(AngularProjectDir)" />
+        <Exec Command="npm run build -- --configuration production" WorkingDirectory="$(AngularProjectDir)"/>
 
         <!-- Copy Angular dist files to ASP.NET wwwroot -->
         <ItemGroup>
-            <DistFiles Include="$(AngularProjectDir)\dist\**\*" />
+            <DistFiles Include="$(AngularProjectDir)\dist\**\*"/>
         </ItemGroup>
-        <Copy SourceFiles="@(DistFiles)" DestinationFolder="wwwroot\" SkipUnchangedFiles="true" />
+        <Copy SourceFiles="@(DistFiles)" DestinationFolder="wwwroot\" SkipUnchangedFiles="true"/>
     </Target>
-    
+
     <ItemGroup>
-        <Folder Include="app\" />
-        <Folder Include="wwwroot\" />
+        <Folder Include="app\"/>
+        <Folder Include="wwwroot\"/>
     </ItemGroup>
 </Project>

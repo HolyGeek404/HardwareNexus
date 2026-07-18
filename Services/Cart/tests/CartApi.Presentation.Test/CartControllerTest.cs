@@ -9,7 +9,6 @@ namespace CartApi.Presentation.Test;
 
 public class CartControllerTest(WebApplicationFactory<Program> factory) : IClassFixture<WebApplicationFactory<Program>>
 {
-    private readonly HttpClient _client = factory.CreateClient();
     private readonly AddCartCommand _addCartCommand = new()
     {
         UserId = "test",
@@ -18,6 +17,8 @@ public class CartControllerTest(WebApplicationFactory<Program> factory) : IClass
         Quantity = 6,
         Price = 1200
     };
+
+    private readonly HttpClient _client = factory.CreateClient();
 
     [Fact]
     public async Task AddCart_InsertCartToCache_ShouldReturnOk()
@@ -54,7 +55,8 @@ public class CartControllerTest(WebApplicationFactory<Program> factory) : IClass
         await _client.PostAsJsonAsync("/Cart", _addCartCommand);
 
         // Act
-        var removeResponse = await _client.DeleteAsync($"/Cart?userId={_addCartCommand.UserId}&productId={_addCartCommand.ProductId}");
+        var removeResponse =
+            await _client.DeleteAsync($"/Cart?userId={_addCartCommand.UserId}&productId={_addCartCommand.ProductId}");
 
         // Assert
         removeResponse.EnsureSuccessStatusCode();

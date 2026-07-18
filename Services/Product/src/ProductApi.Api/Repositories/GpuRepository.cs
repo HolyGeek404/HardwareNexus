@@ -6,6 +6,4 @@ namespace ProductApi.Api.Repositories;
 
 public class GpuRepository(CosmosClient cosmosClient) : CosmosRepository<Gpu>(cosmosClient), IGpuRepository
 {
-        
-    
 }

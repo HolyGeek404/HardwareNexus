@@ -8,25 +8,26 @@ import {NgOptimizedImage} from '@angular/common';
 import {loadProduct} from '../../../services/product-helper';
 
 @Component({
-  selector: 'app-cooler',
-  imports: [
-    NgOptimizedImage
-  ],
-  templateUrl: './cooler.html',
-  styleUrl: './cooler.css',
+    selector: 'app-cooler',
+    imports: [
+        NgOptimizedImage
+    ],
+    templateUrl: './cooler.html',
+    styleUrl: './cooler.css',
 })
 export class Cooler implements OnInit {
-  protected coolerProduct = signal<CoolerModel | undefined>(undefined)
+    protected coolerProduct = signal<CoolerModel | undefined>(undefined)
 
-  constructor(
-    private router: ActivatedRoute,
-    private productService: ProductService,
-    private destroyRef: DestroyRef
-  ) {}
+    constructor(
+        private router: ActivatedRoute,
+        private productService: ProductService,
+        private destroyRef: DestroyRef
+    ) {
+    }
 
-  ngOnInit() {
-    loadProduct<CoolerModel>(ProductTypes.COOLER, this.productService, this.router)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(product => this.coolerProduct.set(product));
-  }
+    ngOnInit() {
+        loadProduct<CoolerModel>(ProductTypes.COOLER, this.productService, this.router)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(product => this.coolerProduct.set(product));
+    }
 }

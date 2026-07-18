@@ -1,90 +1,88 @@
-import {Component, inject} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {GoodStuffFunctionsService} from '../../../services/GoodStuffFunctionsService';
 import {Router, RouterLink} from '@angular/router';
 import {UserSessionService} from '../../../services/user-session-service';
 
 @Component({
-  selector: 'app-sign-in',
-  imports: [
-    FormsModule,
-    ReactiveFormsModule,
-    RouterLink
-  ],
-  templateUrl: './sign-in.html',
-  styleUrl: './sign-in.css'
+    selector: 'app-sign-in',
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        RouterLink
+    ],
+    templateUrl: './sign-in.html',
+    styleUrl: './sign-in.css'
 })
 export class SignIn {
-  public stateMsg: string | null = null;
-
-  constructor(private router: Router, private userSessionService: UserSessionService) {  }
-
-  ngOnInit() {
-    const state = history.state as { message?: string };
-
-    if (state?.message) {
-      this.stateMsg = state.message;
-    }
-  }
-
-  signInForm = new FormGroup({
-    email: new FormControl('', [Validators.required, Validators.email]),
-    password: new FormControl('', [Validators.required, Validators.pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"))])
-  });
-
-  errorMessages = {
-    email: {
-      required: 'Email is required',
-      email: 'Please enter a valid email address'
-    },
-    password: {
-      required: 'Password is required',
-      pattern: 'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)'
-    }
-  };
-  errors: string[] = [];
-
-  onSubmit() {
-    if (this.validate() && this.signInForm.valid) {
-      this.userSessionService.signIn(this.signInForm.controls.email.value!, this.signInForm.controls.password.value!).subscribe({
-        next: (result) => {
-            this.router.navigate(['/user/dashboard']);
+    public stateMsg: string | null = null;
+    signInForm = new FormGroup({
+        email: new FormControl('', [Validators.required, Validators.email]),
+        password: new FormControl('', [Validators.required, Validators.pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$"))])
+    });
+    errorMessages = {
+        email: {
+            required: 'Email is required',
+            email: 'Please enter a valid email address'
         },
-        error: (err) => console.error(`Error signing in.`, err)
-      });
+        password: {
+            required: 'Password is required',
+            pattern: 'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number, and one special character (@$!%*?&)'
+        }
+    };
+    errors: string[] = [];
 
-    }
-  }
-
-  validate(): boolean {
-    // clear error messages
-    this.errors = [];
-    let isValid = true;
-
-    // validate email
-    if(!this.signInForm.controls.email.valid){
-      if(this.signInForm.controls.email.errors!['required'] != null){
-        this.errors.push(this.errorMessages.email.required);
-        isValid = false;
-      }
-      if(this.signInForm.controls.email.errors!['email'] != null){
-        this.errors.push(this.errorMessages.email.email);
-        isValid = false;
-      }
+    constructor(private router: Router, private userSessionService: UserSessionService) {
     }
 
-    //validate password
-    if(!this.signInForm.controls.password.valid){
-      if(this.signInForm.controls.password.errors!['required'] != null){
-        this.errors.push(this.errorMessages.password.required);
-        isValid = false;
-      }
-      if(this.signInForm.controls.password.errors!['pattern'] != null){
-        this.errors.push(this.errorMessages.password.pattern);
-        isValid = false;
-      }
+    ngOnInit() {
+        const state = history.state as { message?: string };
+
+        if (state?.message) {
+            this.stateMsg = state.message;
+        }
     }
 
-    return isValid;
-  }
+    onSubmit() {
+        if (this.validate() && this.signInForm.valid) {
+            this.userSessionService.signIn(this.signInForm.controls.email.value!, this.signInForm.controls.password.value!).subscribe({
+                next: (result) => {
+                    this.router.navigate(['/user/dashboard']);
+                },
+                error: (err) => console.error(`Error signing in.`, err)
+            });
+
+        }
+    }
+
+    validate(): boolean {
+        // clear error messages
+        this.errors = [];
+        let isValid = true;
+
+        // validate email
+        if (!this.signInForm.controls.email.valid) {
+            if (this.signInForm.controls.email.errors!['required'] != null) {
+                this.errors.push(this.errorMessages.email.required);
+                isValid = false;
+            }
+            if (this.signInForm.controls.email.errors!['email'] != null) {
+                this.errors.push(this.errorMessages.email.email);
+                isValid = false;
+            }
+        }
+
+        //validate password
+        if (!this.signInForm.controls.password.valid) {
+            if (this.signInForm.controls.password.errors!['required'] != null) {
+                this.errors.push(this.errorMessages.password.required);
+                isValid = false;
+            }
+            if (this.signInForm.controls.password.errors!['pattern'] != null) {
+                this.errors.push(this.errorMessages.password.pattern);
+                isValid = false;
+            }
+        }
+
+        return isValid;
+    }
 }

@@ -10,15 +10,12 @@ public static class GatewayExtensions
 {
     public static WebApplicationBuilder AddGatewayConfiguration(this WebApplicationBuilder builder)
     {
-        builder.Configuration.AddJsonFile("ocelot.json", optional: false, reloadOnChange: true);
+        builder.Configuration.AddJsonFile("ocelot.json", false, true);
         builder.Configuration.AddEnvironmentVariables();
 
         var azureAd = builder.Configuration.GetSection("AzureAd");
         var kvUrl = azureAd["KvUrl"];
-        if (string.IsNullOrWhiteSpace(kvUrl))
-        {
-            throw new InvalidOperationException("AzureAd:KvUrl is not configured.");
-        }
+        if (string.IsNullOrWhiteSpace(kvUrl)) throw new InvalidOperationException("AzureAd:KvUrl is not configured.");
 
         builder.Configuration.AddAzureKeyVault(new Uri(kvUrl), new DefaultAzureCredential());
 
@@ -32,9 +29,7 @@ public static class GatewayExtensions
 
         var keyValue = configuration["Jwt:Key"];
         if (string.IsNullOrWhiteSpace(keyValue))
-        {
             throw new InvalidOperationException("JWT signing key is not configured.");
-        }
 
         services
             .AddAuthentication("Bearer")
@@ -58,10 +53,7 @@ public static class GatewayExtensions
                         if (string.IsNullOrWhiteSpace(context.Token))
                         {
                             var token = context.Request.Cookies["access_token"];
-                            if (!string.IsNullOrWhiteSpace(token))
-                            {
-                                context.Token = token;
-                            }
+                            if (!string.IsNullOrWhiteSpace(token)) context.Token = token;
                         }
 
                         return Task.CompletedTask;

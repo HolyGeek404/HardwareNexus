@@ -1,4 +1,3 @@
-
 using CartApi.Application.DTO;
 using CartApi.Application.Services;
 using CartApi.Domain;
@@ -11,8 +10,9 @@ namespace CartApi.Application.Test.Services;
 
 public class CacheServiceTests
 {
-    private readonly Mock<IRedisRepository> _redisRepositoryMock;
+    private const string UserId = "test";
     private readonly ICacheService _cacheService;
+
     private readonly Product _product = new()
     {
         Id = "432",
@@ -21,7 +21,7 @@ public class CacheServiceTests
         Quantity = Quantity.Create(3)
     };
 
-    private const string UserId = "test";
+    private readonly Mock<IRedisRepository> _redisRepositoryMock;
 
 
     public CacheServiceTests()
@@ -39,7 +39,7 @@ public class CacheServiceTests
             Id = _product.Id,
             Name = _product.Name,
             Price = _product.Price.Value,
-            Quantity = _product.Quantity.Value,
+            Quantity = _product.Quantity.Value
         };
 
         // Act
@@ -47,12 +47,12 @@ public class CacheServiceTests
 
         // Assert
         _redisRepositoryMock.Verify(x => x.AddCartItem(
-            UserId,
-            It.Is<ProductDto>(p =>
-                p.Id == expectedDto.Id &&
-                p.Name == expectedDto.Name &&
-                p.Price == expectedDto.Price &&
-                p.Quantity == expectedDto.Quantity)),
+                UserId,
+                It.Is<ProductDto>(p =>
+                    p.Id == expectedDto.Id &&
+                    p.Name == expectedDto.Name &&
+                    p.Price == expectedDto.Price &&
+                    p.Quantity == expectedDto.Quantity)),
             Times.Once);
     }
 

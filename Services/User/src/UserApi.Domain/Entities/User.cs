@@ -4,6 +4,10 @@ namespace UserApi.Domain.Entities;
 
 public class User
 {
+    private User()
+    {
+    }
+
     public int Id { get; private set; }
     public Name Name { get; private set; }
     public Name Surname { get; private set; }
@@ -15,10 +19,6 @@ public class User
 
     public bool IsActive { get; private set; }
     public ActivationToken? ActivationKey { get; private set; }
-
-    private User()
-    {
-    }
 
     public static User Create(Name name, Name surname, Email email, Password password)
     {

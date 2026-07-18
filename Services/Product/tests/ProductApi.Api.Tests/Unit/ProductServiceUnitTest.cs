@@ -1,19 +1,19 @@
 using System.Net;
 using System.Text.Json;
+using Moq;
 using ProductApi.Api.Interfaces;
 using ProductApi.Api.Models;
 using ProductApi.Api.Services;
-using Moq;
 
 namespace ProductApi.Api.Tests.Unit;
 
 public class ProductServiceUnitTest
 {
-    private readonly Mock<IUnitOfWork> _uow = new();
-    private readonly Mock<IGpuRepository> _gpuRepository = new();
-    private readonly Mock<ICpuRepository> _cpuRepository = new();
     private readonly Mock<ICoolerRepository> _coolerRepository = new();
+    private readonly Mock<ICpuRepository> _cpuRepository = new();
+    private readonly Mock<IGpuRepository> _gpuRepository = new();
     private readonly ProductServiceUnit _serviceUnit;
+    private readonly Mock<IUnitOfWork> _uow = new();
 
     public ProductServiceUnitTest()
     {
@@ -218,7 +218,8 @@ public class ProductServiceUnitTest
 
         _gpuRepository.Setup(x => x.DeleteAsync(id, ProductCategories.Gpu)).ReturnsAsync(HttpStatusCode.NoContent);
         _cpuRepository.Setup(x => x.DeleteAsync(id, ProductCategories.Cpu)).ReturnsAsync(HttpStatusCode.NoContent);
-        _coolerRepository.Setup(x => x.DeleteAsync(id, ProductCategories.Cooler)).ReturnsAsync(HttpStatusCode.NoContent);
+        _coolerRepository.Setup(x => x.DeleteAsync(id, ProductCategories.Cooler))
+            .ReturnsAsync(HttpStatusCode.NoContent);
 
         var result = await _serviceUnit.Delete(id, type);
 
@@ -293,9 +294,12 @@ public class ProductServiceUnitTest
 
     private void VerifyGetByIdCalled(string type, string id)
     {
-        _gpuRepository.Verify(x => x.GetById(ProductCategories.Gpu, id), type == ProductCategories.Gpu ? Times.Once : Times.Never);
-        _cpuRepository.Verify(x => x.GetById(ProductCategories.Cpu, id), type == ProductCategories.Cpu ? Times.Once : Times.Never);
-        _coolerRepository.Verify(x => x.GetById(ProductCategories.Cooler, id), type == ProductCategories.Cooler ? Times.Once : Times.Never);
+        _gpuRepository.Verify(x => x.GetById(ProductCategories.Gpu, id),
+            type == ProductCategories.Gpu ? Times.Once : Times.Never);
+        _cpuRepository.Verify(x => x.GetById(ProductCategories.Cpu, id),
+            type == ProductCategories.Cpu ? Times.Once : Times.Never);
+        _coolerRepository.Verify(x => x.GetById(ProductCategories.Cooler, id),
+            type == ProductCategories.Cooler ? Times.Once : Times.Never);
     }
 
     private void VerifyNoGetByIdCalls()
@@ -307,9 +311,12 @@ public class ProductServiceUnitTest
 
     private void VerifyGetByTypeCalled(string type)
     {
-        _gpuRepository.Verify(x => x.GetByType(ProductCategories.Gpu), type == ProductCategories.Gpu ? Times.Once : Times.Never);
-        _cpuRepository.Verify(x => x.GetByType(ProductCategories.Cpu), type == ProductCategories.Cpu ? Times.Once : Times.Never);
-        _coolerRepository.Verify(x => x.GetByType(ProductCategories.Cooler), type == ProductCategories.Cooler ? Times.Once : Times.Never);
+        _gpuRepository.Verify(x => x.GetByType(ProductCategories.Gpu),
+            type == ProductCategories.Gpu ? Times.Once : Times.Never);
+        _cpuRepository.Verify(x => x.GetByType(ProductCategories.Cpu),
+            type == ProductCategories.Cpu ? Times.Once : Times.Never);
+        _coolerRepository.Verify(x => x.GetByType(ProductCategories.Cooler),
+            type == ProductCategories.Cooler ? Times.Once : Times.Never);
     }
 
     private void VerifyNoGetByTypeCalls()
@@ -321,23 +328,30 @@ public class ProductServiceUnitTest
 
     private void VerifyCreateCalled(string type, string id, string category)
     {
-        _gpuRepository.Verify(x => x.CreateAsync(It.IsAny<Gpu>(), id, category), type == ProductCategories.Gpu ? Times.Once : Times.Never);
-        _cpuRepository.Verify(x => x.CreateAsync(It.IsAny<Cpu>(), id, category), type == ProductCategories.Cpu ? Times.Once : Times.Never);
-        _coolerRepository.Verify(x => x.CreateAsync(It.IsAny<Cooler>(), id, category), type == ProductCategories.Cooler ? Times.Once : Times.Never);
+        _gpuRepository.Verify(x => x.CreateAsync(It.IsAny<Gpu>(), id, category),
+            type == ProductCategories.Gpu ? Times.Once : Times.Never);
+        _cpuRepository.Verify(x => x.CreateAsync(It.IsAny<Cpu>(), id, category),
+            type == ProductCategories.Cpu ? Times.Once : Times.Never);
+        _coolerRepository.Verify(x => x.CreateAsync(It.IsAny<Cooler>(), id, category),
+            type == ProductCategories.Cooler ? Times.Once : Times.Never);
     }
 
     private void VerifyNoCreateCalls()
     {
         _gpuRepository.Verify(x => x.CreateAsync(It.IsAny<Gpu>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         _cpuRepository.Verify(x => x.CreateAsync(It.IsAny<Cpu>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
-        _coolerRepository.Verify(x => x.CreateAsync(It.IsAny<Cooler>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        _coolerRepository.Verify(x => x.CreateAsync(It.IsAny<Cooler>(), It.IsAny<string>(), It.IsAny<string>()),
+            Times.Never);
     }
 
     private void VerifyDeleteCalled(string type, Guid id)
     {
-        _gpuRepository.Verify(x => x.DeleteAsync(id, ProductCategories.Gpu), type == ProductCategories.Gpu ? Times.Once : Times.Never);
-        _cpuRepository.Verify(x => x.DeleteAsync(id, ProductCategories.Cpu), type == ProductCategories.Cpu ? Times.Once : Times.Never);
-        _coolerRepository.Verify(x => x.DeleteAsync(id, ProductCategories.Cooler), type == ProductCategories.Cooler ? Times.Once : Times.Never);
+        _gpuRepository.Verify(x => x.DeleteAsync(id, ProductCategories.Gpu),
+            type == ProductCategories.Gpu ? Times.Once : Times.Never);
+        _cpuRepository.Verify(x => x.DeleteAsync(id, ProductCategories.Cpu),
+            type == ProductCategories.Cpu ? Times.Once : Times.Never);
+        _coolerRepository.Verify(x => x.DeleteAsync(id, ProductCategories.Cooler),
+            type == ProductCategories.Cooler ? Times.Once : Times.Never);
     }
 
     private void VerifyNoDeleteCalls()
@@ -349,106 +363,119 @@ public class ProductServiceUnitTest
 
     private void VerifyUpdateCalled(string type, string id, string category)
     {
-        _gpuRepository.Verify(x => x.UpdateAsync(It.IsAny<Gpu>(), id, category), type == ProductCategories.Gpu ? Times.Once : Times.Never);
-        _cpuRepository.Verify(x => x.UpdateAsync(It.IsAny<Cpu>(), id, category), type == ProductCategories.Cpu ? Times.Once : Times.Never);
-        _coolerRepository.Verify(x => x.UpdateAsync(It.IsAny<Cooler>(), id, category), type == ProductCategories.Cooler ? Times.Once : Times.Never);
+        _gpuRepository.Verify(x => x.UpdateAsync(It.IsAny<Gpu>(), id, category),
+            type == ProductCategories.Gpu ? Times.Once : Times.Never);
+        _cpuRepository.Verify(x => x.UpdateAsync(It.IsAny<Cpu>(), id, category),
+            type == ProductCategories.Cpu ? Times.Once : Times.Never);
+        _coolerRepository.Verify(x => x.UpdateAsync(It.IsAny<Cooler>(), id, category),
+            type == ProductCategories.Cooler ? Times.Once : Times.Never);
     }
 
     private void VerifyNoUpdateCalls()
     {
         _gpuRepository.Verify(x => x.UpdateAsync(It.IsAny<Gpu>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
         _cpuRepository.Verify(x => x.UpdateAsync(It.IsAny<Cpu>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
-        _coolerRepository.Verify(x => x.UpdateAsync(It.IsAny<Cooler>(), It.IsAny<string>(), It.IsAny<string>()), Times.Never);
+        _coolerRepository.Verify(x => x.UpdateAsync(It.IsAny<Cooler>(), It.IsAny<string>(), It.IsAny<string>()),
+            Times.Never);
     }
 
-    private static Gpu CreateGpu() => new()
+    private static Gpu CreateGpu()
     {
-        Name = "Test GPU",
-        Team = "AMD",
-        Price = "3900",
-        ProductImg = "gpu.png",
-        Category = ProductCategories.Gpu,
-        id = "gpu-123",
-        Warranty = "36",
-        ProducerCode = "GPU123",
-        GpuProcessorLine = "RX",
-        PcieType = "PCIe 5.0",
-        MemorySize = "16 GB",
-        MemoryType = "GDDR6",
-        MemoryBus = "256-bit",
-        MemoryRatio = "18 Gbps",
-        CoreRatio = "2400 MHz",
-        CoresNumber = "4096",
-        CoolingType = "Air",
-        OutputsType = "HDMI, DP",
-        SupportedLibraries = "DX12",
-        PowerConnector = "2x8-pin",
-        RecommendedPsuPower = "750W",
-        Length = "320 mm",
-        Width = "120 mm",
-        Height = "60 mm",
-        GpuProcessorName = "Navi",
-        Manufacturer = "Sapphire"
-    };
+        return new Gpu
+        {
+            Name = "Test GPU",
+            Team = "AMD",
+            Price = "3900",
+            ProductImg = "gpu.png",
+            Category = ProductCategories.Gpu,
+            id = "gpu-123",
+            Warranty = "36",
+            ProducerCode = "GPU123",
+            GpuProcessorLine = "RX",
+            PcieType = "PCIe 5.0",
+            MemorySize = "16 GB",
+            MemoryType = "GDDR6",
+            MemoryBus = "256-bit",
+            MemoryRatio = "18 Gbps",
+            CoreRatio = "2400 MHz",
+            CoresNumber = "4096",
+            CoolingType = "Air",
+            OutputsType = "HDMI, DP",
+            SupportedLibraries = "DX12",
+            PowerConnector = "2x8-pin",
+            RecommendedPsuPower = "750W",
+            Length = "320 mm",
+            Width = "120 mm",
+            Height = "60 mm",
+            GpuProcessorName = "Navi",
+            Manufacturer = "Sapphire"
+        };
+    }
 
-    private static Cpu CreateCpu() => new()
+    private static Cpu CreateCpu()
     {
-        Name = "Test CPU",
-        Team = "AMD",
-        Price = "2500",
-        ProductImg = "cpu.png",
-        Category = ProductCategories.Cpu,
-        id = "cpu-456",
-        Warranty = "36",
-        ProducerCode = "CPU123",
-        Family = "Ryzen",
-        Series = "9000",
-        Socket = "AM5",
-        SupportedChipsets = "X870",
-        RecommendedChipset = "X870E",
-        Architecture = "Zen 5",
-        Frequency = "5.0 GHz",
-        Cores = "8",
-        Threads = "16",
-        UnlockedMultiplayer = "Yes",
-        CacheMemory = "96 MB",
-        IntegratedGpu = "Yes",
-        IntegratedGpuModel = "Radeon",
-        SupportedRam = "DDR5",
-        Lithography = "4 nm",
-        Tdp = "120W",
-        AdditionalInfo = "Test",
-        IncludedCooler = "No"
-    };
+        return new Cpu
+        {
+            Name = "Test CPU",
+            Team = "AMD",
+            Price = "2500",
+            ProductImg = "cpu.png",
+            Category = ProductCategories.Cpu,
+            id = "cpu-456",
+            Warranty = "36",
+            ProducerCode = "CPU123",
+            Family = "Ryzen",
+            Series = "9000",
+            Socket = "AM5",
+            SupportedChipsets = "X870",
+            RecommendedChipset = "X870E",
+            Architecture = "Zen 5",
+            Frequency = "5.0 GHz",
+            Cores = "8",
+            Threads = "16",
+            UnlockedMultiplayer = "Yes",
+            CacheMemory = "96 MB",
+            IntegratedGpu = "Yes",
+            IntegratedGpuModel = "Radeon",
+            SupportedRam = "DDR5",
+            Lithography = "4 nm",
+            Tdp = "120W",
+            AdditionalInfo = "Test",
+            IncludedCooler = "No"
+        };
+    }
 
-    private static Cooler CreateCooler() => new()
+    private static Cooler CreateCooler()
     {
-        Name = "Test Cooler",
-        Team = "Noctua",
-        Price = "120",
-        ProductImg = "cooler.png",
-        Category = ProductCategories.Cooler,
-        id = "cooler-789",
-        Warranty = "72",
-        ProducerCode = "COOL123",
-        CoolerType = "Air",
-        Compatibility = "AM5",
-        Size = "Dual Tower",
-        HeatPipes = "7",
-        Fans = "2",
-        RpmControl = "PWM",
-        Rmp = "1500",
-        BearingType = "SSO2",
-        FanSize = "140 mm",
-        Connector = "4-pin",
-        SupplyVoltage = "12V",
-        SupplyCurrent = "0.2A",
-        Highlight = "Quiet",
-        MtbfLifetime = "150000h",
-        Height = "165 mm",
-        Width = "150 mm",
-        Depth = "161 mm",
-        Weight = "1320 g",
-        Manufacture = "Noctua"
-    };
+        return new Cooler
+        {
+            Name = "Test Cooler",
+            Team = "Noctua",
+            Price = "120",
+            ProductImg = "cooler.png",
+            Category = ProductCategories.Cooler,
+            id = "cooler-789",
+            Warranty = "72",
+            ProducerCode = "COOL123",
+            CoolerType = "Air",
+            Compatibility = "AM5",
+            Size = "Dual Tower",
+            HeatPipes = "7",
+            Fans = "2",
+            RpmControl = "PWM",
+            Rmp = "1500",
+            BearingType = "SSO2",
+            FanSize = "140 mm",
+            Connector = "4-pin",
+            SupplyVoltage = "12V",
+            SupplyCurrent = "0.2A",
+            Highlight = "Quiet",
+            MtbfLifetime = "150000h",
+            Height = "165 mm",
+            Width = "150 mm",
+            Depth = "161 mm",
+            Weight = "1320 g",
+            Manufacture = "Noctua"
+        };
+    }
 }

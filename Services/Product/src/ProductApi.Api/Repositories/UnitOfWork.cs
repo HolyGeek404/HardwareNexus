@@ -2,7 +2,8 @@ using ProductApi.Api.Interfaces;
 
 namespace ProductApi.Api.Repositories;
 
-public class UnitOfWork(ICpuRepository cpuRepository, IGpuRepository gpuRepository, ICoolerRepository coolerRepository) : IUnitOfWork
+public class UnitOfWork(ICpuRepository cpuRepository, IGpuRepository gpuRepository, ICoolerRepository coolerRepository)
+    : IUnitOfWork
 {
     public ICpuRepository CpuRepository { get; set; } = cpuRepository;
     public IGpuRepository GpuRepository { get; set; } = gpuRepository;

@@ -1,4 +1,3 @@
-
 using Azure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Identity.Web;
@@ -8,7 +7,8 @@ namespace OrderApi.Presentation.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddAzureConfig(this IServiceCollection services, IConfigurationManager configuration)
+    public static IServiceCollection AddAzureConfig(this IServiceCollection services,
+        IConfigurationManager configuration)
     {
         var azureAd = configuration.GetSection("AzureAd");
 
@@ -18,6 +18,7 @@ public static class ServiceCollectionExtensions
 
         return services;
     }
+
     public static IServiceCollection AddSwaggerConfig(this IServiceCollection services, IConfiguration configuration)
     {
         var tenantId = configuration.GetSection("AzureAd")["TenantId"];
@@ -36,7 +37,8 @@ public static class ServiceCollectionExtensions
                 {
                     AuthorizationCode = new OpenApiOAuthFlow
                     {
-                        AuthorizationUrl = new Uri($"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/authorize"),
+                        AuthorizationUrl =
+                            new Uri($"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/authorize"),
                         TokenUrl = new Uri($"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/token"),
                         Scopes = new Dictionary<string, string> { { $"{swaggerScope}", "Base rights" } }
                     }
@@ -45,7 +47,7 @@ public static class ServiceCollectionExtensions
             x.AddSecurityRequirement(document => new OpenApiSecurityRequirement
             {
                 {
-                    new OpenApiSecuritySchemeReference("oauth2", document, null),
+                    new OpenApiSecuritySchemeReference("oauth2", document),
                     [swaggerScope]
                 }
             });

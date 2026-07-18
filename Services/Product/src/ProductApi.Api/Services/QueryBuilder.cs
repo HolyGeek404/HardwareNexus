@@ -14,7 +14,7 @@ public static class QueryBuilder
     {
         return new QueryDefinition(Queries.GetSingleById).WithParameter("@category", type).WithParameter("@id", id);
     }
-    
+
     public static IEnumerable<QueryDefinition> GetFilterParams(string type)
     {
         var queryList = Queries.GetFilters(type);

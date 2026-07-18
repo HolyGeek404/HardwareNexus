@@ -1,13 +1,13 @@
 using System.Net;
-using UserApi.Application.Models;
-using UserApi.Application.Services;
-using UserApi.Domain.Entities;
-using UserApi.Domain.ValueObjects;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Internal;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using Moq;
+using UserApi.Application.Models;
+using UserApi.Application.Services;
+using UserApi.Domain.Entities;
+using UserApi.Domain.ValueObjects;
 
 namespace UserApi.Application.Tests.Services;
 

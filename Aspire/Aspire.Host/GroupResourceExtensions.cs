@@ -1,3 +1,5 @@
+using Projects;
+
 namespace Aspire.Host;
 
 public static class GroupResourceExtensions
@@ -18,22 +20,22 @@ public static class GroupResourceExtensions
 
             return builder.AddResource(resource)
                 .WithInitialState(initialSnapshot)
-                .ExcludeFromManifest(); 
+                .ExcludeFromManifest();
         }
 
         public void AddWebsiteSection()
         {
             var websiteSection = builder.AddGroup("Website");
 
-            var gateway = builder.AddProject<Projects.Website_Gateway>("website-gateway")
+            var gateway = builder.AddProject<Website_Gateway>("website-gateway")
                 .WithParentRelationship(websiteSection.Resource);
 
-            builder.AddProject<Projects.Website_Client>("website-client")
+            builder.AddProject<Website_Client>("website-client")
                 .WaitFor(gateway)
                 .WithParentRelationship(websiteSection.Resource);
         }
-        
-        public void AddApiSection(InfrastructureResources  infrastructure)
+
+        public void AddApiSection(InfrastructureResources infrastructure)
         {
             var apiSection = builder.AddGroup("Api");
 
@@ -41,10 +43,11 @@ public static class GroupResourceExtensions
             //     .WaitFor(openbaoSeed)
             //     .WithParentRelationship(apiSection.Resource);
             //
-            builder.AddProject<Projects.ProductApi_Api>("ProductApi-Api")
+            builder.AddProject<ProductApi_Api>("ProductApi-Api")
                 .WithEnvironment("OPENBAO_ADDR", "http://localhost:8200")
                 .WithEnvironment("OPENBAO_ROLE_ID", "hardwarenexus-product-role-id")
-                .WithEnvironment("OPENBAO_ENV_FILE_PATH", Path.Combine(builder.AppHostDirectory, "Scripts", "OpenBao", ".env.local"))
+                .WithEnvironment("OPENBAO_ENV_FILE_PATH",
+                    Path.Combine(builder.AppHostDirectory, "Scripts", "OpenBao", ".env.local"))
                 .WaitFor(infrastructure.OpenBaoSeed)
                 .WaitFor(infrastructure.MongoSeed)
                 .WithParentRelationship(apiSection.Resource);
@@ -67,7 +70,7 @@ public static class GroupResourceExtensions
 
             return new InfrastructureResources(mongo, openbao);
         }
-        
+
         private IResourceBuilder<ExecutableResource> AddMongoDbSection(IResourceBuilder<GroupResource> infraSection)
         {
             var mongoSection = builder.AddGroup("MongoDB")
@@ -83,8 +86,8 @@ public static class GroupResourceExtensions
                     "/scripts/products.json")
                 .WithParentRelationship(mongoSection.Resource)
                 .WithEndpoint(
-                    port: 27017,
-                    targetPort: 27017,
+                    27017,
+                    27017,
                     name: "mongodb");
 
             var mongoSeed = builder.AddExecutable(
@@ -97,6 +100,7 @@ public static class GroupResourceExtensions
 
             return mongoSeed;
         }
+
         private IResourceBuilder<ExecutableResource> AddOpenBaoSection(IResourceBuilder<GroupResource> infraSection)
         {
             var openbaoSection = builder.AddGroup("OpenBao")
@@ -113,8 +117,8 @@ public static class GroupResourceExtensions
                 .WithParentRelationship(openbaoSection.Resource)
                 .WithEnvironment("BAO_DEV_ROOT_TOKEN_ID", "dev-root-token")
                 .WithEndpoint(
-                    port: 8200,
-                    targetPort: 8200,
+                    8200,
+                    8200,
                     name: "http");
 
             var openbaoSeed = builder.AddExecutable(
@@ -129,9 +133,11 @@ public static class GroupResourceExtensions
         }
     }
 }
+
 public sealed class GroupResource(string name) : Resource(name)
 {
 }
+
 public record InfrastructureResources(
     IResourceBuilder<ExecutableResource> MongoSeed,
     IResourceBuilder<ExecutableResource> OpenBaoSeed);

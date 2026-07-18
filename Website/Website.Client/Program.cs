@@ -1,5 +1,3 @@
-
-
 var builder = WebApplication.CreateBuilder(args);
 
 
@@ -25,17 +23,14 @@ app.UseAuthorization();
 app.MapStaticAssets();
 
 app.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Home}/{action=Index}/{id?}")
+        "default",
+        "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
 
 app.Use(async (context, next) =>
 {
     await next();
-    if (context.Response is { StatusCode: 404, HasStarted: false })
-    {
-        context.Response.Redirect("/index.html");
-    }
+    if (context.Response is { StatusCode: 404, HasStarted: false }) context.Response.Redirect("/index.html");
 });
 
 app.Run();

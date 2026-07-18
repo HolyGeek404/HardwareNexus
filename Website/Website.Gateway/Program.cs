@@ -1,5 +1,5 @@
-using Website.Gateway.Extensions;
 using Ocelot.Middleware;
+using Website.Gateway.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,10 +9,7 @@ builder.Services.AddGatewayServices(builder.Configuration);
 var app = builder.Build();
 
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-}
+if (app.Environment.IsDevelopment()) app.MapOpenApi();
 app.UseGatewayPipeline();
 await app.UseOcelot();
 app.Run();

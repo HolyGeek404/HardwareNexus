@@ -1,6 +1,6 @@
-using UserApi.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using UserApi.Domain.Entities;
 
 namespace UserApi.Infrastructure.DataAccess.Context;
 

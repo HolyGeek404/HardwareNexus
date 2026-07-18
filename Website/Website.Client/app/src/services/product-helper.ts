@@ -5,12 +5,12 @@ import {ProductService} from './product-service';
 
 
 export function loadProduct<T>(
-  type: ProductTypes,
-  productService: ProductService,
-  route: ActivatedRoute
+    type: ProductTypes,
+    productService: ProductService,
+    route: ActivatedRoute
 ): Observable<T> {
-  return route.paramMap.pipe(
-    map(params => params.get('id')),
-    switchMap(id => productService.getProduct<T>(type, id!))
-  );
+    return route.paramMap.pipe(
+        map(params => params.get('id')),
+        switchMap(id => productService.getProduct<T>(type, id!))
+    );
 }

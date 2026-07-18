@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Json;
-using UserApi.Application.Services.Interfaces;
 using Microsoft.Extensions.Configuration;
+using UserApi.Application.Services.Interfaces;
 
 namespace UserApi.Infrastructure;
 

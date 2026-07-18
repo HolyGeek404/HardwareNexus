@@ -1,10 +1,10 @@
 using System.Security.Cryptography;
-using UserApi.Domain.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using UserApi.Application.Models;
 using UserApi.Application.Services.Interfaces;
+using UserApi.Domain.Entities;
 
 namespace UserApi.Application.Services;
 
@@ -33,7 +33,7 @@ public class UserSessionService(
                 SessionId = sessionId,
                 LastActivity = DateTime.UtcNow,
                 LoginTime = DateTime.UtcNow,
-                IpAddress = GetClientIpAddress(),
+                IpAddress = GetClientIpAddress()
             };
 
             cache.Set(GetCacheKey(sessionId), userSession, cacheOptions);

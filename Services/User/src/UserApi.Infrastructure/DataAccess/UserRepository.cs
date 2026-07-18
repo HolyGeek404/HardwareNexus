@@ -1,9 +1,9 @@
-﻿using UserApi.Application.Services;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using UserApi.Application.Services;
 using UserApi.Application.Services.Interfaces;
 using UserApi.Domain.Entities;
 using UserApi.Domain.ValueObjects;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using UserApi.Infrastructure.DataAccess.Context;
 
 namespace UserApi.Infrastructure.DataAccess;

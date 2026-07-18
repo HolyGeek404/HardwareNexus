@@ -10,14 +10,16 @@ namespace CartApi.Infrastructure.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services, IConfigurationManager configuration)
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
+        IConfigurationManager configuration)
     {
         services.AddSingleton<IConnectionMultiplexer>(_ =>
         {
             var redisConnStr = Environment.GetEnvironmentVariable("REDIS_CONNSTR");
             if (redisConnStr != null) return ConnectionMultiplexer.Connect(redisConnStr!);
-            
-            configuration.AddAzureKeyVault(new Uri(configuration.GetSection("AzureAd")["KvUrl"]!), new DefaultAzureCredential());
+
+            configuration.AddAzureKeyVault(new Uri(configuration.GetSection("AzureAd")["KvUrl"]!),
+                new DefaultAzureCredential());
             redisConnStr = configuration.GetSection("Redis")["LocalConnStr"];
 
             return ConnectionMultiplexer.Connect(redisConnStr!);

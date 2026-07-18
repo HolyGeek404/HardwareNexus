@@ -11,7 +11,6 @@ public class CpuRepository(CosmosClient cosmosClient) : CosmosRepository<Cpu>(co
     {
         var queries = QueryBuilder.GetFilterParams(category).ToList();
         if (queries.Count < 5)
-        {
             return new CpuFilters
             {
                 Team = [],
@@ -20,7 +19,6 @@ public class CpuRepository(CosmosClient cosmosClient) : CosmosRepository<Cpu>(co
                 Architecture = [],
                 TDP = []
             };
-        }
 
         return new CpuFilters
         {

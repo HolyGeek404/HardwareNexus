@@ -2,8 +2,12 @@ namespace CartApi.Domain.ValueObjects;
 
 public record Quantity
 {
+    private Quantity(int value)
+    {
+        Value = value;
+    }
+
     public int Value { get; init; }
-    private Quantity(int value) => Value = value;
 
     public static Quantity Create(int value)
     {
