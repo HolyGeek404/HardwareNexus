@@ -1,45 +1,37 @@
-using Microsoft.Azure.Cosmos;
+using MongoDB.Driver;
 using ProductApi.Api.Interfaces;
 using ProductApi.Api.Models;
-using ProductApi.Api.Services;
+using ProductApi.Api.Repositories.Base;
 
 namespace ProductApi.Api.Repositories;
 
-public class CpuRepository(CosmosClient cosmosClient) : CosmosRepository<Cpu>(cosmosClient), ICpuRepository
+public class CpuRepository(IMongoDatabase mongoDatabase) : MongoRepository<Cpu>(mongoDatabase), ICpuRepository
 {
     public async Task<CpuFilters> GetFiltersAsync(string category)
     {
-        var queries = QueryBuilder.GetFilterParams(category).ToList();
-        if (queries.Count < 5)
-            return new CpuFilters
-            {
-                Team = [],
-                Cores = [],
-                Socket = [],
-                Architecture = [],
-                TDP = []
-            };
+        var categoryFilter = Builders<Cpu>.Filter.Eq(c => c.Category, category);
 
         return new CpuFilters
         {
-            Team = await GetDistinctValuesAsync(queries[0]),
-            Cores = await GetDistinctValuesAsync(queries[1]),
-            Socket = await GetDistinctValuesAsync(queries[2]),
-            Architecture = await GetDistinctValuesAsync(queries[3]),
-            TDP = await GetDistinctValuesAsync(queries[4])
+            Team = await GetDistinctValuesAsync(c => c.Team, categoryFilter),
+            Cores = await GetDistinctValuesAsync(c => c.Cores, categoryFilter),
+            Socket = await GetDistinctValuesAsync(c => c.Socket, categoryFilter),
+            Architecture = await GetDistinctValuesAsync(c => c.Architecture, categoryFilter),
+            TDP = await GetDistinctValuesAsync(c => c.Tdp, categoryFilter)
         };
     }
 
-    private async Task<string[]> GetDistinctValuesAsync(QueryDefinition query)
+    private async Task<string[]> GetDistinctValuesAsync(
+        System.Linq.Expressions.Expression<Func<Cpu, string>> field,
+        FilterDefinition<Cpu> filter)
     {
-        var iterator = Container.GetItemQueryIterator<string>(query);
-        var results = new List<string>();
-        while (iterator.HasMoreResults)
+        var results = await Collection.DistinctAsync(field, filter);
+        var values = new List<string>();
+        while (await results.MoveNextAsync())
         {
-            var response = await iterator.ReadNextAsync();
-            results.AddRange(response.Resource);
+            values.AddRange(results.Current);
         }
 
-        return results.ToArray();
+        return values.ToArray();
     }
 }

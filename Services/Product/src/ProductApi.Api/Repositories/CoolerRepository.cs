@@ -1,7 +1,8 @@
-using Microsoft.Azure.Cosmos;
+using MongoDB.Driver;
 using ProductApi.Api.Interfaces;
 using ProductApi.Api.Models;
+using ProductApi.Api.Repositories.Base;
 
 namespace ProductApi.Api.Repositories;
 
-public class CoolerRepository(CosmosClient cosmosClient) : CosmosRepository<Cooler>(cosmosClient), ICoolerRepository;
+public class CoolerRepository(IMongoDatabase mongoDatabase) : MongoRepository<Cooler>(mongoDatabase), ICoolerRepository;

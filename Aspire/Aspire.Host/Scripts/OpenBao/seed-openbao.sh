@@ -1,6 +1,6 @@
 
 export BAO_ADDR=http://127.0.0.1:8200
-export BAO_TOKEN="dev-root-token"
+export BAO_TOKEN="9AsG2eYd7TseuOj3FVUo7yXWifSTuh2ZMJx67egZjsU="
 
 until bao status >/dev/null 2>&1; do
   sleep 1
@@ -67,7 +67,7 @@ bao write auth/approle/role/hardwarenexus-cart/role-id \
 
 # --- Secrets (dev only) ---
 bao kv put secret/hardwarenexus/api/product \
-  mongodb-connstr="mongodb://admin:supersecret@localhost:27017/hardwarenexus-products?authSource=admin"
+  mongodb-connstr="mongodb://dev_user:xdt60FPNOnxcDVdug75H3b9HFboWrNNBXSAiBgSS1rU=@localhost:27017/hardwarenexus-products?authSource=admin"
 
 bao kv put secret/hardwarenexus/api/user \
   postgres-connstr="Host=localhost;Port=5432;Database=hardwarenexus-core;Username=postgres;Password=supersecret"

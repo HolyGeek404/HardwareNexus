@@ -13,7 +13,6 @@
         <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.5.1"/>
         <PackageReference Include="Azure.Identity" Version="1.21.0"/>
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
-        <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.62.0" />
         <PackageReference Include="Microsoft.Identity.Web" Version="4.13.2" />
         <PackageReference Include="MongoDB.Driver" Version="3.10.0"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.0.4"/>

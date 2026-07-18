@@ -2,8 +2,10 @@ using Autofac.Extensions.DependencyInjection;
 using ProductApi.Api.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
+
 builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
-await builder.Services.AddMongoDbConfig(builder);
+builder.Services.AddRepositories();
+await IServiceCollection.AddMongoDbConfig(builder);
 builder.Services.AddControllers();
 builder.Services.AddServices();
 builder.Services.AddEndpointsApiExplorer();

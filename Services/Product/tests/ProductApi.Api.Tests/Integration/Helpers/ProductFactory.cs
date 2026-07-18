@@ -9,7 +9,7 @@ public static class ProductFactory
     {
         return JsonSerializer.SerializeToElement(new Gpu
         {
-            id = "11111111-2222-3333-4444-555555555555",
+            ProductGuid = "11111111-2222-3333-4444-555555555555",
             Category = ProductCategories.Gpu,
             Name = "TEST",
             Price = "132",
@@ -66,8 +66,8 @@ public static class ProductFactory
             IncludedCooler = "TEST",
             Warranty = "TEST",
             ProductImg = "TEST",
-            id = "11111111-2222-3333-4444-555555555555",
-            ProducerCode = "TEST"
+            ProductGuid = "11111111-2222-3333-4444-555555555555",
+            ProducerCode = "TEST",
         });
     }
 
@@ -101,7 +101,7 @@ public static class ProductFactory
             Price = "TEST",
             Manufacture = "TEST",
             Category = ProductCategories.Cooler,
-            id = "11111111-2222-3333-4444-555555555555"
+            ProductGuid = "11111111-2222-3333-4444-555555555555"
         });
     }
 }

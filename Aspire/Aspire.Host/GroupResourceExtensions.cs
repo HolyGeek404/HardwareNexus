@@ -44,8 +44,7 @@ public static class GroupResourceExtensions
             //     .WithParentRelationship(apiSection.Resource);
             //
             builder.AddProject<ProductApi_Api>("ProductApi-Api")
-                .WithEnvironment("OPENBAO_ADDR", "http://localhost:8200")
-                .WithEnvironment("OPENBAO_ROLE_ID", "hardwarenexus-product-role-id")
+                .WithEnvironment("OPENBAO_ADDR", builder.Configuration["OpenBao:Address"])
                 .WithEnvironment("OPENBAO_ENV_FILE_PATH",
                     Path.Combine(builder.AppHostDirectory, "Scripts", "OpenBao", ".env.local"))
                 .WaitFor(infrastructure.OpenBaoSeed)
@@ -84,6 +83,8 @@ public static class GroupResourceExtensions
                 .WithBindMount(
                     "./Scripts/MongoDB/products.json",
                     "/scripts/products.json")
+                .WithEnvironment("MONGO_INITDB_ROOT_USERNAME", builder.Configuration["Mongo:admin"])
+                .WithEnvironment("MONGO_INITDB_ROOT_PASSWORD", builder.Configuration["Mongo:secret"])
                 .WithParentRelationship(mongoSection.Resource)
                 .WithEndpoint(
                     27017,
@@ -115,7 +116,7 @@ public static class GroupResourceExtensions
                     "/output")
                 .WithContainerName("openbao-dev")
                 .WithParentRelationship(openbaoSection.Resource)
-                .WithEnvironment("BAO_DEV_ROOT_TOKEN_ID", "dev-root-token")
+                .WithEnvironment("BAO_DEV_ROOT_TOKEN_ID", builder.Configuration["OpenBao:DevRooToken"])
                 .WithEndpoint(
                     8200,
                     8200,
@@ -134,9 +135,7 @@ public static class GroupResourceExtensions
     }
 }
 
-public sealed class GroupResource(string name) : Resource(name)
-{
-}
+public sealed class GroupResource(string name) : Resource(name);
 
 public record InfrastructureResources(
     IResourceBuilder<ExecutableResource> MongoSeed,

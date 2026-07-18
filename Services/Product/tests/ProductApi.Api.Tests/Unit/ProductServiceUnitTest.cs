@@ -28,39 +28,39 @@ public class ProductServiceUnitTest
     public async Task GetByIdAndType_WhenTypeIsGpu_ReturnsGpu()
     {
         var product = CreateGpu();
-        _gpuRepository.Setup(x => x.GetById(ProductCategories.Gpu, product.id)).ReturnsAsync(product);
+        _gpuRepository.Setup(x => x.GetById(ProductCategories.Gpu, product.ProductGuid)).ReturnsAsync(product);
 
-        var result = await _serviceUnit.GetByIdAndType(ProductCategories.Gpu, product.id);
+        var result = await _serviceUnit.GetByIdAndType(ProductCategories.Gpu, product.ProductGuid);
 
         var typed = Assert.IsType<Gpu>(result);
-        Assert.Equal(product.id, typed.id);
-        VerifyGetByIdCalled(ProductCategories.Gpu, product.id);
+        Assert.Equal(product.ProductGuid, typed.ProductGuid);
+        VerifyGetByIdCalled(ProductCategories.Gpu, product.ProductGuid);
     }
 
     [Fact]
     public async Task GetByIdAndType_WhenTypeIsCpu_ReturnsCpu()
     {
         var product = CreateCpu();
-        _cpuRepository.Setup(x => x.GetById(ProductCategories.Cpu, product.id)).ReturnsAsync(product);
+        _cpuRepository.Setup(x => x.GetById(ProductCategories.Cpu, product.ProductGuid)).ReturnsAsync(product);
 
-        var result = await _serviceUnit.GetByIdAndType(ProductCategories.Cpu, product.id);
+        var result = await _serviceUnit.GetByIdAndType(ProductCategories.Cpu, product.ProductGuid);
 
         var typed = Assert.IsType<Cpu>(result);
-        Assert.Equal(product.id, typed.id);
-        VerifyGetByIdCalled(ProductCategories.Cpu, product.id);
+        Assert.Equal(product.ProductGuid, typed.ProductGuid);
+        VerifyGetByIdCalled(ProductCategories.Cpu, product.ProductGuid);
     }
 
     [Fact]
     public async Task GetByIdAndType_WhenTypeIsCooler_ReturnsCooler()
     {
         var product = CreateCooler();
-        _coolerRepository.Setup(x => x.GetById(ProductCategories.Cooler, product.id)).ReturnsAsync(product);
+        _coolerRepository.Setup(x => x.GetById(ProductCategories.Cooler, product.ProductGuid)).ReturnsAsync(product);
 
-        var result = await _serviceUnit.GetByIdAndType(ProductCategories.Cooler, product.id);
+        var result = await _serviceUnit.GetByIdAndType(ProductCategories.Cooler, product.ProductGuid);
 
         var typed = Assert.IsType<Cooler>(result);
-        Assert.Equal(product.id, typed.id);
-        VerifyGetByIdCalled(ProductCategories.Cooler, product.id);
+        Assert.Equal(product.ProductGuid, typed.ProductGuid);
+        VerifyGetByIdCalled(ProductCategories.Cooler, product.ProductGuid);
     }
 
     [Fact]
@@ -155,14 +155,14 @@ public class ProductServiceUnitTest
         var product = CreateGpu();
         var payload = JsonSerializer.SerializeToElement(product);
         _gpuRepository
-            .Setup(x => x.CreateAsync(It.Is<Gpu>(gpu => gpu.id == product.id), product.id, product.Category))
+            .Setup(x => x.CreateAsync(It.Is<Gpu>(gpu => gpu.ProductGuid == product.ProductGuid), product.ProductGuid, product.Category))
             .ReturnsAsync(product);
 
         var result = await _serviceUnit.Create(payload, ProductCategories.Gpu);
 
         var typed = Assert.IsType<Gpu>(result);
-        Assert.Equal(product.id, typed.id);
-        VerifyCreateCalled(ProductCategories.Gpu, product.id, product.Category);
+        Assert.Equal(product.ProductGuid, typed.ProductGuid);
+        VerifyCreateCalled(ProductCategories.Gpu, product.ProductGuid, product.Category);
     }
 
     [Fact]
@@ -171,14 +171,14 @@ public class ProductServiceUnitTest
         var product = CreateCpu();
         var payload = JsonSerializer.SerializeToElement(product);
         _cpuRepository
-            .Setup(x => x.CreateAsync(It.Is<Cpu>(cpu => cpu.id == product.id), product.id, product.Category))
+            .Setup(x => x.CreateAsync(It.Is<Cpu>(cpu => cpu.ProductGuid == product.ProductGuid), product.ProductGuid, product.Category))
             .ReturnsAsync(product);
 
         var result = await _serviceUnit.Create(payload, ProductCategories.Cpu);
 
         var typed = Assert.IsType<Cpu>(result);
-        Assert.Equal(product.id, typed.id);
-        VerifyCreateCalled(ProductCategories.Cpu, product.id, product.Category);
+        Assert.Equal(product.ProductGuid, typed.ProductGuid);
+        VerifyCreateCalled(ProductCategories.Cpu, product.ProductGuid, product.Category);
     }
 
     [Fact]
@@ -187,14 +187,14 @@ public class ProductServiceUnitTest
         var product = CreateCooler();
         var payload = JsonSerializer.SerializeToElement(product);
         _coolerRepository
-            .Setup(x => x.CreateAsync(It.Is<Cooler>(cooler => cooler.id == product.id), product.id, product.Category))
+            .Setup(x => x.CreateAsync(It.Is<Cooler>(cooler => cooler.ProductGuid == product.ProductGuid), product.ProductGuid, product.Category))
             .ReturnsAsync(product);
 
         var result = await _serviceUnit.Create(payload, ProductCategories.Cooler);
 
         var typed = Assert.IsType<Cooler>(result);
-        Assert.Equal(product.id, typed.id);
-        VerifyCreateCalled(ProductCategories.Cooler, product.id, product.Category);
+        Assert.Equal(product.ProductGuid, typed.ProductGuid);
+        VerifyCreateCalled(ProductCategories.Cooler, product.ProductGuid, product.Category);
     }
 
     [Fact]
@@ -242,13 +242,13 @@ public class ProductServiceUnitTest
         var product = CreateGpu();
         var payload = JsonSerializer.SerializeToElement(product);
         _gpuRepository
-            .Setup(x => x.UpdateAsync(It.Is<Gpu>(gpu => gpu.id == product.id), product.id, product.Category))
+            .Setup(x => x.UpdateAsync(It.Is<Gpu>(gpu => gpu.ProductGuid == product.ProductGuid), product.ProductGuid, product.Category))
             .ReturnsAsync(HttpStatusCode.OK);
 
         var result = await _serviceUnit.Update(payload, ProductCategories.Gpu);
 
         Assert.Equal(HttpStatusCode.OK, result);
-        VerifyUpdateCalled(ProductCategories.Gpu, product.id, product.Category);
+        VerifyUpdateCalled(ProductCategories.Gpu, product.ProductGuid, product.Category);
     }
 
     [Fact]
@@ -257,13 +257,13 @@ public class ProductServiceUnitTest
         var product = CreateCpu();
         var payload = JsonSerializer.SerializeToElement(product);
         _cpuRepository
-            .Setup(x => x.UpdateAsync(It.Is<Cpu>(cpu => cpu.id == product.id), product.id, product.Category))
+            .Setup(x => x.UpdateAsync(It.Is<Cpu>(cpu => cpu.ProductGuid == product.ProductGuid), product.ProductGuid, product.Category))
             .ReturnsAsync(HttpStatusCode.OK);
 
         var result = await _serviceUnit.Update(payload, ProductCategories.Cpu);
 
         Assert.Equal(HttpStatusCode.OK, result);
-        VerifyUpdateCalled(ProductCategories.Cpu, product.id, product.Category);
+        VerifyUpdateCalled(ProductCategories.Cpu, product.ProductGuid, product.Category);
     }
 
     [Fact]
@@ -272,13 +272,13 @@ public class ProductServiceUnitTest
         var product = CreateCooler();
         var payload = JsonSerializer.SerializeToElement(product);
         _coolerRepository
-            .Setup(x => x.UpdateAsync(It.Is<Cooler>(cooler => cooler.id == product.id), product.id, product.Category))
+            .Setup(x => x.UpdateAsync(It.Is<Cooler>(cooler => cooler.ProductGuid == product.ProductGuid), product.ProductGuid, product.Category))
             .ReturnsAsync(HttpStatusCode.OK);
 
         var result = await _serviceUnit.Update(payload, ProductCategories.Cooler);
 
         Assert.Equal(HttpStatusCode.OK, result);
-        VerifyUpdateCalled(ProductCategories.Cooler, product.id, product.Category);
+        VerifyUpdateCalled(ProductCategories.Cooler, product.ProductGuid, product.Category);
     }
 
     [Fact]
@@ -388,7 +388,7 @@ public class ProductServiceUnitTest
             Price = "3900",
             ProductImg = "gpu.png",
             Category = ProductCategories.Gpu,
-            id = "gpu-123",
+            ProductGuid = "gpu-123",
             Warranty = "36",
             ProducerCode = "GPU123",
             GpuProcessorLine = "RX",
@@ -421,7 +421,7 @@ public class ProductServiceUnitTest
             Price = "2500",
             ProductImg = "cpu.png",
             Category = ProductCategories.Cpu,
-            id = "cpu-456",
+            ProductGuid = "cpu-456",
             Warranty = "36",
             ProducerCode = "CPU123",
             Family = "Ryzen",
@@ -454,7 +454,7 @@ public class ProductServiceUnitTest
             Price = "120",
             ProductImg = "cooler.png",
             Category = ProductCategories.Cooler,
-            id = "cooler-789",
+            ProductGuid = "cooler-789",
             Warranty = "72",
             ProducerCode = "COOL123",
             CoolerType = "Air",

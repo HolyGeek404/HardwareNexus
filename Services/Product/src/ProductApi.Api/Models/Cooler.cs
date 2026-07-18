@@ -1,5 +1,8 @@
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace ProductApi.Api.Models;
 
+[BsonIgnoreExtraElements]
 public class Cooler : BaseProduct
 {
     public required string CoolerType { get; set; }

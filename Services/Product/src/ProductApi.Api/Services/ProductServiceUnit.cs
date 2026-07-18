@@ -50,13 +50,13 @@ public class ProductServiceUnit(IUnitOfWork uow) : IProductService
         {
             case ProductCategories.Gpu:
                 var gpu = product.Deserialize<Gpu>()!;
-                return await uow.GpuRepository.CreateAsync(gpu, gpu.id, gpu.Category);
+                return await uow.GpuRepository.CreateAsync(gpu, gpu.ProductGuid, gpu.Category);
             case ProductCategories.Cpu:
                 var cpu = product.Deserialize<Cpu>()!;
-                return await uow.CpuRepository.CreateAsync(cpu, cpu.id, cpu.Category);
+                return await uow.CpuRepository.CreateAsync(cpu, cpu.ProductGuid, cpu.Category);
             case ProductCategories.Cooler:
                 var cooler = product.Deserialize<Cooler>()!;
-                return await uow.CoolerRepository.CreateAsync(cooler, cooler.id, cooler.Category);
+                return await uow.CoolerRepository.CreateAsync(cooler, cooler.ProductGuid, cooler.Category);
             default:
                 return null;
         }
@@ -79,13 +79,13 @@ public class ProductServiceUnit(IUnitOfWork uow) : IProductService
         {
             case ProductCategories.Gpu:
                 var gpu = product.Deserialize<Gpu>()!;
-                return await uow.GpuRepository.UpdateAsync(gpu, gpu.id, gpu.Category);
+                return await uow.GpuRepository.UpdateAsync(gpu, gpu.ProductGuid, gpu.Category);
             case ProductCategories.Cpu:
                 var cpu = product.Deserialize<Cpu>()!;
-                return await uow.CpuRepository.UpdateAsync(cpu, cpu.id, cpu.Category);
+                return await uow.CpuRepository.UpdateAsync(cpu, cpu.ProductGuid, cpu.Category);
             case ProductCategories.Cooler:
                 var cooler = product.Deserialize<Cooler>()!;
-                return await uow.CoolerRepository.UpdateAsync(cooler, cooler.id, cooler.Category);
+                return await uow.CoolerRepository.UpdateAsync(cooler, cooler.ProductGuid, cooler.Category);
             default:
                 return HttpStatusCode.BadRequest;
         }

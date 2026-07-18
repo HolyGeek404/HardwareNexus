@@ -195,7 +195,7 @@ public class ProductController(IProductService productService, ILogger<ProductCo
         {
             var result = await productService.Create(product, type);
 
-            if (result == null || string.IsNullOrEmpty(result.id))
+            if (result == null || string.IsNullOrEmpty(result.ProductGuid))
             {
                 Logger.LogCreateFailedOrReturnedNullInCreatenameByCallerTypeTypeProductProduct(logger, nameof(Create),
                     caller, type, product);
@@ -203,9 +203,9 @@ public class ProductController(IProductService productService, ILogger<ProductCo
             }
 
             Logger.LogSuccessfullyCreatedProductInCreatenameByCallerTypeTypeProductProductIdId(logger, nameof(Create),
-                caller, type, product, result.id);
+                caller, type, product, result.ProductGuid);
 
-            return CreatedAtAction(nameof(GetById), new { type = result.Category, result.id }, result);
+            return CreatedAtAction(nameof(GetById), new { type = result.Category, id = result.ProductGuid }, result);
         }
         catch (Exception ex)
         {

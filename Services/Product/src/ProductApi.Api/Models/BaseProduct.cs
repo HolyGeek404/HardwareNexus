@@ -1,5 +1,8 @@
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace ProductApi.Api.Models;
 
+[BsonIgnoreExtraElements]
 public class BaseProduct
 {
     public required string Name { get; set; }
@@ -8,7 +11,8 @@ public class BaseProduct
     public string? ProductImg { get; set; }
     public virtual required string Category { get; init; }
 
-    public required string id { get; set; }
+    [BsonElement("id")]
+    public required string ProductGuid { get; set; }
 
     public required string Warranty { get; set; }
     public required string ProducerCode { get; set; }

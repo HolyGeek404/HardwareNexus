@@ -1,5 +1,8 @@
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace ProductApi.Api.Models;
 
+[BsonIgnoreExtraElements]
 public class Cpu : BaseProduct
 {
     public required string Family { get; set; }

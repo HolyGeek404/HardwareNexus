@@ -1,5 +1,8 @@
+using MongoDB.Bson.Serialization.Attributes;
+
 namespace ProductApi.Api.Models;
 
+[BsonIgnoreExtraElements]
 public class Gpu : BaseProduct
 {
     public required string GpuProcessorLine { get; set; }
