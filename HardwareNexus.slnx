@@ -1,46 +1,46 @@
 <Solution>
     <Folder Name="/Aspire/">
-        <Project Path="Aspire/Aspire.Host/Aspire.Host.csproj"/>
+        <Project Path="Aspire/Aspire.Host/Aspire.Host.csproj" />
     </Folder>
-    <Folder Name="/Services/"/>
-    <Folder Name="/Services/Cart/"/>
+    <Folder Name="/Services/" />
+    <Folder Name="/Services/Cart/" />
     <Folder Name="/Services/Cart/src/">
-        <Project Path="Services/Cart/src/CartApi.Application/CartApi.Application.csproj"/>
-        <Project Path="Services/Cart/src/CartApi.Domain/CartApi.Domain.csproj"/>
-        <Project Path="Services/Cart/src/CartApi.Infrastructure/CartApi.Infrastructure.csproj"/>
-        <Project Path="Services/Cart/src/CartApi.Presentation/CartApi.Presentation.csproj"/>
+        <Project Path="Services/Cart/src/CartApi.Application/CartApi.Application.csproj" />
+        <Project Path="Services/Cart/src/CartApi.Domain/CartApi.Domain.csproj" />
+        <Project Path="Services/Cart/src/CartApi.Infrastructure/CartApi.Infrastructure.csproj" />
+        <Project Path="Services/Cart/src/CartApi.Presentation/CartApi.Presentation.csproj" />
     </Folder>
     <Folder Name="/Services/Cart/tests/">
-        <Project Path="Services/Cart/tests/CartApi.Application.Test/CartApi.Application.Test.csproj"/>
-        <Project Path="Services/Cart/tests/CartApi.Presentation.Test/CartApi.Presentation.Test.csproj"/>
+        <Project Path="Services/Cart/tests/CartApi.Application.Test/CartApi.Application.Test.csproj" />
+        <Project Path="Services/Cart/tests/CartApi.Presentation.Test/CartApi.Presentation.Test.csproj" />
     </Folder>
-    <Folder Name="/Services/Order/"/>
+    <Folder Name="/Services/Order/" />
     <Folder Name="/Services/Order/src/">
-        <Project Path="Services/Order/src/OrderApi.Application/OrderApi.Application.csproj"/>
-        <Project Path="Services/Order/src/OrderApi.Domain/OrderApi.Domain.csproj"/>
-        <Project Path="Services/Order/src/OrderApi.Infrastructure/OrderApi.Infrastructure.csproj"/>
-        <Project Path="Services/Order/src/OrderApi.Presentation/OrderApi.Presentation.csproj"/>
+        <Project Path="Services/Order/src/OrderApi.Application/OrderApi.Application.csproj" />
+        <Project Path="Services/Order/src/OrderApi.Domain/OrderApi.Domain.csproj" />
+        <Project Path="Services/Order/src/OrderApi.Infrastructure/OrderApi.Infrastructure.csproj" />
+        <Project Path="Services/Order/src/OrderApi.Presentation/OrderApi.Presentation.csproj" />
     </Folder>
-    <Folder Name="/Services/Product/"/>
+    <Folder Name="/Services/Product/" />
     <Folder Name="/Services/Product/src/">
-        <Project Path="Services/Product/src/ProductApi.Api/ProductApi.Api.csproj"/>
+        <Project Path="Services/Product/src/ProductApi.Api/ProductApi.Api.csproj" />
     </Folder>
     <Folder Name="/Services/Product/tests/">
-        <Project Path="Services/Product/tests/ProductApi.Api.Tests/ProductApi.Api.Tests.csproj"/>
+        <Project Path="Services/Product/tests/ProductApi.Api.Tests/ProductApi.Api.Tests.csproj" />
     </Folder>
-    <Folder Name="/Services/User/"/>
+    <Folder Name="/Services/User/" />
     <Folder Name="/Services/User/src/">
-        <Project Path="Services\User\src\UserApi.Application\UserApi.Application.csproj"/>
-        <Project Path="Services\User\src\UserApi.Domain\UserApi.Domain.csproj"/>
-        <Project Path="Services\User\src\UserApi.Infrastructure\UserApi.Infrastructure.csproj"/>
-        <Project Path="Services\User\src\UserApi.Presentation\UserApi.Presentation.csproj"/>
+        <Project Path="Services\User\src\UserApi.Application\UserApi.Application.csproj" />
+        <Project Path="Services\User\src\UserApi.Domain\UserApi.Domain.csproj" />
+        <Project Path="Services\User\src\UserApi.Infrastructure\UserApi.Infrastructure.csproj" />
+        <Project Path="Services\User\src\UserApi.Presentation\UserApi.Presentation.csproj" />
     </Folder>
     <Folder Name="/Services/User/tests/">
-        <Project Path="Services\User\tests\UserApi.Application.Tests\UserApi.Application.Tests.csproj"/>
-        <Project Path="Services\User\tests\UserApi.Presentation.Tests\UserApi.Presentation.Tests.csproj"/>
+        <Project Path="Services\User\tests\UserApi.Application.Tests\UserApi.Application.Tests.csproj" />
+        <Project Path="Services\User\tests\UserApi.Presentation.Tests\UserApi.Presentation.Tests.csproj" />
     </Folder>
     <Folder Name="/Website/">
-        <Project Path="Website/Website.Client/Website.Client.csproj"/>
-        <Project Path="Website/Website.Gateway/Website.Gateway.csproj"/>
+        <Project Path="Website/Website.Client/Website.Client.csproj" />
+        <Project Path="Website/Website.Gateway/Website.Gateway.csproj" />
     </Folder>
 </Solution>

@@ -2,29 +2,18 @@ using System.Text;
 using Azure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Ocelot.DependencyInjection;
 
 namespace Website.Gateway.Extensions;
 
 public static class GatewayExtensions
 {
-    public static WebApplicationBuilder AddGatewayConfiguration(this WebApplicationBuilder builder)
+    public static void AddGatewayConfiguration(this WebApplicationBuilder builder)
     {
-        builder.Configuration.AddJsonFile("ocelot.json", false, true);
         builder.Configuration.AddEnvironmentVariables();
-
-        var azureAd = builder.Configuration.GetSection("AzureAd");
-        var kvUrl = azureAd["KvUrl"];
-        if (string.IsNullOrWhiteSpace(kvUrl)) throw new InvalidOperationException("AzureAd:KvUrl is not configured.");
-
-        builder.Configuration.AddAzureKeyVault(new Uri(kvUrl), new DefaultAzureCredential());
-
-        return builder;
     }
 
-    public static IServiceCollection AddGatewayServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddGatewayServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddOcelot();
         services.AddOpenApi();
 
         var keyValue = configuration["Jwt:Key"];
@@ -50,27 +39,21 @@ public static class GatewayExtensions
                 {
                     OnMessageReceived = context =>
                     {
-                        if (string.IsNullOrWhiteSpace(context.Token))
-                        {
-                            var token = context.Request.Cookies["access_token"];
-                            if (!string.IsNullOrWhiteSpace(token)) context.Token = token;
-                        }
+                        if (!string.IsNullOrWhiteSpace(context.Token)) return Task.CompletedTask;
+                        var token = context.Request.Cookies["access_token"];
+                        if (!string.IsNullOrWhiteSpace(token)) context.Token = token;
 
                         return Task.CompletedTask;
                     }
                 };
             });
         services.AddAuthorization();
-
-        return services;
     }
 
-    public static WebApplication UseGatewayPipeline(this WebApplication app)
+    public static void UseGatewayPipeline(this WebApplication app)
     {
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
-
-        return app;
     }
 }

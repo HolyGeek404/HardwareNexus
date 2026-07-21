@@ -29,10 +29,6 @@ public static class GroupResourceExtensions
 
             var gateway = builder.AddProject<Website_Gateway>("website-gateway")
                 .WithParentRelationship(websiteSection.Resource);
-
-            builder.AddProject<Website_Client>("website-client")
-                .WaitFor(gateway)
-                .WithParentRelationship(websiteSection.Resource);
         }
 
         public void AddApiSection(InfrastructureResources infrastructure)
@@ -43,7 +39,7 @@ public static class GroupResourceExtensions
             //     .WaitFor(openbaoSeed)
             //     .WithParentRelationship(apiSection.Resource);
             //
-            builder.AddProject<ProductApi_Api>("ProductApi-Api")
+            builder.AddProject<ProductApi_Api>("Product-Api")
                 .WithEnvironment("OPENBAO_ADDR", builder.Configuration["OpenBao:Address"])
                 .WithEnvironment("OPENBAO_ENV_FILE_PATH",
                     Path.Combine(builder.AppHostDirectory, "Scripts", "OpenBao", ".env.local"))

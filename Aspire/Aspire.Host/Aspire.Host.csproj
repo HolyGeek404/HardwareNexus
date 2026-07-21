@@ -13,8 +13,7 @@
         <ProjectReference Include="..\..\Services\Order\src\OrderApi.Presentation\OrderApi.Presentation.csproj"/>
         <ProjectReference Include="..\..\Services\Product\src\ProductApi.Api\ProductApi.Api.csproj"/>
         <ProjectReference Include="..\..\Services\User\src\UserApi.Presentation\UserApi.Presentation.csproj"/>
-        <ProjectReference Include="..\..\Website\Website.Client\Website.Client.csproj"/>
-        <ProjectReference Include="..\..\Website\Website.Gateway\Website.Gateway.csproj"/>
+        <ProjectReference Include="..\..\Website\Website.Gateway\Website.Gateway.csproj" />
     </ItemGroup>
     <PropertyGroup>
         <AspNetCoreUrl>http://localhost:5242</AspNetCoreUrl> <!-- Adjust port as needed -->
