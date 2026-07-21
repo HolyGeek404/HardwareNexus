@@ -15,6 +15,10 @@
         <ProjectReference Include="..\..\Services\User\src\UserApi.Presentation\UserApi.Presentation.csproj"/>
         <ProjectReference Include="..\..\Website\Website.Gateway\Website.Gateway.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Aspire.Hosting.JavaScript" Version="13.4.6" />
+    </ItemGroup>
     <PropertyGroup>
         <AspNetCoreUrl>http://localhost:5242</AspNetCoreUrl> <!-- Adjust port as needed -->
     </PropertyGroup>

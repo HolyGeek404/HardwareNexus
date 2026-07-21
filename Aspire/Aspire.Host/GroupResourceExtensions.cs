@@ -29,6 +29,13 @@ public static class GroupResourceExtensions
 
             var gateway = builder.AddProject<Website_Gateway>("website-gateway")
                 .WithParentRelationship(websiteSection.Resource);
+            
+            builder.AddJavaScriptApp("website-client", "../../Website/Website.Client")
+                .WithRunScript("start")
+                .WithHttpEndpoint(env: "PORT")
+                .WithExternalHttpEndpoints()
+                .WaitFor(gateway)
+                .WithParentRelationship(websiteSection.Resource);
         }
 
         public void AddApiSection(InfrastructureResources infrastructure)
