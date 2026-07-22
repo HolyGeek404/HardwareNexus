@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {GoodStuffFunctionsService} from '../../../services/GoodStuffFunctionsService';
 import {Router, RouterLink} from '@angular/router';
@@ -12,6 +12,7 @@ import {UserSessionService} from '../../../services/user-session-service';
     RouterLink
   ],
   templateUrl: './sign-in.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './sign-in.css'
 })
 export class SignIn {

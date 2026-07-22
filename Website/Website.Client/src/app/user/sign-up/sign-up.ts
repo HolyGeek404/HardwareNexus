@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import {GoodStuffFunctionsService} from '../../../services/GoodStuffFunctionsService';
 import {Router, RouterLink} from '@angular/router';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
@@ -11,6 +11,7 @@ import {SignUpRequest} from '../../../models/user/SignUpRequest';
     RouterLink
   ],
   templateUrl: './sign-up.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './sign-up.css'
 })
 export class SignUp {

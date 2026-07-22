@@ -1,4 +1,4 @@
-import {Component, computed, input} from '@angular/core';
+import {Component, computed, input, ChangeDetectionStrategy} from '@angular/core';
 import {NgOptimizedImage} from '@angular/common';
 import {HttpClient} from '@angular/common/http';
 import {GoodStuffFunctionsService} from '../../../services/GoodStuffFunctionsService';
@@ -11,6 +11,7 @@ import {RouterLink} from '@angular/router';
     RouterLink
   ],
   templateUrl: './category-card.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './category-card.css'
 })
 export class CategoryCard {

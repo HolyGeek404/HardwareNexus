@@ -1,4 +1,4 @@
-import {Component, DestroyRef, OnInit, signal} from '@angular/core';
+import {Component, DestroyRef, OnInit, signal, ChangeDetectionStrategy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {ProductService} from '../../../services/product-service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -13,6 +13,7 @@ import {loadProduct} from '../../../services/product-helper';
     NgOptimizedImage
   ],
   templateUrl: './cpu.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './cpu.css',
 })
 export class Cpu implements OnInit {

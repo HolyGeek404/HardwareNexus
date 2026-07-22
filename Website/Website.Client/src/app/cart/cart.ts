@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import {NgOptimizedImage} from '@angular/common';
 import {UserSessionService} from '../../services/user-session-service';
 import {User} from '../../models/user/user';
@@ -17,6 +17,7 @@ interface CartItem {
   selector: 'app-cart',
   imports: [NgOptimizedImage, ReactiveFormsModule],
   templateUrl: './cart.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './cart.css'
 })
 export class Cart {

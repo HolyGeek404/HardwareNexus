@@ -1,10 +1,11 @@
-import {Component, input} from '@angular/core';
+import {Component, input, ChangeDetectionStrategy} from '@angular/core';
 import type {CoolerModel} from '../../../../models/product/CoolerModel';
 
 @Component({
   selector: 'app-cooler-spec-details',
   imports: [],
   templateUrl: './cooler-spec-details.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './cooler-spec-details.css'
 })
 export class CoolerSpecDetails {

@@ -1,4 +1,4 @@
-import {Component, signal} from '@angular/core';
+import {Component, signal, ChangeDetectionStrategy} from '@angular/core';
 import {UserSessionService} from '../../../services/user-session-service';
 import {User} from '../../../models/user/user';
 
@@ -6,6 +6,7 @@ import {User} from '../../../models/user/user';
   selector: 'app-dashboard',
   imports: [],
   templateUrl: './dashboard.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './dashboard.css'
 })
 export class Dashboard {

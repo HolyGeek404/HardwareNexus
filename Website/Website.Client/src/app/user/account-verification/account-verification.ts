@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import {GoodStuffFunctionsService} from '../../../services/GoodStuffFunctionsService';
 import {ActivatedRoute, Router} from '@angular/router';
 import type {AccountVerificationRequest} from '../../../models/user/AccountVerification';
@@ -6,6 +6,7 @@ import type {AccountVerificationRequest} from '../../../models/user/AccountVerif
 @Component({
   selector: 'app-account-verification',
   template: ``,
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true
 })
 export class AccountVerification {

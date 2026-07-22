@@ -1,4 +1,4 @@
-import { Component, effect, inject, input, output, signal } from '@angular/core';
+import { Component, effect, inject, input, output, signal, ChangeDetectionStrategy } from '@angular/core';
 import { GoodStuffFunctionsService } from '../../../services/GoodStuffFunctionsService';
 import { ProductTypes } from '../../../models/product/ProductTypes';
 import type { ProductFilters } from '../../../models/product/ProductFilters';
@@ -16,6 +16,7 @@ export interface ProductFilterSelection {
   selector: 'app-product-filter',
   standalone: true,
   templateUrl: './product-filter.component.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './product-filter.component.css'
 })
 export class ProductFilterComponent {

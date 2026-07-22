@@ -1,4 +1,4 @@
-import {Component, OnInit, signal} from '@angular/core';
+import {Component, OnInit, signal, ChangeDetectionStrategy} from '@angular/core';
 import {NgOptimizedImage} from '@angular/common';
 import {RouterLink} from '@angular/router';
 import {UserSessionService} from '../../services/user-session-service';
@@ -10,6 +10,7 @@ import {UserSessionService} from '../../services/user-session-service';
     RouterLink
   ],
   templateUrl: './nav.html',
+  changeDetection: ChangeDetectionStrategy.Eager,
   styleUrl: './nav.css'
 })
 export class Nav implements OnInit {
