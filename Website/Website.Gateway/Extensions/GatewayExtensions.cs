@@ -1,5 +1,4 @@
 using System.Text;
-using Azure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -55,5 +54,19 @@ public static class GatewayExtensions
         app.UseHttpsRedirection();
         app.UseAuthentication();
         app.UseAuthorization();
+    }
+
+    public static void AddWebsiteClientCors(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAngularDev", policy =>
+            {
+                policy.WithOrigins("http://localhost:8100")
+                    .AllowAnyHeader()
+                    .WithMethods("GET")
+                    .AllowCredentials();
+            });
+        });
     }
 }

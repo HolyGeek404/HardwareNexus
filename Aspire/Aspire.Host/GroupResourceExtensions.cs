@@ -32,7 +32,6 @@ public static class GroupResourceExtensions
             
             builder.AddJavaScriptApp("website-client", "../../Website/Website.Client")
                 .WithRunScript("start")
-                .WithHttpEndpoint(env: "PORT")
                 .WithExternalHttpEndpoints()
                 .WaitFor(gateway)
                 .WithParentRelationship(websiteSection.Resource);
