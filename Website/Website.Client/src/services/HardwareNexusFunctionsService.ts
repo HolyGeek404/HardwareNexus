@@ -1,16 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import {CpuModel} from '../models/product/CpuModel';
-import {GpuModel} from '../models/product/GpuModel';
 import {ProductTypes} from '../models/product/ProductTypes';
-import {CoolerModel} from '../models/product/CoolerModel';
-import {BaseProduct} from '../models/product/BaseProduct';
 import {SignUpRequest} from '../models/user/SignUpRequest';
 import {AccountVerificationRequest} from '../models/user/AccountVerification';
-import {User} from '../models/user/user';
 import {ProductFilters} from '../models/product/ProductFilters';
-import {AddCartCommand} from '../models/cart/AddCartCommand';
 import {CartItemResponse} from '../models/cart/CartItemResponse';
 
 @Injectable({ providedIn: 'root' })

@@ -66,13 +66,15 @@ public static class GroupResourceExtensions
         {
             var infraSection = builder.AddGroup("Infrastructure");
 
-            var openbao = builder.AddOpenBaoSection(infraSection);
-            var mongo = builder.AddMongoDbSection(infraSection);
+            var openbao = builder.AddOpenBao(infraSection);
+            var mongo = builder.AddMongoDb(infraSection);
+            var postgres = builder.AddPostgresSql(infraSection);
 
-            return new InfrastructureResources(mongo, openbao);
+            
+            return new InfrastructureResources(mongo, openbao, postgres);
         }
 
-        private IResourceBuilder<ExecutableResource> AddMongoDbSection(IResourceBuilder<GroupResource> infraSection)
+        private IResourceBuilder<ExecutableResource> AddMongoDb(IResourceBuilder<GroupResource> infraSection)
         {
             var mongoSection = builder.AddGroup("MongoDB")
                 .WithParentRelationship(infraSection.Resource);
@@ -103,8 +105,7 @@ public static class GroupResourceExtensions
 
             return mongoSeed;
         }
-
-        private IResourceBuilder<ExecutableResource> AddOpenBaoSection(IResourceBuilder<GroupResource> infraSection)
+        private IResourceBuilder<ExecutableResource> AddOpenBao(IResourceBuilder<GroupResource> infraSection)
         {
             var openbaoSection = builder.AddGroup("OpenBao")
                 .WithParentRelationship(infraSection.Resource);
@@ -134,6 +135,25 @@ public static class GroupResourceExtensions
 
             return openbaoSeed;
         }
+
+        private IResourceBuilder<PostgresServerResource> AddPostgresSql(IResourceBuilder<GroupResource> infraSection)
+        {
+            var postgresSection = builder.AddGroup("Postgres")
+                .WithParentRelationship(infraSection.Resource);
+
+            var postgres = builder.AddPostgres("postgres-sql-container")
+                .WithDataVolume()
+                .WithParentRelationship(postgresSection.Resource);
+
+            return postgres;
+        }
+        // private IResourceBuilder<ExecutableResource> AddKeyCloak(IResourceBuilder<GroupResource> infraSection)
+        // {
+        //     var keycloak = builder.AddKeycloak("keycloak")
+        //         .WithDataVolume()
+        //         .WithEnvironment("KEYCLOAK_ADMIN", "admin")
+        //         .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", "supersecret");
+        // }
     }
 }
 
@@ -141,4 +161,5 @@ public sealed class GroupResource(string name) : Resource(name);
 
 public record InfrastructureResources(
     IResourceBuilder<ExecutableResource> MongoSeed,
-    IResourceBuilder<ExecutableResource> OpenBaoSeed);
+    IResourceBuilder<ExecutableResource> OpenBaoSeed,
+    IResourceBuilder<PostgresServerResource> Postgres);

@@ -9,19 +9,21 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\Services\Cart\src\CartApi.Presentation\CartApi.Presentation.csproj"/>
-        <ProjectReference Include="..\..\Services\Order\src\OrderApi.Presentation\OrderApi.Presentation.csproj"/>
-        <ProjectReference Include="..\..\Services\Product\src\ProductApi.Api\ProductApi.Api.csproj"/>
-        <ProjectReference Include="..\..\Services\User\src\UserApi.Presentation\UserApi.Presentation.csproj"/>
+        <ProjectReference Include="..\..\Services\Cart\src\CartApi.Presentation\CartApi.Presentation.csproj" />
+        <ProjectReference Include="..\..\Services\Order\src\OrderApi.Presentation\OrderApi.Presentation.csproj" />
+        <ProjectReference Include="..\..\Services\Product\src\ProductApi.Api\ProductApi.Api.csproj" />
+        <ProjectReference Include="..\..\Services\User\src\UserApi.Presentation\UserApi.Presentation.csproj" />
         <ProjectReference Include="..\..\Website\Website.Gateway\Website.Gateway.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="Aspire.Hosting.JavaScript" Version="13.4.6" />
+      <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="13.4.6" />
+      <PackageReference Include="Codehard.Aspire.Hosting.Keycloak" Version="1.0.1" />
     </ItemGroup>
     <PropertyGroup>
         <AspNetCoreUrl>http://localhost:5242</AspNetCoreUrl> <!-- Adjust port as needed -->
     </PropertyGroup>
-    <Target Name="BeforeBuild" DependsOnTargets="BuildAngularApp"/>
+    <Target Name="BeforeBuild" DependsOnTargets="BuildAngularApp" />
 </Project>
         
