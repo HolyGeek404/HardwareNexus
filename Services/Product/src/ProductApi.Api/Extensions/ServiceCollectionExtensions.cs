@@ -43,10 +43,10 @@ public static class ServiceCollectionExtensions
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "GoodStuff Product API",
+                    Title = "HardwareNexus Product API",
                     Version = "v1",
                     Description =
-                        "Catalog and product data for GoodStuff commerce apps. " +
+                        "Catalog and product data for HardwareNexus commerce apps. " +
                         "All endpoints require a valid bearer token (OAuth2 auth code with PKCE). " +
                         "Use the configured scope to authenticate and explore product queries."
                 });

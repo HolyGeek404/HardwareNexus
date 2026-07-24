@@ -1,5 +1,5 @@
 import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
-import {GoodStuffFunctionsService} from '../../../services/GoodStuffFunctionsService';
+import {HardwareNexusFunctionsService} from '../../../services/HardwareNexusFunctionsService';
 import {Router, RouterLink} from '@angular/router';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {SignUpRequest} from '../../../models/user/SignUpRequest';
@@ -15,7 +15,7 @@ import {SignUpRequest} from '../../../models/user/SignUpRequest';
   styleUrl: './sign-up.css'
 })
 export class SignUp {
-  private functionsService = inject(GoodStuffFunctionsService);
+  private functionsService = inject(HardwareNexusFunctionsService);
 
   constructor(private router: Router) {
 

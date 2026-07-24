@@ -133,8 +133,8 @@ public class UserService(
         if (string.IsNullOrWhiteSpace(keyValue))
             throw new InvalidOperationException("JWT signing key is not configured.");
 
-        var issuer = configuration["Jwt:Issuer"] ?? "goodstuff-user-api";
-        var audience = configuration["Jwt:Audience"] ?? "goodstuff";
+        var issuer = configuration["Jwt:Issuer"] ?? "HardwareNexus-user-api";
+        var audience = configuration["Jwt:Audience"] ?? "HardwareNexus";
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyValue));
 
         var token = new JwtSecurityToken(

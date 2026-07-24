@@ -1,5 +1,5 @@
 import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
-import {GoodStuffFunctionsService} from '../../../services/GoodStuffFunctionsService';
+import {HardwareNexusFunctionsService} from '../../../services/HardwareNexusFunctionsService';
 import {ActivatedRoute, Router} from '@angular/router';
 import type {AccountVerificationRequest} from '../../../models/user/AccountVerification';
 
@@ -10,7 +10,7 @@ import type {AccountVerificationRequest} from '../../../models/user/AccountVerif
   standalone: true
 })
 export class AccountVerification {
-  private functionsService = inject(GoodStuffFunctionsService);
+  private functionsService = inject(HardwareNexusFunctionsService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 

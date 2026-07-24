@@ -10,5 +10,5 @@ import {RouterOutlet} from '@angular/router';
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('GoodStuffWebsite');
+  protected readonly title = signal('HardwareNexusWebsite');
 }

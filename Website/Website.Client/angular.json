@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "GoodStuffWebsite": {
+    "HardwareNexusWebsite": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -63,10 +63,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "GoodStuffWebsite:build:production"
+              "buildTarget": "HardwareNexusWebsite:build:production"
             },
             "development": {
-              "buildTarget": "GoodStuffWebsite:build:development"
+              "buildTarget": "HardwareNexusWebsite:build:development"
             }
           },
           "defaultConfiguration": "development"

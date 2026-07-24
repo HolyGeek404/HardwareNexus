@@ -1,5 +1,5 @@
 import { Component, effect, inject, input, output, signal, ChangeDetectionStrategy } from '@angular/core';
-import { GoodStuffFunctionsService } from '../../../services/GoodStuffFunctionsService';
+import { HardwareNexusFunctionsService } from '../../../services/HardwareNexusFunctionsService';
 import { ProductTypes } from '../../../models/product/ProductTypes';
 import type { ProductFilters } from '../../../models/product/ProductFilters';
 
@@ -20,7 +20,7 @@ export interface ProductFilterSelection {
   styleUrl: './product-filter.component.css'
 })
 export class ProductFilterComponent {
-  private functionsService = inject(GoodStuffFunctionsService);
+  private functionsService = inject(HardwareNexusFunctionsService);
 
   productType = input.required<ProductTypes>();
   filtersApplied = output<ProductFilterSelection>();

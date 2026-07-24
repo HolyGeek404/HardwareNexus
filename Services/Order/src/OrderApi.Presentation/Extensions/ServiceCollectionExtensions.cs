@@ -27,7 +27,7 @@ public static class ServiceCollectionExtensions
 
         services.AddSwaggerGen(x =>
         {
-            x.SwaggerDoc("v1", new OpenApiInfo { Title = "GoodStuff Order Api Swagger", Version = "v1" });
+            x.SwaggerDoc("v1", new OpenApiInfo { Title = "HardwareNexus Order Api Swagger", Version = "v1" });
             x.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
             {
                 Description = "OAuth 2.0 Auth Code with PKCE",

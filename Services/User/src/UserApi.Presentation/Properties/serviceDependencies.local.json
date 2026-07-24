@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "identityapp1": {
-      "connectionInfo": "App registration: GoodStuff_WebApi, Tenant: HolyCloud (wiktorzmegmail.onmicrosoft.com - Microsoft Entra ID)",
+      "connectionInfo": "App registration: HardwareNexus_WebApi, Tenant: HolyCloud (wiktorzmegmail.onmicrosoft.com - Microsoft Entra ID)",
       "type": "identityapp.default"
     }
   }

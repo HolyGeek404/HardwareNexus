@@ -10,7 +10,7 @@ using UserApi.Infrastructure.DataAccess.Context;
 
 namespace UserApi.Infrastructure.Migrations
 {
-    [DbContext(typeof(GoodStuffContext))]
+    [DbContext(typeof(HardwareNexusContext))]
     partial class PGPContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

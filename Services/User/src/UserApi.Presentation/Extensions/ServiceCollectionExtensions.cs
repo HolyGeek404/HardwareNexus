@@ -62,9 +62,9 @@ public static class ServiceCollectionExtensions
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyValue)),
                         ValidateIssuer = true,
-                        ValidIssuer = configuration["Jwt:Issuer"] ?? "goodstuff-user-api",
+                        ValidIssuer = configuration["Jwt:Issuer"] ?? "HardwareNexus-user-api",
                         ValidateAudience = true,
-                        ValidAudience = configuration["Jwt:Audience"] ?? "goodstuff",
+                        ValidAudience = configuration["Jwt:Audience"] ?? "HardwareNexus",
                         ValidateLifetime = true,
                         ClockSkew = TimeSpan.FromMinutes(1)
                     };
@@ -89,7 +89,7 @@ public static class ServiceCollectionExtensions
             if (string.IsNullOrWhiteSpace(connectionString))
                 throw new InvalidOperationException("USER_API_CONNECTION_STRING is not configured.");
 
-            services.AddDbContext<GoodStuffContext>(options =>
+            services.AddDbContext<HardwareNexusContext>(options =>
                 options.UseSqlServer(connectionString));
         }
 
@@ -102,16 +102,16 @@ public static class ServiceCollectionExtensions
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
-                    Title = "GoodStuff User API",
+                    Title = "HardwareNexus User API",
                     Version = "v1",
                     Description =
-                        "User management API for GoodStuff. Provides signup, signin, account verification, and profile endpoints. Use the OAuth2 flow in this UI to authorize requests.",
-                    TermsOfService = new Uri("https://goodstuff.example.com/terms"),
+                        "User management API for HardwareNexus. Provides signup, signin, account verification, and profile endpoints. Use the OAuth2 flow in this UI to authorize requests.",
+                    TermsOfService = new Uri("https://HardwareNexus.example.com/terms"),
                     Contact = new OpenApiContact
                     {
-                        Name = "GoodStuff API Support",
-                        Email = "support@goodstuff.example.com",
-                        Url = new Uri("https://goodstuff.example.com/support")
+                        Name = "HardwareNexus API Support",
+                        Email = "support@HardwareNexus.example.com",
+                        Url = new Uri("https://HardwareNexus.example.com/support")
                     }
                 });
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";

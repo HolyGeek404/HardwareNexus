@@ -1,7 +1,7 @@
 import {Component, computed, input, ChangeDetectionStrategy} from '@angular/core';
 import {NgOptimizedImage} from '@angular/common';
 import {HttpClient} from '@angular/common/http';
-import {GoodStuffFunctionsService} from '../../../services/GoodStuffFunctionsService';
+import {HardwareNexusFunctionsService} from '../../../services/HardwareNexusFunctionsService';
 import {RouterLink} from '@angular/router';
 
 @Component({

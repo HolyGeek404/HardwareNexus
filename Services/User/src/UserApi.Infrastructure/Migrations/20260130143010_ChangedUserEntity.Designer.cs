@@ -11,7 +11,7 @@ using UserApi.Infrastructure.DataAccess.Context;
 
 namespace UserApi.Infrastructure.Migrations
 {
-    [DbContext(typeof(GoodStuffContext))]
+    [DbContext(typeof(HardwareNexusContext))]
     [Migration("20260130143010_ChangedUserEntity")]
     partial class ChangedUserEntity
     {

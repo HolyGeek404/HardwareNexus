@@ -1,6 +1,6 @@
 import {Component, inject, ChangeDetectionStrategy} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {GoodStuffFunctionsService} from '../../../services/GoodStuffFunctionsService';
+import {HardwareNexusFunctionsService} from '../../../services/HardwareNexusFunctionsService';
 import {Router, RouterLink} from '@angular/router';
 import {UserSessionService} from '../../../services/user-session-service';
 

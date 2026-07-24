@@ -18,7 +18,7 @@ builder.Services.AddHttpClient();
 var app = builder.Build();
 using (var scope = app.Services.CreateScope())
 {
-    var db = scope.ServiceProvider.GetRequiredService<GoodStuffContext>();
+    var db = scope.ServiceProvider.GetRequiredService<HardwareNexusContext>();
     db.Database.Migrate();
 }
 
@@ -26,7 +26,7 @@ app.UseSwagger(c => { c.RouteTemplate = "swagger/{documentName}/swagger.json"; }
 
 app.UseSwaggerUI(c =>
 {
-    c.SwaggerEndpoint("v1/swagger.json", "GoodStuff User Api v1");
+    c.SwaggerEndpoint("v1/swagger.json", "HardwareNexus User Api v1");
     c.OAuthClientId(builder.Configuration["Swagger:SwaggerClientId"]);
     c.OAuthUsePkce();
     c.OAuthScopeSeparator(" ");

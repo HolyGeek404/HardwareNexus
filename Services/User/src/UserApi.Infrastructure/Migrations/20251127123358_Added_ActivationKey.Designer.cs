@@ -11,7 +11,7 @@ using UserApi.Infrastructure.DataAccess.Context;
 
 namespace UserApi.Infrastructure.Migrations
 {
-    [DbContext(typeof(GoodStuffContext))]
+    [DbContext(typeof(HardwareNexusContext))]
     [Migration("20251127123358_Added_ActivationKey")]
     partial class Added_ActivationKey
     {

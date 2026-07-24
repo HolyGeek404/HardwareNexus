@@ -8,7 +8,7 @@ using UserApi.Infrastructure.DataAccess.Context;
 
 namespace UserApi.Infrastructure.DataAccess;
 
-public class UserRepository(GoodStuffContext context, ILogger<UserRepository> logger) : IUserRepository
+public class UserRepository(HardwareNexusContext context, ILogger<UserRepository> logger) : IUserRepository
 {
     public async Task SignUpAsync(User user)
     {

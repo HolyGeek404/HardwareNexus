@@ -14,7 +14,7 @@ import {AddCartCommand} from '../models/cart/AddCartCommand';
 import {CartItemResponse} from '../models/cart/CartItemResponse';
 
 @Injectable({ providedIn: 'root' })
-export class GoodStuffFunctionsService {
+export class HardwareNexusFunctionsService {
   private baseUrl = '/api/gateway/';
   private authOptions = { withCredentials: true, responseType: 'text' as const };
 

@@ -11,7 +11,7 @@ using UserApi.Infrastructure.DataAccess.Context;
 
 namespace UserApi.Infrastructure.Migrations
 {
-    [DbContext(typeof(GoodStuffContext))]
+    [DbContext(typeof(HardwareNexusContext))]
     [Migration("20251127123003_Added_IsActive")]
     partial class Added_IsActive
     {
