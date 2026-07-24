@@ -408,7 +408,8 @@ public class ProductServiceUnitTest
             Width = "120 mm",
             Height = "60 mm",
             GpuProcessorName = "Navi",
-            Manufacturer = "Sapphire"
+            Manufacturer = "Sapphire",
+            ProductId = null
         };
     }
 
@@ -441,7 +442,8 @@ public class ProductServiceUnitTest
             Lithography = "4 nm",
             Tdp = "120W",
             AdditionalInfo = "Test",
-            IncludedCooler = "No"
+            IncludedCooler = "No",
+            ProductId = null
         };
     }
 
@@ -475,7 +477,8 @@ public class ProductServiceUnitTest
             Width = "150 mm",
             Depth = "161 mm",
             Weight = "1320 g",
-            Manufacture = "Noctua"
+            Manufacture = "Noctua",
+            ProductId = null
         };
     }
 }

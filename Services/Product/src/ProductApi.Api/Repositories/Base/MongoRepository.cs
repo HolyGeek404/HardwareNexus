@@ -21,7 +21,7 @@ public class MongoRepository<TProduct>(IMongoDatabase database) : IReadRepositor
     {
         var filter = Builders<TProduct>.Filter.And(
             Builders<TProduct>.Filter.Eq(p => p.Category, category),
-            Builders<TProduct>.Filter.Eq(p => p.ProductGuid, id));
+            Builders<TProduct>.Filter.Eq(p => p.ProductId, id));
 
         return await Collection.Find(filter).FirstOrDefaultAsync();
     }

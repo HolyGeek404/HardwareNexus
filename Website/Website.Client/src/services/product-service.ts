@@ -12,7 +12,6 @@ export class ProductService {
 
   public getProductsBaseInfo(type: string): Observable<BaseProduct[]>
   {
-    console.log(environment.api_gateway_url+"/product/"+type);
     return this.http.get<BaseProduct[]>(environment.api_gateway_url+"/product/"+type)
   }
 

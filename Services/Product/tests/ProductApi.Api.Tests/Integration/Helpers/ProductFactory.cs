@@ -34,7 +34,8 @@ public static class ProductFactory
             Length = "TEST",
             Width = "TEST",
             Height = "TEST",
-            ProducerCode = "TEST"
+            ProducerCode = "TEST",
+            ProductId = null
         });
     }
 
@@ -68,6 +69,7 @@ public static class ProductFactory
             ProductImg = "TEST",
             ProductGuid = "11111111-2222-3333-4444-555555555555",
             ProducerCode = "TEST",
+            ProductId = null,
         });
     }
 
@@ -101,7 +103,8 @@ public static class ProductFactory
             Price = "TEST",
             Manufacture = "TEST",
             Category = ProductCategories.Cooler,
-            ProductGuid = "11111111-2222-3333-4444-555555555555"
+            ProductGuid = "11111111-2222-3333-4444-555555555555",
+            ProductId = null
         });
     }
 }

@@ -10,6 +10,7 @@ public class BaseProduct
     public required string Price { get; set; }
     public string? ProductImg { get; set; }
     public virtual required string Category { get; init; }
+    public required string ProductId { get; set; }
 
     [BsonElement("id")]
     public required string ProductGuid { get; set; }
