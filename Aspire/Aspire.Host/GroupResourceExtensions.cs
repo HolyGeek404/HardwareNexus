@@ -1,3 +1,4 @@
+using Keycloak.Hosting;
 using Projects;
 
 namespace Aspire.Host;
@@ -41,17 +42,9 @@ public static class GroupResourceExtensions
         {
             var apiSection = builder.AddGroup("Api");
 
-            // builder.AddProject<Projects.UserApi_Presentation>("User-Api")
-            //     .WaitFor(openbaoSeed)
-            //     .WithParentRelationship(apiSection.Resource);
-            //
-            builder.AddProject<ProductApi_Api>("Product-Api")
-                .WithEnvironment("OPENBAO_ADDR", builder.Configuration["OpenBao:Address"])
-                .WithEnvironment("OPENBAO_ENV_FILE_PATH",
-                    Path.Combine(builder.AppHostDirectory, "Scripts", "OpenBao", ".env.local"))
-                .WaitFor(infrastructure.OpenBaoSeed)
-                .WaitFor(infrastructure.MongoSeed)
-                .WithParentRelationship(apiSection.Resource);
+            builder.AddUserApi(infrastructure, apiSection);
+            builder.AddProductApi(infrastructure, apiSection);
+            
             //
             // builder.AddProject<Projects.CartApi_Presentation>("Cart-Api")
             //     .WaitFor(openbaoSeed)
@@ -62,6 +55,23 @@ public static class GroupResourceExtensions
             //     .WithParentRelationship(apiSection.Resource);
         }
 
+        private void AddUserApi(InfrastructureResources infrastructure, IResourceBuilder<GroupResource> apiSection)
+        {
+            builder.AddProject<UserApi_Presentation>("User-Api")
+                .WaitFor(infrastructure.Keycloak)
+                .WithParentRelationship(apiSection.Resource);
+        }
+        private void AddProductApi(InfrastructureResources infrastructure, IResourceBuilder<GroupResource> apiSection)
+        {
+            builder.AddProject<ProductApi_Api>("Product-Api")
+                .WithEnvironment("OPENBAO_ADDR", builder.Configuration["OpenBao:Address"])
+                .WithEnvironment("OPENBAO_ENV_FILE_PATH",
+                    Path.Combine(builder.AppHostDirectory, "Scripts", "OpenBao", ".env.local"))
+                .WaitFor(infrastructure.OpenBaoSeed)
+                .WaitFor(infrastructure.MongoSeed)
+                .WithParentRelationship(apiSection.Resource);
+        }
+
         public InfrastructureResources AddInfrastructureSection()
         {
             var infraSection = builder.AddGroup("Infrastructure");
@@ -69,9 +79,9 @@ public static class GroupResourceExtensions
             var openbao = builder.AddOpenBao(infraSection);
             var mongo = builder.AddMongoDb(infraSection);
             var postgres = builder.AddPostgresSql(infraSection);
-
+            var keycloak = builder.AddKeyCloak(infraSection,postgres);
             
-            return new InfrastructureResources(mongo, openbao, postgres);
+            return new InfrastructureResources(mongo, openbao, postgres,keycloak);
         }
 
         private IResourceBuilder<ExecutableResource> AddMongoDb(IResourceBuilder<GroupResource> infraSection)
@@ -135,25 +145,33 @@ public static class GroupResourceExtensions
 
             return openbaoSeed;
         }
-
         private IResourceBuilder<PostgresServerResource> AddPostgresSql(IResourceBuilder<GroupResource> infraSection)
         {
             var postgresSection = builder.AddGroup("Postgres")
                 .WithParentRelationship(infraSection.Resource);
-
-            var postgres = builder.AddPostgres("postgres-sql-container")
+            
+            var userName = builder.AddParameter("userName", builder.Configuration["PostgresSql:admin"]!);
+            var password = builder.AddParameter("password", builder.Configuration["PostgresSql:password"]!, secret:true);
+            var postgres = builder.AddPostgres("postgres-sql-container", userName, password)
                 .WithDataVolume()
+                .WithHostPort(5432)
                 .WithParentRelationship(postgresSection.Resource);
-
+            postgres.AddDatabase(builder.Configuration["PostgresSql:database"]!);
             return postgres;
         }
-        // private IResourceBuilder<ExecutableResource> AddKeyCloak(IResourceBuilder<GroupResource> infraSection)
-        // {
-        //     var keycloak = builder.AddKeycloak("keycloak")
-        //         .WithDataVolume()
-        //         .WithEnvironment("KEYCLOAK_ADMIN", "admin")
-        //         .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", "supersecret");
-        // }
+        private IResourceBuilder<KeycloakResource> AddKeyCloak(IResourceBuilder<GroupResource> infraSection, IResourceBuilder<PostgresServerResource> postgres)
+        {
+            var keycloakSection = builder.AddGroup("Keycloak")
+                .WithParentRelationship(infraSection.Resource);
+
+            var keycloak = builder.AddKeycloak("keycloak-container", postgres)
+                .WithEnvironment("KEYCLOAK_ADMIN", builder.Configuration["KeyCloak:admin"])
+                .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", builder.Configuration["OpenBao:password"])
+                .WithEndpoint(port: 8080, targetPort: 8080, name: "http")
+                .WithParentRelationship(keycloakSection.Resource);
+
+            return keycloak;
+        }
     }
 }
 
@@ -162,4 +180,5 @@ public sealed class GroupResource(string name) : Resource(name);
 public record InfrastructureResources(
     IResourceBuilder<ExecutableResource> MongoSeed,
     IResourceBuilder<ExecutableResource> OpenBaoSeed,
-    IResourceBuilder<PostgresServerResource> Postgres);
+    IResourceBuilder<PostgresServerResource> Postgres,
+    IResourceBuilder<KeycloakResource> Keycloak);

@@ -41,63 +41,15 @@ public static class ServiceCollectionExtensions
             services.AddFluentValidationAutoValidation();
         }
 
-        public void AddAzureConfig(IConfigurationManager configuration)
-        {
-            var azureAd = configuration.GetSection("AzureAd");
-            configuration.AddAzureKeyVault(new Uri(azureAd["KvUrl"]!), new DefaultAzureCredential());
-
-            services.AddAuthentication(options =>
-                {
-                    options.DefaultAuthenticateScheme = "CookieJwt";
-                    options.DefaultChallengeScheme = "CookieJwt";
-                })
-                .AddJwtBearer("CookieJwt", options =>
-                {
-                    var keyValue = configuration["Jwt:Key"];
-                    if (string.IsNullOrWhiteSpace(keyValue))
-                        throw new InvalidOperationException("JWT signing key is not configured.");
-
-                    options.TokenValidationParameters = new TokenValidationParameters
-                    {
-                        ValidateIssuerSigningKey = true,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyValue)),
-                        ValidateIssuer = true,
-                        ValidIssuer = configuration["Jwt:Issuer"] ?? "HardwareNexus-user-api",
-                        ValidateAudience = true,
-                        ValidAudience = configuration["Jwt:Audience"] ?? "HardwareNexus",
-                        ValidateLifetime = true,
-                        ClockSkew = TimeSpan.FromMinutes(1)
-                    };
-                    options.Events = new JwtBearerEvents
-                    {
-                        OnMessageReceived = context =>
-                        {
-                            var token = context.Request.Cookies["access_token"];
-                            if (!string.IsNullOrWhiteSpace(token))
-                                context.Token = token;
-
-                            return Task.CompletedTask;
-                        }
-                    };
-                })
-                .AddMicrosoftIdentityWebApi(azureAd, "AzureAd");
-        }
-
         public void AddDataBaseConfig(IConfigurationManager configuration)
         {
-            var connectionString = Environment.GetEnvironmentVariable("USER_API_CONNECTION_STRING");
-            if (string.IsNullOrWhiteSpace(connectionString))
-                throw new InvalidOperationException("USER_API_CONNECTION_STRING is not configured.");
+            var connectionString = ServiceCollectionExtensionsHelper.GetPostgresSqlConnStr(configuration);
 
-            services.AddDbContext<HardwareNexusContext>(options =>
-                options.UseSqlServer(connectionString));
+            services.AddDbContext<HardwareNexusContext>(options => options.UseNpgsql(connectionString));
         }
 
-        public void AddSwaggerConfig(IConfiguration configuration)
+        public void AddSwaggerConfig()
         {
-            var tenantId = configuration.GetSection("AzureAd")["TenantId"];
-            var swaggerScope = configuration.GetSection("Swagger")["Scope"];
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -117,32 +69,6 @@ public static class ServiceCollectionExtensions
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath, true);
-                c.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
-                {
-                    Description = "OAuth2.0 Auth Code with PKCE",
-                    Name = "oauth2",
-                    Type = SecuritySchemeType.OAuth2,
-                    Flows = new OpenApiOAuthFlows
-                    {
-                        AuthorizationCode = new OpenApiOAuthFlow
-                        {
-                            AuthorizationUrl =
-                                new Uri($"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/authorize"),
-                            TokenUrl = new Uri($"https://login.microsoftonline.com/{tenantId}/oauth2/v2.0/token"),
-                            Scopes = new Dictionary<string, string>
-                            {
-                                { $"{swaggerScope}", "Swagger - Local testing" }
-                            }
-                        }
-                    }
-                });
-                c.AddSecurityRequirement(document => new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecuritySchemeReference("oauth2", document),
-                        [swaggerScope]
-                    }
-                });
             });
         }
     }
