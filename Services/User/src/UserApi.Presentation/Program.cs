@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using UserApi.Application.Services.Interfaces;
 using UserApi.Infrastructure.DataAccess.Context;
 using UserApi.Presentation.Extensions;
 
@@ -14,8 +15,25 @@ builder.Services.AddMemoryCache();
 builder.Logging.AddLoggingConfig();
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
+
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<HardwareNexusContext>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>()
+        .CreateLogger("DatabaseSeeder");
+
+    logger.LogInformation("Applying pending database migrations...");
+    db.Database.Migrate();
+    logger.LogInformation("Migrations applied successfully.");
+
+    if (app.Environment.IsDevelopment())
+    {
+        var passwordService = scope.ServiceProvider.GetRequiredService<IPasswordService>();
+        await DatabaseSeeder.SeedAsync(db, passwordService, logger);
+    }
+}
 app.UseSwagger(c => { c.RouteTemplate = "swagger/{documentName}/swagger.json"; });
 
 app.UseSwaggerUI(c =>

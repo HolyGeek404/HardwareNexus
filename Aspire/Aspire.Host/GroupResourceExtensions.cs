@@ -1,3 +1,4 @@
+using Aspire.Host.Options;
 using Keycloak.Hosting;
 using Projects;
 
@@ -38,12 +39,12 @@ public static class GroupResourceExtensions
                 .WithParentRelationship(websiteSection.Resource);
         }
 
-        public void AddApiSection(InfrastructureResources infrastructure)
+        public void AddApiSection(InfrastructureResources infrastructure, InfrastructureOptions options)
         {
             var apiSection = builder.AddGroup("Api");
 
             builder.AddUserApi(infrastructure, apiSection);
-            builder.AddProductApi(infrastructure, apiSection);
+            builder.AddProductApi(infrastructure, apiSection, options);
             
             //
             // builder.AddProject<Projects.CartApi_Presentation>("Cart-Api")
@@ -61,10 +62,13 @@ public static class GroupResourceExtensions
                 .WaitFor(infrastructure.Keycloak)
                 .WithParentRelationship(apiSection.Resource);
         }
-        private void AddProductApi(InfrastructureResources infrastructure, IResourceBuilder<GroupResource> apiSection)
+        private void AddProductApi(
+            InfrastructureResources infrastructure,
+            IResourceBuilder<GroupResource> apiSection,
+            InfrastructureOptions options)
         {
             builder.AddProject<ProductApi_Api>("Product-Api")
-                .WithEnvironment("OPENBAO_ADDR", builder.Configuration["OpenBao:Address"])
+                .WithEnvironment("OPENBAO_ADDR", options.OpenBao.Address)
                 .WithEnvironment("OPENBAO_ENV_FILE_PATH",
                     Path.Combine(builder.AppHostDirectory, "Scripts", "OpenBao", ".env.local"))
                 .WaitFor(infrastructure.OpenBaoSeed)
@@ -72,19 +76,21 @@ public static class GroupResourceExtensions
                 .WithParentRelationship(apiSection.Resource);
         }
 
-        public InfrastructureResources AddInfrastructureSection()
+        public InfrastructureResources AddInfrastructureSection(InfrastructureOptions options)
         {
             var infraSection = builder.AddGroup("Infrastructure");
 
-            var openbao = builder.AddOpenBao(infraSection);
-            var mongo = builder.AddMongoDb(infraSection);
-            var postgres = builder.AddPostgresSql(infraSection);
-            var keycloak = builder.AddKeyCloak(infraSection,postgres);
+            var openbao = builder.AddOpenBao(infraSection, options.OpenBao);
+            var mongo = builder.AddMongoDb(infraSection, options.Mongo);
+            var postgres = builder.AddPostgresSql(infraSection, options.PostgresSql);
+            var keycloak = builder.AddKeyCloak(infraSection, postgres, options.KeyCloak);
             
             return new InfrastructureResources(mongo, openbao, postgres,keycloak);
         }
 
-        private IResourceBuilder<ExecutableResource> AddMongoDb(IResourceBuilder<GroupResource> infraSection)
+        private IResourceBuilder<ExecutableResource> AddMongoDb(
+            IResourceBuilder<GroupResource> infraSection,
+            MongoDbOptions options)
         {
             var mongoSection = builder.AddGroup("MongoDB")
                 .WithParentRelationship(infraSection.Resource);
@@ -97,8 +103,8 @@ public static class GroupResourceExtensions
                 .WithBindMount(
                     "./Scripts/MongoDB/products.json",
                     "/scripts/products.json")
-                .WithEnvironment("MONGO_INITDB_ROOT_USERNAME", builder.Configuration["Mongo:admin"])
-                .WithEnvironment("MONGO_INITDB_ROOT_PASSWORD", builder.Configuration["Mongo:secret"])
+                .WithEnvironment("MONGO_INITDB_ROOT_USERNAME", options.Login)
+                .WithEnvironment("MONGO_INITDB_ROOT_PASSWORD", options.Password)
                 .WithParentRelationship(mongoSection.Resource)
                 .WithEndpoint(
                     27017,
@@ -115,7 +121,9 @@ public static class GroupResourceExtensions
 
             return mongoSeed;
         }
-        private IResourceBuilder<ExecutableResource> AddOpenBao(IResourceBuilder<GroupResource> infraSection)
+        private IResourceBuilder<ExecutableResource> AddOpenBao(
+            IResourceBuilder<GroupResource> infraSection,
+            OpenBaoOptions options)
         {
             var openbaoSection = builder.AddGroup("OpenBao")
                 .WithParentRelationship(infraSection.Resource);
@@ -129,7 +137,7 @@ public static class GroupResourceExtensions
                     "/output")
                 .WithContainerName("openbao-dev")
                 .WithParentRelationship(openbaoSection.Resource)
-                .WithEnvironment("BAO_DEV_ROOT_TOKEN_ID", builder.Configuration["OpenBao:DevRooToken"])
+                .WithEnvironment("BAO_DEV_ROOT_TOKEN_ID", options.DevRootToken)
                 .WithEndpoint(
                     8200,
                     8200,
@@ -145,28 +153,33 @@ public static class GroupResourceExtensions
 
             return openbaoSeed;
         }
-        private IResourceBuilder<PostgresServerResource> AddPostgresSql(IResourceBuilder<GroupResource> infraSection)
+        private IResourceBuilder<PostgresServerResource> AddPostgresSql(
+            IResourceBuilder<GroupResource> infraSection,
+            PostgresSqlOptions options)
         {
             var postgresSection = builder.AddGroup("Postgres")
                 .WithParentRelationship(infraSection.Resource);
             
-            var userName = builder.AddParameter("userName", builder.Configuration["PostgresSql:admin"]!);
-            var password = builder.AddParameter("password", builder.Configuration["PostgresSql:password"]!, secret:true);
+            var userName = builder.AddParameter("userName", options.Login);
+            var password = builder.AddParameter("password", options.Password, secret:true);
             var postgres = builder.AddPostgres("postgres-sql-container", userName, password)
                 .WithDataVolume()
                 .WithHostPort(5432)
                 .WithParentRelationship(postgresSection.Resource);
-            postgres.AddDatabase(builder.Configuration["PostgresSql:database"]!);
+            postgres.AddDatabase(options.DatabaseName);
             return postgres;
         }
-        private IResourceBuilder<KeycloakResource> AddKeyCloak(IResourceBuilder<GroupResource> infraSection, IResourceBuilder<PostgresServerResource> postgres)
+        private IResourceBuilder<KeycloakResource> AddKeyCloak(
+            IResourceBuilder<GroupResource> infraSection,
+            IResourceBuilder<PostgresServerResource> postgres,
+            KeyCloakOptions options)
         {
             var keycloakSection = builder.AddGroup("Keycloak")
                 .WithParentRelationship(infraSection.Resource);
 
             var keycloak = builder.AddKeycloak("keycloak-container", postgres)
-                .WithEnvironment("KEYCLOAK_ADMIN", builder.Configuration["KeyCloak:admin"])
-                .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", builder.Configuration["OpenBao:password"])
+                .WithEnvironment("KEYCLOAK_ADMIN", options.Login)
+                .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", options.Password)
                 .WithEndpoint(port: 8080, targetPort: 8080, name: "http")
                 .WithParentRelationship(keycloakSection.Resource);
 

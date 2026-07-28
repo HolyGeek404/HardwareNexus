@@ -70,7 +70,7 @@ bao kv put secret/hardwarenexus/api/product \
   mongodb-connstr="mongodb://dev_user:xdt60FPNOnxcDVdug75H3b9HFboWrNNBXSAiBgSS1rU=@localhost:27017/hardwarenexus-products?authSource=admin"
 
 bao kv put secret/hardwarenexus/api/user \
-  postgres-connstr="Host=localhost;Port=5432;Database=hardwarenexus-core;Username=postgres;Password=supersecret"
+  postgres-connstr="Host=localhost;Port=5432;Database=HardwareNexus;Username=dev_user;Password=XDJmD2ef/C5eW6cteabSWqGWgfeXv5q+MaCB5HLZH0U="
 
 bao kv put secret/hardwarenexus/api/cart \
   redis-connstr="localhost:6379"
