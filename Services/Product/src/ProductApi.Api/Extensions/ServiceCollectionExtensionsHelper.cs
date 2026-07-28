@@ -8,12 +8,9 @@ public static class ServiceCollectionExtensionsHelper
 {
     public static async Task<string> GetMongoDbConnStr(WebApplicationBuilder  builder)
     {
-        var envFilePath = builder.Configuration["OPENBAO_ENV_FILE_PATH"]!;
-        var lines = await File.ReadAllLinesAsync(envFilePath);
-
-        var secretId = lines.First(l => l.StartsWith("OPENBAO_PRODUCT_SECRET_ID=")).Split('=', 2)[1];
-        var openBaoAddr = builder.Configuration["OPENBAO_ADDR"] ?? throw new InvalidOperationException("OPENBAO_ADDR not set");
-        var roleId = lines.First(l => l.StartsWith("OPENBAO_PRODUCT_ROLE_ID=")).Split('=', 2)[1];
+        var secretId = GetRequiredConfiguration(builder, "OPENBAO_PRODUCT_SECRET_ID");
+        var openBaoAddr = GetRequiredConfiguration(builder, "OPENBAO_ADDR");
+        var roleId = GetRequiredConfiguration(builder, "OPENBAO_PRODUCT_ROLE_ID");
         
         IAuthMethodInfo authMethod = new AppRoleAuthMethodInfo(roleId, secretId);
         var vaultClient = new VaultClient(new VaultClientSettings(openBaoAddr, authMethod));
@@ -28,4 +25,8 @@ public static class ServiceCollectionExtensionsHelper
         
         return mongoConnectionString;
     }
+
+    private static string GetRequiredConfiguration(WebApplicationBuilder builder, string key)
+        => builder.Configuration[key]
+           ?? throw new InvalidOperationException($"Required configuration value '{key}' is not set.");
 }

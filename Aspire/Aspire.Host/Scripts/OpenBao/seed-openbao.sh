@@ -1,6 +1,26 @@
+#!/bin/sh
+set -eu
+
+: "${OPENBAO_USER_ROLE_ID:?OPENBAO_USER_ROLE_ID is required}"
+: "${OPENBAO_USER_SECRET_ID:?OPENBAO_USER_SECRET_ID is required}"
+: "${OPENBAO_PRODUCT_ROLE_ID:?OPENBAO_PRODUCT_ROLE_ID is required}"
+: "${OPENBAO_PRODUCT_SECRET_ID:?OPENBAO_PRODUCT_SECRET_ID is required}"
+: "${OPENBAO_CART_ROLE_ID:?OPENBAO_CART_ROLE_ID is required}"
+: "${OPENBAO_CART_SECRET_ID:?OPENBAO_CART_SECRET_ID is required}"
 
 export BAO_ADDR=http://127.0.0.1:8200
-export BAO_TOKEN="9AsG2eYd7TseuOj3FVUo7yXWifSTuh2ZMJx67egZjsU="
+export BAO_TOKEN="${BAO_DEV_ROOT_TOKEN_ID:?BAO_DEV_ROOT_TOKEN_ID is required}"
+
+ensure_secret_id() {
+  role_name="$1"
+  secret_id="$2"
+
+  if bao write "auth/approle/role/${role_name}/secret-id/lookup" secret_id="$secret_id" >/dev/null 2>&1; then
+    return
+  fi
+
+  bao write "auth/approle/role/${role_name}/custom-secret-id" secret_id="$secret_id" >/dev/null
+}
 
 until bao status >/dev/null 2>&1; do
   sleep 1
@@ -42,7 +62,8 @@ bao write auth/approle/role/hardwarenexus-user \
   token_max_ttl=4h
 
 bao write auth/approle/role/hardwarenexus-user/role-id \
-  role_id="hardwarenexus-user-role-id"
+  role_id="$OPENBAO_USER_ROLE_ID"
+ensure_secret_id hardwarenexus-user "$OPENBAO_USER_SECRET_ID"
 # ---
 
 # --- Product
@@ -52,17 +73,19 @@ bao write auth/approle/role/hardwarenexus-product \
   token_max_ttl=4h
 
 bao write auth/approle/role/hardwarenexus-product/role-id \
-  role_id="hardwarenexus-product-role-id"
+  role_id="$OPENBAO_PRODUCT_ROLE_ID"
+ensure_secret_id hardwarenexus-product "$OPENBAO_PRODUCT_SECRET_ID"
 # ---
 
-# --- User
+# --- Cart
 bao write auth/approle/role/hardwarenexus-cart \
   token_policies="hardwarenexus-cart-policy" \
   token_ttl=1h \
   token_max_ttl=4h
 
 bao write auth/approle/role/hardwarenexus-cart/role-id \
-  role_id="hardwarenexus-cart-role-id"
+  role_id="$OPENBAO_CART_ROLE_ID"
+ensure_secret_id hardwarenexus-cart "$OPENBAO_CART_SECRET_ID"
 # ---
 
 # --- Secrets (dev only) ---
@@ -75,26 +98,4 @@ bao kv put secret/hardwarenexus/api/user \
 bao kv put secret/hardwarenexus/api/cart \
   redis-connstr="localhost:6379"
 
-# --- Generate fresh SecretIDs and write them to .env.local for Aspire to read ---
-USER_SECRET_ID=$(bao write -f -field=secret_id auth/approle/role/hardwarenexus-user/secret-id)
-PRODUCT_SECRET_ID=$(bao write -f -field=secret_id auth/approle/role/hardwarenexus-product/secret-id)
-CART_SECRET_ID=$(bao write -f -field=secret_id auth/approle/role/hardwarenexus-cart/secret-id)
-
-cat > /output/.env.local <<EOF
-OPENBAO_USER_ROLE_ID=hardwarenexus-user-role-id
-OPENBAO_USER_SECRET_ID=${USER_SECRET_ID}
-
-OPENBAO_PRODUCT_ROLE_ID=hardwarenexus-product-role-id
-OPENBAO_PRODUCT_SECRET_ID=${PRODUCT_SECRET_ID}
-
-OPENBAO_CART_ROLE_ID=hardwarenexus-cart-role-id
-OPENBAO_CART_SECRET_ID=${CART_SECRET_ID}
-EOF
-
-if [ ! -f /output/.env.local ]; then
-  echo "ERROR: failed to write .env.local — check that /out is mounted correctly"
-  exit 1
-fi
-
-echo ""
-echo "Seed complete. Wrote fresh SecretIDs to .env.local"
+echo "OpenBao seed complete. AppRole credentials were registered."

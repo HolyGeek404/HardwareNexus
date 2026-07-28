@@ -11,4 +11,14 @@ public sealed class OpenBaoOptions
     // Preserve the existing development-secret key while exposing a correctly named property in code.
     [ConfigurationKeyName("DevRooToken")]
     public required string DevRootToken { get; set; }
+
+    public required AppRoleOptions User { get; set; }
+    public required AppRoleOptions Product { get; set; }
+    public required AppRoleOptions Cart { get; set; }
+}
+
+public sealed class AppRoleOptions
+{
+    public required string RoleId { get; set; }
+    public required string SecretId { get; set; }
 }

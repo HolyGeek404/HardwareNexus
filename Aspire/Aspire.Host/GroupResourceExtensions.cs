@@ -69,8 +69,8 @@ public static class GroupResourceExtensions
         {
             builder.AddProject<ProductApi_Api>("Product-Api")
                 .WithEnvironment("OPENBAO_ADDR", options.OpenBao.Address)
-                .WithEnvironment("OPENBAO_ENV_FILE_PATH",
-                    Path.Combine(builder.AppHostDirectory, "Scripts", "OpenBao", ".env.local"))
+                .WithEnvironment("OPENBAO_PRODUCT_ROLE_ID", options.OpenBao.Product.RoleId)
+                .WithEnvironment("OPENBAO_PRODUCT_SECRET_ID", options.OpenBao.Product.SecretId)
                 .WaitFor(infrastructure.OpenBaoSeed)
                 .WaitFor(infrastructure.MongoSeed)
                 .WithParentRelationship(apiSection.Resource);
@@ -132,9 +132,6 @@ public static class GroupResourceExtensions
                 .WithBindMount(
                     "./Scripts/OpenBao/seed-openbao.sh",
                     "/scripts/seed-openbao.sh")
-                .WithBindMount(
-                    "./Scripts/OpenBao",
-                    "/output")
                 .WithContainerName("openbao-dev")
                 .WithParentRelationship(openbaoSection.Resource)
                 .WithEnvironment("BAO_DEV_ROOT_TOKEN_ID", options.DevRootToken)
@@ -148,6 +145,12 @@ public static class GroupResourceExtensions
                     "/bin/sh",
                     ".",
                     "Scripts/OpenBao/start-seed-openbao.sh")
+                .WithEnvironment("OPENBAO_USER_ROLE_ID", options.User.RoleId)
+                .WithEnvironment("OPENBAO_USER_SECRET_ID", options.User.SecretId)
+                .WithEnvironment("OPENBAO_PRODUCT_ROLE_ID", options.Product.RoleId)
+                .WithEnvironment("OPENBAO_PRODUCT_SECRET_ID", options.Product.SecretId)
+                .WithEnvironment("OPENBAO_CART_ROLE_ID", options.Cart.RoleId)
+                .WithEnvironment("OPENBAO_CART_SECRET_ID", options.Cart.SecretId)
                 .WaitFor(openbaoContainer)
                 .WithParentRelationship(openbaoSection.Resource);
 

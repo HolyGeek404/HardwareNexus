@@ -1,4 +1,18 @@
 #!/bin/sh
-set -e
+set -eu
 
-docker exec openbao-dev sh /scripts/seed-openbao.sh
+: "${OPENBAO_USER_ROLE_ID:?OPENBAO_USER_ROLE_ID is required}"
+: "${OPENBAO_USER_SECRET_ID:?OPENBAO_USER_SECRET_ID is required}"
+: "${OPENBAO_PRODUCT_ROLE_ID:?OPENBAO_PRODUCT_ROLE_ID is required}"
+: "${OPENBAO_PRODUCT_SECRET_ID:?OPENBAO_PRODUCT_SECRET_ID is required}"
+: "${OPENBAO_CART_ROLE_ID:?OPENBAO_CART_ROLE_ID is required}"
+: "${OPENBAO_CART_SECRET_ID:?OPENBAO_CART_SECRET_ID is required}"
+
+docker exec \
+  -e OPENBAO_USER_ROLE_ID \
+  -e OPENBAO_USER_SECRET_ID \
+  -e OPENBAO_PRODUCT_ROLE_ID \
+  -e OPENBAO_PRODUCT_SECRET_ID \
+  -e OPENBAO_CART_ROLE_ID \
+  -e OPENBAO_CART_SECRET_ID \
+  openbao-dev sh /scripts/seed-openbao.sh
