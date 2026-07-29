@@ -1,40 +1,40 @@
-import { Routes } from '@angular/router';
-import {ProductTypes} from '../models/product/ProductTypes';
+import {Routes} from '@angular/router';
+import {ProductTypesEnum} from './business/products/enums/product-types.enum';
 
 export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./home/home').then(m => m.Home)
+      import('./shared/components/home/component/home.component').then(m => m.HomeComponent)
   },
   {
     path: 'products/:category',
     loadComponent: () =>
-      import('./products/product-card/product-card').then(m => m.ProductCard)
+      import('./business/products/components/product-details/component/product-details.component').then(m => m.ProductDetailsComponent)
   },
   {
-    path: `products/${ProductTypes.CPU}/:id`,
+    path: `products/${ProductTypesEnum.CPU}/:id`,
     loadComponent: () =>
-      import('./products/cpu/cpu').then(m => m.Cpu)
+      import('./business/products/components/cpu/component/cpu.component').then(m => m.CpuComponent)
   },
   {
-    path: `products/${ProductTypes.GPU}/:id`,
+    path: `products/${ProductTypesEnum.GPU}/:id`,
     loadComponent: () =>
-      import('./products/gpu/gpu').then(m => m.Gpu)
+      import('./business/products/components/gpu/component/gpu.component').then(m => m.GpuComponent)
   },
   {
     path: 'products/COOLER/:id',
     loadComponent: () =>
-      import('./products/cooler/cooler').then(m => m.Cooler)
+      import('./business/products/components/cooler/component/cooler.component').then(m => m.CoolerComponent)
   },
   {
     path: 'user/sign-in',
     loadComponent: () =>
-      import('./user/sign-in/sign-in').then(m => m.SignIn)
+      import('./business/user/components/sign-in/component/sign-in.component').then(m => m.SignInComponent)
   },
   {
     path: 'user/dashboard',
     loadComponent: () =>
-      import('./user/dashboard/dashboard').then(m => m.Dashboard)
+      import('./business/user/components/dashboard/component/dashboard.component').then(m => m.DashboardComponent)
   }
 ];

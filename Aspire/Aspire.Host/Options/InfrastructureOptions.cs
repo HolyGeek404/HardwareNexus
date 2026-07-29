@@ -40,8 +40,8 @@ public sealed class InfrastructureOptions
         Require(options.OpenBao.User.SecretId, "OpenBao:User:SecretId", missing);
         Require(options.OpenBao.Product.RoleId, "OpenBao:Product:RoleId", missing);
         Require(options.OpenBao.Product.SecretId, "OpenBao:Product:SecretId", missing);
-        Require(options.OpenBao.Cart.RoleId, "OpenBao:Cart:RoleId", missing);
-        Require(options.OpenBao.Cart.SecretId, "OpenBao:Cart:SecretId", missing);
+        Require(options.OpenBao.Cart.RoleId, "OpenBao:CartComponent:RoleId", missing);
+        Require(options.OpenBao.Cart.SecretId, "OpenBao:CartComponent:SecretId", missing);
         Require(options.PostgresSql.DatabaseName, "PostgresSql:database", missing);
         Require(options.PostgresSql.Login, "PostgresSql:admin", missing);
         Require(options.PostgresSql.Password, "PostgresSql:password", missing);

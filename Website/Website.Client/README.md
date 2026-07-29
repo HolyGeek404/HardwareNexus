@@ -17,10 +17,10 @@ Once the server is running, open your browser and navigate to `http://localhost:
 Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
 
 ```bash
-ng generate component component-name
+ng generate components components-name
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+For a complete list of available schematics (such as `component`, `directives`, or `pipes`), run:
 
 ```bash
 ng generate --help

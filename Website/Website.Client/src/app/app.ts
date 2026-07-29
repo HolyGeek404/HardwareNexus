@@ -1,4 +1,4 @@
-import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
+import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
 import {Nav} from './nav/nav';
 import {RouterOutlet} from '@angular/router';
 

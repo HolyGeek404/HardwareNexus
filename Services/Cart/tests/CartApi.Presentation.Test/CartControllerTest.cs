@@ -24,16 +24,16 @@ public class CartControllerTest(WebApplicationFactory<Program> factory) : IClass
     public async Task AddCart_InsertCartToCache_ShouldReturnOk()
     {
         // Act
-        var response = await _client.PostAsJsonAsync("/Cart", _addCartCommand);
+        var response = await _client.PostAsJsonAsync("/CartComponent", _addCartCommand);
         response.EnsureSuccessStatusCode();
     }
 
     [Fact]
     public async Task GetCart_WhenCartHasItems_ShouldReturnItems()
     {
-        await _client.PostAsJsonAsync("/Cart", _addCartCommand);
+        await _client.PostAsJsonAsync("/CartComponent", _addCartCommand);
 
-        var response = await _client.GetAsync($"/Cart?userId={_addCartCommand.UserId}");
+        var response = await _client.GetAsync($"/CartComponent?userId={_addCartCommand.UserId}");
 
         response.EnsureSuccessStatusCode();
         var content = await response.Content.ReadAsStringAsync();
@@ -52,16 +52,16 @@ public class CartControllerTest(WebApplicationFactory<Program> factory) : IClass
     public async Task RemoveItem_WhenItemExists_ShouldReturnOkAndRemoveFromCart()
     {
         // Arrange
-        await _client.PostAsJsonAsync("/Cart", _addCartCommand);
+        await _client.PostAsJsonAsync("/CartComponent", _addCartCommand);
 
         // Act
         var removeResponse =
-            await _client.DeleteAsync($"/Cart?userId={_addCartCommand.UserId}&productId={_addCartCommand.ProductId}");
+            await _client.DeleteAsync($"/CartComponent?userId={_addCartCommand.UserId}&productId={_addCartCommand.ProductId}");
 
         // Assert
         removeResponse.EnsureSuccessStatusCode();
 
-        var getResponse = await _client.GetAsync($"/Cart?userId={_addCartCommand.UserId}");
+        var getResponse = await _client.GetAsync($"/CartComponent?userId={_addCartCommand.UserId}");
         getResponse.EnsureSuccessStatusCode();
 
         var content = await getResponse.Content.ReadAsStringAsync();
