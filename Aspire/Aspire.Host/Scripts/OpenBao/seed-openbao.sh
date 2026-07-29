@@ -1,5 +1,7 @@
 #!/bin/sh
 set -eu
+max_attempts=10
+attempt=0
 
 : "${OPENBAO_USER_ROLE_ID:?OPENBAO_USER_ROLE_ID is required}"
 : "${OPENBAO_USER_SECRET_ID:?OPENBAO_USER_SECRET_ID is required}"
@@ -11,19 +13,15 @@ set -eu
 export BAO_ADDR=http://127.0.0.1:8200
 export BAO_TOKEN="${BAO_DEV_ROOT_TOKEN_ID:?BAO_DEV_ROOT_TOKEN_ID is required}"
 
-ensure_secret_id() {
-  role_name="$1"
-  secret_id="$2"
-
-  if bao write "auth/approle/role/${role_name}/secret-id/lookup" secret_id="$secret_id" >/dev/null 2>&1; then
-    return
-  fi
-
-  bao write "auth/approle/role/${role_name}/custom-secret-id" secret_id="$secret_id" >/dev/null
-}
-
 until bao status >/dev/null 2>&1; do
-  sleep 1
+    attempt=$((attempt + 1))
+  
+    if [ "$attempt" -ge "$max_attempts" ]; then
+      echo "OpenBao did not become ready within ${max_attempts} seconds." >&2
+      exit 1
+    fi
+  
+    sleep 1
 done
 
 echo "OpenBao is up."
@@ -32,8 +30,9 @@ bao status
 
 
 # --- Enable AppRole auth (ignore error if already enabled) ---
-bao auth enable approle 2>/dev/null || echo "approle already enabled"
-
+if ! bao auth list -format=json | grep -q '"approle/"'; then
+  bao auth enable approle
+fi
 # --- Policies ---
 bao policy write hardwarenexus-user-policy - <<EOF
 path "secret/data/hardwarenexus/api/user" {
@@ -63,7 +62,9 @@ bao write auth/approle/role/hardwarenexus-user \
 
 bao write auth/approle/role/hardwarenexus-user/role-id \
   role_id="$OPENBAO_USER_ROLE_ID"
-ensure_secret_id hardwarenexus-user "$OPENBAO_USER_SECRET_ID"
+  
+bao write auth/approle/role/hardwarenexus-user/custom-secret-id \
+  secret_id="$OPENBAO_USER_SECRET_ID"
 # ---
 
 # --- Product
@@ -74,7 +75,9 @@ bao write auth/approle/role/hardwarenexus-product \
 
 bao write auth/approle/role/hardwarenexus-product/role-id \
   role_id="$OPENBAO_PRODUCT_ROLE_ID"
-ensure_secret_id hardwarenexus-product "$OPENBAO_PRODUCT_SECRET_ID"
+  
+bao write auth/approle/role/hardwarenexus-product/custom-secret-id \
+  secret_id="$OPENBAO_PRODUCT_SECRET_ID"
 # ---
 
 # --- Cart
@@ -85,7 +88,9 @@ bao write auth/approle/role/hardwarenexus-cart \
 
 bao write auth/approle/role/hardwarenexus-cart/role-id \
   role_id="$OPENBAO_CART_ROLE_ID"
-ensure_secret_id hardwarenexus-cart "$OPENBAO_CART_SECRET_ID"
+  
+bao write auth/approle/role/hardwarenexus-cart/custom-secret-id \
+  secret_id="$OPENBAO_CART_SECRET_ID"
 # ---
 
 # --- Secrets (dev only) ---
