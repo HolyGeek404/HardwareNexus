@@ -78,7 +78,7 @@ bao write auth/approle/role/hardwarenexus-product/custom-secret-id \
   secret_id="$OPENBAO_PRODUCT_SECRET_ID"
 # ---
 
-# --- CartComponent
+# --- Cart
 bao write auth/approle/role/hardwarenexus-cart \
   token_policies="hardwarenexus-cart-policy" \
   token_ttl=1h \
