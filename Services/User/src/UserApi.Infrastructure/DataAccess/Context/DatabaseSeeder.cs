@@ -32,7 +32,7 @@ public static class DatabaseSeeder
                 Name.Create("Admin"),
                 Name.Create("User"),
                 Email.Create("admin@hardwarenexus.com"),
-                Password.Create(passwordService.HashPassword("admin")));
+                Password.Create(passwordService.HashPassword("Wiktor1@34")));
 
             adminUser.Activate();
 

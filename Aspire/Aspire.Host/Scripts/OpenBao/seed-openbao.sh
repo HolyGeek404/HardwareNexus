@@ -52,8 +52,6 @@ path "secret/data/hardwarenexus/api/cart" {
 }
 EOF
 
-# --- Roles, with pinned RoleIDs so they stay stable across every reset ---
-
 # --- User
 bao write auth/approle/role/hardwarenexus-user \
   token_policies="hardwarenexus-user-policy" \

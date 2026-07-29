@@ -43,23 +43,20 @@ public static class GroupResourceExtensions
         {
             var apiSection = builder.AddGroup("Api");
 
-            builder.AddUserApi(infrastructure, apiSection);
+            builder.AddUserApi(infrastructure, apiSection,options);
             builder.AddProductApi(infrastructure, apiSection, options);
-            
-            //
-            // builder.AddProject<Projects.CartApi_Presentation>("Cart-Api")
-            //     .WaitFor(openbaoSeed)
-            //     .WithParentRelationship(apiSection.Resource);
-            //
-            // builder.AddProject<Projects.OrderApi_Presentation>("Order-Api")
-            //     .WaitFor(openbaoSeed)
-            //     .WithParentRelationship(apiSection.Resource);
         }
 
-        private void AddUserApi(InfrastructureResources infrastructure, IResourceBuilder<GroupResource> apiSection)
+        private void AddUserApi(InfrastructureResources infrastructure,
+            IResourceBuilder<GroupResource> apiSection,
+            InfrastructureOptions options)
         {
             builder.AddProject<UserApi_Presentation>("User-Api")
-                .WaitFor(infrastructure.Keycloak)
+                .WithEnvironment("OPENBAO_ADDR", options.OpenBao.Address)
+                .WithEnvironment("OPENBAO_USER_ROLE_ID", options.OpenBao.User.RoleId)
+                .WithEnvironment("OPENBAO_USER_SECRET_ID", options.OpenBao.User.SecretId)
+                .WaitFor(infrastructure.OpenBaoSeed)
+                .WaitFor(infrastructure.MongoSeed)
                 .WithParentRelationship(apiSection.Resource);
         }
         private void AddProductApi(

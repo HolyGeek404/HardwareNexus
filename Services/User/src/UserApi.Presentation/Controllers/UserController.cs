@@ -152,8 +152,7 @@ public class UserController(IMediator mediator, ILogger<UserController> logger) 
     /// <response code="500">An unexpected error occurred.</response>
     [HttpPost]
     [Route("accountverification")]
-    public async Task<IActionResult> AccountVerification(
-        [FromBody] AccountVerificationCommand accountVerificationCommand)
+    public async Task<IActionResult> AccountVerification([FromBody] AccountVerificationCommand accountVerificationCommand)
     {
         try
         {
