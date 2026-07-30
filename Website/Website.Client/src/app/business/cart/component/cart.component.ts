@@ -1,8 +1,8 @@
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {NgOptimizedImage} from '@angular/common';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {HardwareNexusFunctionsService} from "../../../shared/services/HardwareNexusFunctionsService";
-import {UserModel} from "../../../shared/models/user.model";
+import {BaseHttpService} from "../../../shared/services/base-http.service";
+import {UserModel} from "../../../shared/models/models";
 import {CartItemResponse} from "../models/CartItemResponse";
 
 interface CartItem {
@@ -20,7 +20,7 @@ interface CartItem {
   styleUrl: './cart.css'
 })
 export class CartComponent {
-  private functionsService = inject(HardwareNexusFunctionsService);
+  private functionsService = inject(BaseHttpService);
   user: UserModel | null = null
   orderState: 'idle' | 'success' | 'error' = 'idle';
 

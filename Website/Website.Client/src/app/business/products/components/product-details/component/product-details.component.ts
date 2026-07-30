@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal} from '@angular/core';
 import {NgOptimizedImage} from '@angular/common';
 import {ActivatedRoute, RouterLink} from '@angular/router';
-import {ProductService} from '../../../../user/services/product.service';
+import {ProductService} from '../../../services/product.service';
 import {BaseProductModel} from '../../../models/base-product.model';
 import {CpuDetailsComponent} from '../../cpu/component/cpu-details/cpu-details.component';
 import {GpuDetailsComponent} from '../../gpu/component/gpu-details/gpu-details.component';

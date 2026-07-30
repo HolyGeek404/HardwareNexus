@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
-import {SessionService} from '../../../services/session.service';
+import {SessionService} from '../../../../../shared/services/session.service';
 
 @Component({
   selector: 'app-sign-in',

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
-import {HardwareNexusFunctionsService} from '../../../shared/services/HardwareNexusFunctionsService';
+import {BaseHttpService} from '../../../shared/services/base-http.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import type {AccountVerificationRequest} from '../models/account-verification.model';
 
@@ -10,7 +10,7 @@ import type {AccountVerificationRequest} from '../models/account-verification.mo
   standalone: true
 })
 export class AccountVerificationService {
-  private functionsService = inject(HardwareNexusFunctionsService);
+  private functionsService = inject(BaseHttpService);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
 

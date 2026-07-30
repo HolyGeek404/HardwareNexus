@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, effect, inject, input, output, signal} from '@angular/core';
-import {HardwareNexusFunctionsService} from '../../../../../shared/services/HardwareNexusFunctionsService';
+import {BaseHttpService} from '../../../../../shared/services/base-http.service';
 import {ProductTypesEnum} from '../../../enums/product-types.enum';
 import type {FilterModel} from '../models/filter.model';
 
@@ -20,7 +20,7 @@ export interface ProductFilterSelection {
   styleUrl: './product-filter.components.css'
 })
 export class FilterComponent {
-  private functionsService = inject(HardwareNexusFunctionsService);
+  private functionsService = inject(BaseHttpService);
 
   productType = input.required<ProductTypesEnum>();
   filtersApplied = output<ProductFilterSelection>();

@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, signal} from '@angular/core';
-import {SessionService} from '../../../services/session.service';
-import {UserModel} from '../../../../../shared/models/user.model';
+import {SessionService} from '../../../../../shared/services/session.service';
+import {UserModel} from '../../../../../shared/models/models';
 
 @Component({
   selector: 'app-dashboard',

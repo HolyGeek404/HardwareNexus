@@ -1,11 +1,11 @@
 import {ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {ProductService} from '../../../../user/services/product.service';
+import {ProductService} from '../../../services/product.service';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {CoolerModel} from '../models/cooler.model';
 import {ProductTypesEnum} from '../../../enums/product-types.enum';
 import {NgOptimizedImage} from '@angular/common';
-import {loadProduct} from '../../../../user/functions/product.functions';
+import {loadProduct} from '../../../functions/product.functions';
 
 @Component({
   selector: 'app-cooler',

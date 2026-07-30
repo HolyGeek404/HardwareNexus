@@ -1,5 +1,5 @@
 import {map, Observable, switchMap} from 'rxjs';
-import {ProductTypesEnum} from '../../products/enums/product-types.enum';
+import {ProductTypesEnum} from '../enums/product-types.enum';
 import {ActivatedRoute} from '@angular/router';
 import {ProductService} from '../services/product.service';
 

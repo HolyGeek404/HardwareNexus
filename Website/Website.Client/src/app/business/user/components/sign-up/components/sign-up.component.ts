@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
-import {HardwareNexusFunctionsService} from '../../../../../shared/services/HardwareNexusFunctionsService';
+import {BaseHttpService} from '../../../../../shared/services/base-http.service';
 import {Router, RouterLink} from '@angular/router';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {RequestsModel} from '../models/requests.model';
@@ -15,7 +15,7 @@ import {RequestsModel} from '../models/requests.model';
   styleUrl: './sign-up.component.css'
 })
 export class SignUpComponent {
-  private functionsService = inject(HardwareNexusFunctionsService);
+  private functionsService = inject(BaseHttpService);
 
   constructor(private router: Router) {
 

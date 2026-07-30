@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, OnInit, signal} from '@angular/core';
 import {NgOptimizedImage} from '@angular/common';
 import {RouterLink} from '@angular/router';
-import {UserSessionService} from '../../services/user-session-service';
+import {SessionService} from "../../../services/session.service";
 
 @Component({
   selector: 'app-nav',
@@ -16,11 +16,11 @@ import {UserSessionService} from '../../services/user-session-service';
 export class NavComponent implements OnInit {
   isLoggedIn = signal<boolean>(false);
 
-  constructor(private userSessionService: UserSessionService) {
+  constructor(private userSessionService: SessionService) {
   }
 
   ngOnInit() {
-    const result = this.userSessionService.checkSession().subscribe(session => {
+    this.userSessionService.checkSession().subscribe(session => {
       this.isLoggedIn.set(session);
     });
   }
