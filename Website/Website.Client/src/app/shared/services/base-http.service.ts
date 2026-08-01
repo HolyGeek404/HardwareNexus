@@ -1,17 +1,16 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpParams} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {ProductTypes} from '../models/enums';
 import {RequestsModel} from '../../business/user/components/sign-up/models/requests.model';
 import {AccountVerificationRequest} from '../../business/user/models/account-verification.model';
 import {FilterModel} from '../../business/products/components/filter/models/filter.model';
 import {CartItemResponse} from "../../business/cart/models/CartItemResponse";
-import {ApiGetArs, BaseGetRequest} from "../models/models";
-import {toSignal} from "@angular/core/rxjs-interop";
+import {environment} from "../../../environments/environment";
 
 @Injectable({providedIn: 'root'})
 export class BaseHttpService {
-    private baseUrl = '/api/gateway';
+    private baseUrl = environment.api_gateway_url;
     private authOptions = {withCredentials: true, responseType: 'text' as const};
 
     constructor(private http: HttpClient) {
@@ -36,20 +35,7 @@ export class BaseHttpService {
         });
     }
 
-    protected get<TResponse>(domain: string, args: ApiGetArs[]): TResponse | undefined {
-        const request = this.buildGetRequest(domain, args);
-        const response = toSignal<TResponse>(this.http.get<TResponse>(request.domain, {params: request.params}))
-        return response();
-    }
-
-    private buildGetRequest(domain: string, args: ApiGetArs[]): BaseGetRequest {
-        let params = new HttpParams();
-        for (let arg of args) {
-            params.set(arg.property, arg.value);
-        }
-        return {
-            domain: `${this.baseUrl}/${domain}`,
-            params: params,
-        }
+    get<TResponse>(url: string): Observable<TResponse> {
+        return this.http.get<TResponse>(`${this.baseUrl}/${url}`);
     }
 }

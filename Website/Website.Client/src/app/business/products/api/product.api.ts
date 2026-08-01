@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BaseProductModel} from '../models/base-product.model';
 import {BaseHttpService} from "../../../shared/services/base-http.service";
-import {ApiGetArs} from "../../../shared/models/models";
+import {Observable} from "rxjs";
 
 @Injectable({
     providedIn: 'root',
@@ -9,21 +9,11 @@ import {ApiGetArs} from "../../../shared/models/models";
 export class ProductApi extends BaseHttpService {
     private readonly domain = "product";
 
-    public getProducts(category: string): BaseProductModel[] | undefined {
-        const args: ApiGetArs[] = [{
-            property: "type",
-            value: category
-        }];
-        return this.get<BaseProductModel[]>(this.domain, args)
+    public getProducts(category: string): Observable<BaseProductModel[]> {
+        return this.get<BaseProductModel[]>(`${this.domain}/${category}`);
     }
 
-    public getProduct<TProduct>(category: string, id: string): TProduct | undefined {
-        const args: ApiGetArs[] = [{
-            property: "type",
-            value: category
-        }, {property: "id", value: id}];
-
-        return this.get<TProduct>(this.domain, args)
-
+    public getProduct<TProduct>(category: string, id: string): Observable<TProduct> {
+        return this.get<TProduct>(`${this.domain}/${category}/${id}`);
     }
 }

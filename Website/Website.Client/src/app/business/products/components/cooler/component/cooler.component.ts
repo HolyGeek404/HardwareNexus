@@ -25,8 +25,10 @@ export class CoolerComponent implements OnInit {
     ngOnInit() {
         const id = toSignal(this.route.paramMap.pipe(map(params => params.get('id'))));
         if (id()) {
-            const product = this.api.getProduct<CoolerModel>(this.category, id()!);
-            this.product.set(product);
+            const product = toSignal(this.api.getProduct<CoolerModel>(this.category, id()!));
+            if (product()) {
+                this.product.set(product());
+            }
         }
     }
 }
