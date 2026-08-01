@@ -18,10 +18,9 @@ import {ProductTypes} from "../../../../../shared/models/enums";
 })
 export class GpuComponent implements OnInit {
     readonly category = ProductTypes.GPU;
+    protected product = signal<GpuModel | undefined>(undefined)
     private api = inject(ProductApi);
     private route = inject(ActivatedRoute);
-    private product = signal<GpuModel | undefined>(undefined)
-
 
     ngOnInit() {
         const id = toSignal(this.route.paramMap.pipe(map(params => params.get('id'))));

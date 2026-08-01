@@ -18,10 +18,9 @@ import {CoolerModel} from "../models/cooler.model";
 })
 export class CoolerComponent implements OnInit {
     readonly category = ProductTypes.COOLER;
+    protected product = signal<CoolerModel | undefined>(undefined)
     private api = inject(ProductApi);
     private route = inject(ActivatedRoute);
-    private product = signal<CoolerModel | undefined>(undefined)
-
 
     ngOnInit() {
         const id = toSignal(this.route.paramMap.pipe(map(params => params.get('id'))));

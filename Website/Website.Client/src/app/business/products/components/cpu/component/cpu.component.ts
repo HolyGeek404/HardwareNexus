@@ -18,10 +18,9 @@ import {map} from "rxjs";
 })
 export class CpuComponent implements OnInit {
     readonly category = ProductTypes.CPU;
+    protected product = signal<CpuModel | undefined>(undefined)
     private api = inject(ProductApi);
     private route = inject(ActivatedRoute);
-    private product = signal<CpuModel | undefined>(undefined)
-
 
     ngOnInit() {
         const id = toSignal(this.route.paramMap.pipe(map(params => params.get('id'))));
