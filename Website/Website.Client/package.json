@@ -32,6 +32,8 @@
     "@azure/msal-browser": "^4.26.0",
     "@fortawesome/angular-fontawesome": "^5.1.0",
     "@fortawesome/free-solid-svg-icons": "^7.0.0",
+    "@ngrx/signals": "^21.1.1",
+    "@ngrx/store": "^21.1.1",
     "bootstrap": "^5.3.8",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
