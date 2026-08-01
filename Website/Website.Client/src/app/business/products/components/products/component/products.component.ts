@@ -21,9 +21,7 @@ import {ProductApi} from "../../../api/product.api";
 export class ProductsComponent {
     route = inject(ActivatedRoute);
     api = inject(ProductApi);
-    category = toSignal(this.route.paramMap.pipe(
-        map(params => params.get('category'))), {initialValue: null}
-    );
+    category = toSignal(this.route.paramMap.pipe(map(params => params.get('category'))), {initialValue: null});
 
     products = toSignal(toObservable(this.category).pipe(
             filter((category): category is string => category !== null),
