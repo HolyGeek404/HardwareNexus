@@ -1,33 +1,33 @@
-import {ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {ProductService} from '../../../services/product.service';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {ProductTypesEnum} from '../../../enums/product-types.enum';
+import {ChangeDetectionStrategy, Component, inject, OnInit, signal} from '@angular/core';
 import {NgOptimizedImage} from '@angular/common';
 import {GpuModel} from '../models/gpu.model';
-import {loadProduct} from '../../../functions/product.functions';
+import {ProductApi} from "../../../api/product.api";
+import {map} from "rxjs";
+import {ActivatedRoute} from "@angular/router";
+import {toSignal} from "@angular/core/rxjs-interop";
+import {ProductTypes} from "../../../../../shared/models/enums";
 
 @Component({
-  selector: 'app-gpu',
-  imports: [
-    NgOptimizedImage
-  ],
-  templateUrl: './gpu.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './gpu.component.css',
+    selector: 'app-gpu',
+    imports: [
+        NgOptimizedImage
+    ],
+    templateUrl: './gpu.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './gpu.component.css',
 })
 export class GpuComponent implements OnInit {
-  protected gpuProduct = signal<GpuModel | undefined>(undefined)
+    readonly category = ProductTypes.GPU;
+    private api = inject(ProductApi);
+    private route = inject(ActivatedRoute);
+    private product = signal<GpuModel | undefined>(undefined)
 
-  constructor(
-    private router: ActivatedRoute,
-    private productService: ProductService,
-    private destroyRef: DestroyRef
-  ) {}
 
-  ngOnInit() {
-    loadProduct<GpuModel>(ProductTypesEnum.GPU, this.productService, this.router)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(product => this.gpuProduct.set(product));
-  }
+    ngOnInit() {
+        const id = toSignal(this.route.paramMap.pipe(map(params => params.get('id'))));
+        if (id()) {
+            const product = this.api.getProduct<GpuModel>(this.category, id()!);
+            this.product.set(product);
+        }
+    }
 }

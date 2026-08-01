@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import type {AccountVerificationRequest} from '../models/account-verification.model';
 
 @Component({
-  selector: 'app-services',
+  selector: 'app-api',
   template: ``,
   changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true

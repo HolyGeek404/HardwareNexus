@@ -1,33 +1,33 @@
-import {ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnInit, signal} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {ProductService} from '../../../services/product.service';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {CoolerModel} from '../models/cooler.model';
-import {ProductTypesEnum} from '../../../enums/product-types.enum';
+import {ProductApi} from '../../../api/product.api';
+import {toSignal} from '@angular/core/rxjs-interop';
+import {ProductTypes} from '../../../../../shared/models/enums';
 import {NgOptimizedImage} from '@angular/common';
-import {loadProduct} from '../../../functions/product.functions';
+import {map} from "rxjs";
+import {CoolerModel} from "../models/cooler.model";
 
 @Component({
-  selector: 'app-cooler',
-  imports: [
-    NgOptimizedImage
-  ],
-  templateUrl: './cooler.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './cooler.component.css',
+    selector: 'app-cooler',
+    imports: [
+        NgOptimizedImage
+    ],
+    templateUrl: './cooler.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './cooler.component.css',
 })
 export class CoolerComponent implements OnInit {
-  protected coolerProduct = signal<CoolerModel | undefined>(undefined)
+    readonly category = ProductTypes.COOLER;
+    private api = inject(ProductApi);
+    private route = inject(ActivatedRoute);
+    private product = signal<CoolerModel | undefined>(undefined)
 
-  constructor(
-    private router: ActivatedRoute,
-    private productService: ProductService,
-    private destroyRef: DestroyRef
-  ) {}
 
-  ngOnInit() {
-    loadProduct<CoolerModel>(ProductTypesEnum.COOLER, this.productService, this.router)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(product => this.coolerProduct.set(product));
-  }
+    ngOnInit() {
+        const id = toSignal(this.route.paramMap.pipe(map(params => params.get('id'))));
+        if (id()) {
+            const product = this.api.getProduct<CoolerModel>(this.category, id()!);
+            this.product.set(product);
+        }
+    }
 }

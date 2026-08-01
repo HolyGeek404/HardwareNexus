@@ -1,33 +1,33 @@
-import {ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject, OnInit, signal} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {ProductService} from '../../../services/product.service';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {ProductApi} from '../../../api/product.api';
+import {toSignal} from '@angular/core/rxjs-interop';
 import {CpuModel} from '../models/cpu.model';
-import {ProductTypesEnum} from '../../../enums/product-types.enum';
+import {ProductTypes} from '../../../../../shared/models/enums';
 import {NgOptimizedImage} from '@angular/common';
-import {loadProduct} from '../../../functions/product.functions';
+import {map} from "rxjs";
 
 @Component({
-  selector: 'app-cpu',
-  imports: [
-    NgOptimizedImage
-  ],
-  templateUrl: './cpu.component.html',
-  changeDetection: ChangeDetectionStrategy.Eager,
-  styleUrl: './cpu.component.css',
+    selector: 'app-cpu',
+    imports: [
+        NgOptimizedImage
+    ],
+    templateUrl: './cpu.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
+    styleUrl: './cpu.component.css',
 })
 export class CpuComponent implements OnInit {
-  protected cpuProduct = signal<CpuModel | undefined>(undefined)
+    readonly category = ProductTypes.CPU;
+    private api = inject(ProductApi);
+    private route = inject(ActivatedRoute);
+    private product = signal<CpuModel | undefined>(undefined)
 
-  constructor(
-    private router: ActivatedRoute,
-    private productService: ProductService,
-    private destroyRef: DestroyRef
-  ) {}
 
-  ngOnInit() {
-    loadProduct<CpuModel>(ProductTypesEnum.CPU, this.productService, this.router)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(product => this.cpuProduct.set(product));
-  }
+    ngOnInit() {
+        const id = toSignal(this.route.paramMap.pipe(map(params => params.get('id'))));
+        if (id()) {
+            const product = this.api.getProduct<CpuModel>(this.category, id()!);
+            this.product.set(product);
+        }
+    }
 }
