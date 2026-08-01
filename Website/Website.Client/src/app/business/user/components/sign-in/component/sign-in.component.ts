@@ -33,7 +33,7 @@ export class SignInComponent {
     }
 
     onSubmit() {
-        if (this.validate() && this.signInForm.valid) {
+        if (this.signInForm.valid) {
             this.userSessionService.signIn(this.signInForm.controls.email.value!,
                 this.signInForm.controls.password.value!).subscribe({
                 next: (result) => {

@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {ProductTypes} from '../models/enums';
-import {RequestsModel} from '../../business/user/components/sign-up/models/requests.model';
-import {AccountVerificationRequest} from '../../business/user/models/account-verification.model';
+import {SignUpRequest} from '../../business/user/components/sign-up/models/model';
+import {AccountVerificationRequest} from '../../business/user/models/model';
 import {FilterModel} from '../../business/products/components/filter/models/filter.model';
 import {CartItemResponse} from "../../business/cart/models/CartItemResponse";
 import {environment} from "../../../environments/environment";
@@ -20,7 +20,7 @@ export class BaseHttpService {
         return this.http.get<FilterModel>(`${this.baseUrl}product/${types}/filters`);
     }
 
-    signUp(signUp: RequestsModel): Observable<boolean> {
+    signUp(signUp: SignUpRequest): Observable<boolean> {
         return this.http.post<boolean>(`${this.baseUrl}user/signup`, signUp);
     }
 

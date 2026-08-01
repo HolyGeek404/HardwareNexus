@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {BaseHttpService} from '../../../../../shared/services/base-http.service';
 import {Router, RouterLink} from '@angular/router';
 import {FormControl, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import {RequestsModel} from '../models/requests.model';
+import {SignUpRequest} from '../models/model';
 
 @Component({
     selector: 'app-sign-up',
@@ -53,7 +53,7 @@ export class SignUpComponent {
 
     onSubmit() {
         if (this.validate() && this.signUpForm.valid) {
-            const signUp: RequestsModel = {
+            const signUp: SignUpRequest = {
                 Name: this.signUpForm.controls.name.value!,
                 Surname: this.signUpForm.controls.surname.value!,
                 Email: this.signUpForm.controls.email.value!,
