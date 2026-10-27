@@ -17,8 +17,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Aspire.Hosting.JavaScript" Version="13.4.6" />
-      <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="13.4.6" />
+      <PackageReference Include="Aspire.Hosting.JavaScript" Version="13.6.4" />
+      <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="13.6.4" />
       <PackageReference Include="Codehard.Aspire.Hosting.Keycloak" Version="1.0.1" />
     </ItemGroup>
     <PropertyGroup>
