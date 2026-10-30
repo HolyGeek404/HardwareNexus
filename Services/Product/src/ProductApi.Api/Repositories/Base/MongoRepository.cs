@@ -1,70 +1,60 @@
-using System.Net;
+using System.Linq.Expressions;
+using System.Text.Json;
 using MongoDB.Driver;
 using ProductApi.Api.Interfaces;
 using ProductApi.Api.Models;
 
 namespace ProductApi.Api.Repositories.Base;
 
-public class MongoRepository<TProduct>(IMongoDatabase database) : IReadRepository<TProduct>, IWriteRepository<TProduct>
-    where TProduct : BaseProduct
+public abstract class MongoRepository<T>(IMongoDatabase db) : IProductRepository
+    where T : BaseProduct
 {
-    protected readonly IMongoCollection<TProduct> Collection = database.GetCollection<TProduct>("products");
+    private IMongoCollection<T> Collection => db.GetCollection<T>("products");
+    protected abstract string Category { get; }
 
-    public async Task<IEnumerable<TProduct>> GetByType(string category)
+    public async Task<IReadOnlyList<object>> GetByType(CancellationToken ct = default)
     {
-        var filter = Builders<TProduct>.Filter.Eq(p => p.Category, category);
-        var results = await Collection.Find(filter).ToListAsync();
-        return results;
+        var items = await Collection.Find(p => p.Category == Category).ToListAsync(ct);
+        return items.Cast<object>().ToList();
     }
 
-    public async Task<TProduct?> GetById(string category, string id)
-    {
-        var filter = Builders<TProduct>.Filter.And(
-            Builders<TProduct>.Filter.Eq(p => p.Category, category),
-            Builders<TProduct>.Filter.Eq(p => p.ProductId, id));
+    public async Task<object?> GetById(string id, CancellationToken ct = default) =>
+        await Collection.Find(p => p.Category == Category && p.ProductId == id)
+            .FirstOrDefaultAsync(ct);
 
-        return await Collection.Find(filter).FirstOrDefaultAsync();
+    public async Task CreateAsync(JsonElement json, CancellationToken ct = default)
+    {
+        var product = json.Deserialize<T>(JsonOptions)
+                      ?? throw new JsonException($"Invalid {typeof(T).Name} payload.");
+        await Collection.InsertOneAsync(product, cancellationToken: ct);
     }
 
-    public async Task<BaseProduct?> CreateAsync(TProduct entity, string id, string pk)
+    public async Task<bool> UpdateAsync(JsonElement json, CancellationToken ct = default)
     {
-        try
-        {
-            await Collection.InsertOneAsync(entity);
-            return entity;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+        var product = json.Deserialize<T>(JsonOptions)
+                      ?? throw new JsonException($"Invalid {typeof(T).Name} payload.");
+        var result = await Collection.ReplaceOneAsync(
+            p => p.Category == Category && p.ProductGuid == product.ProductGuid,
+            product, cancellationToken: ct);
+        return result.MatchedCount > 0;
     }
 
-    public async Task<HttpStatusCode> UpdateAsync(TProduct entity, string id, string pk)
+    public async Task<bool> DeleteAsync(Guid id, CancellationToken ct = default)
     {
-        try
-        {
-            var filter = Builders<TProduct>.Filter.Eq(p => p.ProductGuid, id);
-            var result = await Collection.ReplaceOneAsync(filter, entity);
-
-            if (result.MatchedCount == 0)
-                return HttpStatusCode.NotFound;
-
-            return HttpStatusCode.OK;
-        }
-        catch (Exception)
-        {
-            return HttpStatusCode.NotFound;
-        }
+        var result = await Collection.DeleteOneAsync(
+            p => p.Category == Category && p.ProductGuid == id.ToString(), ct);
+        return result.DeletedCount > 0;
     }
 
-    public async Task<HttpStatusCode> DeleteAsync(Guid id, string partitionKey)
-    {
-        var filter = Builders<TProduct>.Filter.Eq(p => p.ProductGuid, id.ToString());
-        var result = await Collection.DeleteOneAsync(filter);
+    // only thing each category must supply
+    public abstract Task<object> GetFiltersAsync(CancellationToken ct = default);
 
-        return result.DeletedCount > 0
-            ? HttpStatusCode.OK
-            : HttpStatusCode.NotFound;
+    protected async Task<TField[]> Distinct<TField>(
+        Expression<Func<T, TField>> field, CancellationToken ct = default)
+    {
+        var cursor = await Collection.DistinctAsync(field, p => p.Category == Category, cancellationToken: ct);
+        return (await cursor.ToListAsync(ct)).ToArray();
     }
+
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 }

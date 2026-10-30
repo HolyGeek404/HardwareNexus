@@ -1,4 +1,3 @@
-using System.Net;
 using System.Text.Json;
 using ProductApi.Api.Models;
 
@@ -6,10 +5,10 @@ namespace ProductApi.Api.Interfaces;
 
 public interface IProductService
 {
-    Task<object?> GetByIdAndType(string type, string id);
-    Task<object?> GetByType(string type);
-    Task<object?> GetFilterByType(string type);
-    Task<BaseProduct?> Create(JsonElement product, string type);
-    Task<HttpStatusCode> Delete(Guid id, string type);
-    Task<HttpStatusCode> Update(JsonElement product, string type);
+    Task<object?> GetByIdAndType(ProductCategory type, string id);
+    Task<object?> GetByType(ProductCategory type);
+    Task<object?> GetFilterByType(ProductCategory type);
+    Task Create(JsonElement product, ProductCategory type);
+    Task Delete(Guid id, ProductCategory type);
+    Task Update(JsonElement product, ProductCategory type);
 }

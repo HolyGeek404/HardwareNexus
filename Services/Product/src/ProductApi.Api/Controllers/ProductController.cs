@@ -4,6 +4,7 @@ using System.Text.Json.Nodes;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductApi.Api.Interfaces;
+using ProductApi.Api.Models;
 using Logger = ProductApi.Api.Services.Logger;
 
 namespace ProductApi.Api.Controllers;
@@ -12,7 +13,7 @@ namespace ProductApi.Api.Controllers;
 ///     Exposes product catalog endpoints by product type.
 /// </summary>
 [ApiController]
-[Route("[controller]/{type:alpha}")]
+[Route("[controller]/{type}")]
 public class ProductController(IProductService productService, ILogger<ProductController> logger) : Controller
 {
     /// <summary>
@@ -23,7 +24,7 @@ public class ProductController(IProductService productService, ILogger<ProductCo
     /// <response code="404">No products found for the requested type.</response>
     /// <response code="500">Unexpected server error.</response>
     [HttpGet]
-    public async Task<IActionResult> GetByType([FromRoute] string type)
+    public async Task<IActionResult> GetByType([FromRoute] ProductCategory type)
     {
         var caller = User.FindFirst("appid")?.Value ?? "Unknown";
         Logger.LogCallingGetbytypenameByUnknownTypeType(logger, nameof(GetByType), caller, type);
@@ -58,7 +59,7 @@ public class ProductController(IProductService productService, ILogger<ProductCo
     /// <response code="500">Unexpected server error.</response>
     [HttpGet]
     [Route("{id}")]
-    public async Task<IActionResult> GetById([FromRoute] string type, [FromRoute] string id)
+    public async Task<IActionResult> GetById([FromRoute] ProductCategory type, [FromRoute] string id)
     {
         var caller = User.FindFirst("appid")?.Value ?? "Unknown";
         Logger.LogCallingGetbyidnameByUnknownTypeTypeIdId(logger, nameof(GetById), caller, type, id);
@@ -97,7 +98,7 @@ public class ProductController(IProductService productService, ILogger<ProductCo
     /// <response code="500">Unexpected server error.</response>
     [HttpGet]
     [Route("filters")]
-    public async Task<IActionResult> GetFilters([FromRoute] string type)
+    public async Task<IActionResult> GetFilters([FromRoute] ProductCategory type)
     {
         var caller = User.FindFirst("appid")?.Value ?? "Unknown";
         Logger.LogCallingGetbytypenameByUnknownTypeType(logger, nameof(GetFilters), caller, type);
@@ -127,12 +128,10 @@ public class ProductController(IProductService productService, ILogger<ProductCo
     /// <param name="product">Product payload to update.</param>
     /// <param name="type">Product type segment.</param>
     /// <response code="204">Update succeeded.</response>
-    /// <response code="400">The product payload is empty.</response>
-    /// <response code="404">No product found to update.</response>
     /// <response code="500">Unexpected server error.</response>
     [HttpPatch]
     [Authorize(Roles = "Update")]
-    public async Task<IActionResult> Update([FromBody] JsonElement product, [FromRoute] string type)
+    public async Task<IActionResult> Update([FromBody] JsonElement product, [FromRoute] ProductCategory type)
     {
         var caller = User.FindFirst("appid")?.Value ?? "Unknown";
         Logger.LogCallingUpdatenameByUnknownTypeTypeProductProduct(logger, nameof(Update), caller, type, product);
@@ -145,22 +144,8 @@ public class ProductController(IProductService productService, ILogger<ProductCo
 
         try
         {
-            var result = await productService.Update(product, type);
-
-            switch (result)
-            {
-                case HttpStatusCode.NotFound:
-                    Logger.LogNoProductFoundInUpdatenameByUnknownTypeTypeProductProduct(logger, nameof(Update), caller,
-                        type, product);
-                    var productNode = JsonNode.Parse(product.GetRawText())!.AsObject();
-                    return NotFound($"No product found to update for type: {type} and product: {productNode["id"]}");
-                case HttpStatusCode.OK or HttpStatusCode.Created or HttpStatusCode.NoContent:
-                    Logger.LogSuccessfullyCalledUpdatenameByUnknownTypeTypeProductProduct(logger, nameof(Update),
-                        caller, type, product);
-                    return NoContent();
-                default:
-                    return StatusCode((int)HttpStatusCode.InternalServerError);
-            }
+            await productService.Update(product, type);
+            return StatusCode(StatusCodes.Status204NoContent);
         }
         catch (Exception ex)
         {
@@ -180,7 +165,7 @@ public class ProductController(IProductService productService, ILogger<ProductCo
     /// <response code="500">Unexpected server error.</response>
     [HttpPost]
     [Authorize(Roles = "Create")]
-    public async Task<IActionResult> Create([FromBody] JsonElement product, [FromRoute] string type)
+    public async Task<IActionResult> Create([FromBody] JsonElement product, [FromRoute] ProductCategory type)
     {
         var caller = User.FindFirst("appid")?.Value ?? "Unknown";
         Logger.LogCallingCreatenameByCallerTypeTypeProductProduct(logger, nameof(Create), caller, type, product);
@@ -193,19 +178,8 @@ public class ProductController(IProductService productService, ILogger<ProductCo
 
         try
         {
-            var result = await productService.Create(product, type);
-
-            if (result == null || string.IsNullOrEmpty(result.ProductGuid))
-            {
-                Logger.LogCreateFailedOrReturnedNullInCreatenameByCallerTypeTypeProductProduct(logger, nameof(Create),
-                    caller, type, product);
-                return StatusCode(StatusCodes.Status500InternalServerError);
-            }
-
-            Logger.LogSuccessfullyCreatedProductInCreatenameByCallerTypeTypeProductProductIdId(logger, nameof(Create),
-                caller, type, product, result.ProductGuid);
-
-            return CreatedAtAction(nameof(GetById), new { type = result.Category, id = result.ProductGuid }, result);
+            await productService.Create(product, type);
+            return Created();
         }
         catch (Exception ex)
         {
@@ -221,17 +195,16 @@ public class ProductController(IProductService productService, ILogger<ProductCo
     /// <param name="id">Product identifier.</param>
     /// <param name="type">Product type segment.</param>
     /// <response code="204">Delete succeeded.</response>
-    /// <response code="400">Missing id or type.</response>
     /// <response code="404">No product found to delete.</response>
     /// <response code="500">Unexpected server error.</response>
     [HttpDelete]
     [Authorize(Roles = "Delete")]
-    public async Task<IActionResult> Delete(Guid id, [FromRoute] string type)
+    public async Task<IActionResult> Delete(Guid id, [FromRoute] ProductCategory type)
     {
         var caller = User.FindFirst("appid")?.Value ?? "Unknown";
         Logger.LogDeleteRequestReceivedByCallerIdIdTypeType(logger, caller, id, type);
 
-        if (id == Guid.Empty || string.IsNullOrEmpty(type))
+        if (id == Guid.Empty || type != ProductCategory.Unknow)
         {
             Logger.LogDeleteFailedDueToMissingParametersCallerCallerIdIdTypeType(logger, caller, id, type);
             return BadRequest("Both 'id' and 'type' are required.");
@@ -239,27 +212,8 @@ public class ProductController(IProductService productService, ILogger<ProductCo
 
         try
         {
-            var result = await productService.Delete(id, type);
-
-            switch (result)
-            {
-                case HttpStatusCode.NoContent:
-                    Logger.LogSuccessfullyDeletedItemCallerCallerIdIdTypeType(logger, caller, id, type);
-                    return NoContent();
-
-                case HttpStatusCode.NotFound:
-                    Logger.LogItemNotFoundForDeletionCallerCallerIdIdTypeType(logger, caller, id, type);
-                    return NotFound();
-
-                case HttpStatusCode.BadRequest:
-                    Logger.LogBadRequestDuringDeletionCallerCallerIdIdTypeType(logger, caller, id, type);
-                    return BadRequest();
-
-                default:
-                    Logger.LogUnexpectedStatusCodeStatusDuringDeletionCallerCallerIdIdTypeType(logger, result, caller,
-                        id, type);
-                    return StatusCode((int)result);
-            }
+            await productService.Delete(id, type);
+            return StatusCode(StatusCodes.Status204NoContent);
         }
         catch (Exception ex)
         {

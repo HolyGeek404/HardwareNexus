@@ -1,9 +1,10 @@
 using System.Reflection;
 using Microsoft.OpenApi;
 using MongoDB.Driver;
+using ProductApi.Api.Factories;
 using ProductApi.Api.Interfaces;
+using ProductApi.Api.Models;
 using ProductApi.Api.Repositories;
-using ProductApi.Api.Repositories.Base;
 using ProductApi.Api.Services;
 
 namespace ProductApi.Api.Extensions;
@@ -17,22 +18,19 @@ public static class ServiceCollectionExtensions
             var mongoConnectionString = await ServiceCollectionExtensionsHelper.GetMongoDbConnStr(builder);
             builder.Services.AddSingleton<IMongoClient>(_ => new MongoClient(mongoConnectionString));
             builder.Services.AddSingleton(sp => sp.GetRequiredService<IMongoClient>().GetDatabase("hardwarenexus-products"));
-
-            builder.Services.AddScoped(typeof(IReadRepository<>), typeof(MongoRepository<>));
-            builder.Services.AddScoped(typeof(IWriteRepository<>), typeof(MongoRepository<>));
         }
 
         public void AddRepositories()
         {
-            services.AddScoped<ICpuRepository, CpuRepository>();
-            services.AddScoped<IGpuRepository, GpuRepository>();
-            services.AddScoped<ICoolerRepository, CoolerRepository>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddKeyedScoped<IProductRepository, CpuRepository>(ProductCategories.Cpu);
+            services.AddKeyedScoped<IProductRepository, GpuRepository>(ProductCategories.Gpu);
+            services.AddKeyedScoped<IProductRepository, CoolerRepository>(ProductCategories.Cooler);
         }
 
         public void AddServices()
         {
-            services.AddScoped<IProductService, ProductServiceUnit>();
+            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IProductRepositoryFactory, ProductRepositoryFactory>();
         }
 
         public void AddSwaggerConfig(IConfiguration configuration)
