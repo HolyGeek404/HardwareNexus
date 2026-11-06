@@ -1,5 +1,5 @@
 import {Routes} from '@angular/router';
-import {ProductTypes} from './shared/models/enums';
+import {ProductCategory} from './shared/models/enums';
 
 export const routes: Routes = [
     {
@@ -13,17 +13,17 @@ export const routes: Routes = [
             import('./business/products/components/products/component/products.component').then(m => m.ProductsComponent)
     },
     {
-        path: `products/${ProductTypes.CPU}/:id`,
+        path: `products/${ProductCategory.Cpu}/:id`,
         loadComponent: () =>
             import('./business/products/components/cpu/component/cpu.component').then(m => m.CpuComponent)
     },
     {
-        path: `products/${ProductTypes.GPU}/:id`,
+        path: `products/${ProductCategory.Gpu}/:id`,
         loadComponent: () =>
             import('./business/products/components/gpu/component/gpu.component').then(m => m.GpuComponent)
     },
     {
-        path: 'products/COOLER/:id',
+        path: `products/${ProductCategory.Cooler}/:id`,
         loadComponent: () =>
             import('./business/products/components/cooler/component/cooler.component').then(m => m.CoolerComponent)
     },

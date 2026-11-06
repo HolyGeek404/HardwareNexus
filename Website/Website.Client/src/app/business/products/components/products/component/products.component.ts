@@ -5,7 +5,7 @@ import {BaseProductModel} from '../../../models/base-product.model';
 import {CpuDetailsComponent} from '../../cpu/component/cpu-details/cpu-details.component';
 import {GpuDetailsComponent} from '../../gpu/component/gpu-details/gpu-details.component';
 import {CoolerDetailsComponent} from '../../cooler/component/cooler-details/cooler-details.component';
-import {ProductTypes} from '../../../../../shared/models/enums';
+import {ProductCategory} from '../../../../../shared/models/enums';
 import {toObservable, toSignal} from "@angular/core/rxjs-interop";
 import {filter, map, switchMap} from "rxjs";
 import {ProductApi} from "../../../api/product.api";
@@ -21,13 +21,16 @@ import {ProductApi} from "../../../api/product.api";
 export class ProductsComponent {
     route = inject(ActivatedRoute);
     api = inject(ProductApi);
-    category = toSignal(this.route.paramMap.pipe(map(params => params.get('category'))), {initialValue: null});
+    category = toSignal(this.route.paramMap.pipe(
+        map(params => params.get('category')),
+        map(category => Object.values(ProductCategory).find(value => value === category) ?? null)
+    ), {initialValue: null});
 
     products = toSignal(toObservable(this.category).pipe(
-            filter((category): category is string => category !== null),
+            filter((category): category is ProductCategory => category !== null),
             switchMap(category => this.api.getProducts(category))
         ),
         {initialValue: [] as BaseProductModel[]}
     );
-    protected readonly ProductTypes = ProductTypes;
+    protected readonly ProductCategory = ProductCategory;
 }

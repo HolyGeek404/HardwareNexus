@@ -18,15 +18,15 @@
             <div class="product-card__details">
               @switch (category())
               {
-                @case (ProductTypes.CPU)
+                @case (ProductCategory.Cpu)
                 {
                   <app-cpu-details [product]="product"/>
                 }
-                @case (ProductTypes.GPU)
+                @case (ProductCategory.Gpu)
                 {
                   <app-gpu-details [product]="product"/>
                 }
-                @case (ProductTypes.COOLER)
+                @case (ProductCategory.Cooler)
                 {
                   <app-cooler-details [product]="product"/>
                 }

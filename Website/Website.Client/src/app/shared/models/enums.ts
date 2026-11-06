@@ -8,3 +8,10 @@ export enum ProductTypes {
     CASE = "CASE",
     COOLER = "COOLER"
 }
+
+export enum ProductCategory {
+    Unknow = "UNKNOWN",
+    Cpu = "CPU",
+    Gpu = "GPU",
+    Cooler = "COOLER"
+}

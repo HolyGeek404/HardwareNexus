@@ -3,7 +3,7 @@ import {ActivatedRoute} from '@angular/router';
 import {ProductApi} from '../../../api/product.api';
 import {toObservable, toSignal} from '@angular/core/rxjs-interop';
 import {CpuModel} from '../models/cpu.model';
-import {ProductTypes} from '../../../../../shared/models/enums';
+import {ProductCategory} from '../../../../../shared/models/enums';
 import {NgOptimizedImage} from '@angular/common';
 import {filter, map, switchMap} from "rxjs";
 
@@ -17,7 +17,7 @@ import {filter, map, switchMap} from "rxjs";
     styleUrl: './cpu.component.css',
 })
 export class CpuComponent {
-    readonly category = ProductTypes.CPU;
+    readonly category = ProductCategory.Cpu;
     api = inject(ProductApi);
     route = inject(ActivatedRoute);
     id = toSignal(this.route.paramMap.pipe(

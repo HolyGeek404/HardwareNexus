@@ -5,7 +5,7 @@ import {ProductApi} from "../../../api/product.api";
 import {map} from "rxjs";
 import {ActivatedRoute} from "@angular/router";
 import {toSignal} from "@angular/core/rxjs-interop";
-import {ProductTypes} from "../../../../../shared/models/enums";
+import {ProductCategory} from "../../../../../shared/models/enums";
 
 @Component({
     selector: 'app-gpu',
@@ -17,7 +17,7 @@ import {ProductTypes} from "../../../../../shared/models/enums";
     styleUrl: './gpu.component.css',
 })
 export class GpuComponent implements OnInit {
-    readonly category = ProductTypes.GPU;
+    readonly category = ProductCategory.Gpu;
     protected product = signal<GpuModel | undefined>(undefined)
     private api = inject(ProductApi);
     private route = inject(ActivatedRoute);

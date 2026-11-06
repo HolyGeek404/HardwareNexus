@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, inject, OnInit, signal} from '@angul
 import {ActivatedRoute} from '@angular/router';
 import {ProductApi} from '../../../api/product.api';
 import {toSignal} from '@angular/core/rxjs-interop';
-import {ProductTypes} from '../../../../../shared/models/enums';
+import {ProductCategory} from '../../../../../shared/models/enums';
 import {NgOptimizedImage} from '@angular/common';
 import {map} from "rxjs";
 import {CoolerModel} from "../models/cooler.model";
@@ -17,7 +17,7 @@ import {CoolerModel} from "../models/cooler.model";
     styleUrl: './cooler.component.css',
 })
 export class CoolerComponent implements OnInit {
-    readonly category = ProductTypes.COOLER;
+    readonly category = ProductCategory.Cooler;
     protected product = signal<CoolerModel | undefined>(undefined)
     private api = inject(ProductApi);
     private route = inject(ActivatedRoute);

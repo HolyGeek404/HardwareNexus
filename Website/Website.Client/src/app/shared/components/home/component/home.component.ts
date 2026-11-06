@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {
   CategoryCardComponent
 } from "../../../../business/products/components/category-card/component/category-card.component";
-import {ProductTypes} from "../../../models/enums";
+import {ProductCategory} from "../../../models/enums";
 
 @Component({
     selector: 'app-home',
@@ -12,5 +12,5 @@ import {ProductTypes} from "../../../models/enums";
     styleUrl: './home.component.css'
 })
 export class HomeComponent {
-    categories = Object.values(ProductTypes);
+    categories = Object.values(ProductCategory).filter(category => category !== ProductCategory.Unknow);
 }

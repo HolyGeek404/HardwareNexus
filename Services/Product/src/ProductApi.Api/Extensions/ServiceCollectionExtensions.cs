@@ -22,9 +22,9 @@ public static class ServiceCollectionExtensions
 
         public void AddRepositories()
         {
-            services.AddKeyedScoped<IProductRepository, CpuRepository>(ProductCategories.Cpu);
-            services.AddKeyedScoped<IProductRepository, GpuRepository>(ProductCategories.Gpu);
-            services.AddKeyedScoped<IProductRepository, CoolerRepository>(ProductCategories.Cooler);
+            services.AddKeyedScoped<IProductRepository, CpuRepository>(ProductCategory.Cpu);
+            services.AddKeyedScoped<IProductRepository, GpuRepository>(ProductCategory.Gpu);
+            services.AddKeyedScoped<IProductRepository, CoolerRepository>(ProductCategory.Cooler);
         }
 
         public void AddServices()
