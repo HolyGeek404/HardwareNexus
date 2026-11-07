@@ -1,5 +1,4 @@
 using Aspire.Host.Options;
-using Keycloak.Hosting;
 using Projects;
 
 namespace Aspire.Host;
@@ -79,10 +78,9 @@ public static class GroupResourceExtensions
 
             var openbao = builder.AddOpenBao(infraSection, options.OpenBao);
             var mongo = builder.AddMongoDb(infraSection, options.Mongo);
-            var postgres = builder.AddPostgresSql(infraSection, options.PostgresSql);
-            var keycloak = builder.AddKeyCloak(infraSection, postgres, options.KeyCloak);
+            var keycloak = builder.AddKeyCloak(infraSection, options.KeyCloak);
             
-            return new InfrastructureResources(mongo, openbao, postgres,keycloak);
+            return new InfrastructureResources(mongo, openbao,keycloak);
         }
 
         private IResourceBuilder<ExecutableResource> AddMongoDb(
@@ -153,35 +151,20 @@ public static class GroupResourceExtensions
 
             return openbaoSeed;
         }
-        private IResourceBuilder<PostgresServerResource> AddPostgresSql(
-            IResourceBuilder<GroupResource> infraSection,
-            PostgresSqlOptions options)
-        {
-            var postgresSection = builder.AddGroup("Postgres")
-                .WithParentRelationship(infraSection.Resource);
-            
-            var userName = builder.AddParameter("userName", options.Login);
-            var password = builder.AddParameter("password", options.Password, secret:true);
-            var postgres = builder.AddPostgres("postgres-sql-container", userName, password)
-                .WithDataVolume()
-                .WithHostPort(5432)
-                .WithParentRelationship(postgresSection.Resource);
-            postgres.AddDatabase(options.DatabaseName);
-            return postgres;
-        }
+
         private IResourceBuilder<KeycloakResource> AddKeyCloak(
             IResourceBuilder<GroupResource> infraSection,
-            IResourceBuilder<PostgresServerResource> postgres,
             KeyCloakOptions options)
         {
             var keycloakSection = builder.AddGroup("Keycloak")
                 .WithParentRelationship(infraSection.Resource);
 
-            var keycloak = builder.AddKeycloak("keycloak-container", postgres)
-                .WithEnvironment("KEYCLOAK_ADMIN", options.Login)
-                .WithEnvironment("KEYCLOAK_ADMIN_PASSWORD", options.Password)
-                .WithEndpoint(port: 8080, targetPort: 8080, name: "http")
-                .WithParentRelationship(keycloakSection.Resource);
+            var username = builder.AddParameter("keycloak-admin", options.Login);
+            var password = builder.AddParameter("keycloak-admin-password", options.Password, secret: true);
+
+            var keycloak = builder.AddKeycloak("keycloak-container", 8080, username, password)
+                .WithDataVolume()
+                .WithParentRelationship(keycloakSection);
 
             return keycloak;
         }
@@ -193,5 +176,4 @@ public sealed class GroupResource(string name) : Resource(name);
 public record InfrastructureResources(
     IResourceBuilder<ExecutableResource> MongoSeed,
     IResourceBuilder<ExecutableResource> OpenBaoSeed,
-    IResourceBuilder<PostgresServerResource> Postgres,
     IResourceBuilder<KeycloakResource> Keycloak);
