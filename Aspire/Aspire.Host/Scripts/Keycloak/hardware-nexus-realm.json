@@ -1,0 +1,44 @@
+{
+  "realm": "hardware-nexus",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "gateway",
+      "name": "HardwareNexus Gateway BFF",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "secret": "fiYU62dBOZUJHkFy3jDNAOP3Ie9rpdEC",
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "redirectUris": [ "https://localhost:7100/signin-oidc", "http://localhost:7100/signin-oidc" ],
+      "webOrigins": [ "http://localhost:8100", "https://localhost:8100" ],
+      "attributes": { "pkce.code.challenge.method": "S256" },
+      "protocolMappers": [
+        {
+          "name": "user-api-audience",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-audience-mapper",
+          "consentRequired": false,
+          "config": {
+            "included.client.audience": "hardware-nexus-user-api",
+            "id.token.claim": "false",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "hardware-nexus-user-api",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false
+    }
+  ],
+  "registrationAllowed": true,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false
+}

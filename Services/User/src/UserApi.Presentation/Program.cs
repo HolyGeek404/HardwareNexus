@@ -16,28 +16,7 @@ builder.Services.AddMemoryCache();
 builder.Logging.AddLoggingConfig();
 builder.Services.AddHttpClient();
 builder.Services.AddHttpContextAccessor();
-builder.Services
-    .AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = "CookieJwt";
-        options.DefaultChallengeScheme = "CookieJwt";
-    })
-    .AddJwtBearer("CookieJwt", options =>
-    {
-        options.Authority = "http://localhost:8080/realms/my-realm";
-        options.Audience = "HardwareNexus";
 
-        options.RequireHttpsMetadata = false;
-
-        options.Events = new JwtBearerEvents
-        {
-            OnMessageReceived = context =>
-            {
-                context.Token = context.Request.Cookies["access_token"];
-                return Task.CompletedTask;
-            }
-        };
-    });
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())

@@ -164,6 +164,7 @@ public static class GroupResourceExtensions
 
             var keycloak = builder.AddKeycloak("keycloak-container", 8080, username, password)
                 .WithDataVolume()
+                .WithRealmImport(Path.Combine(builder.AppHostDirectory, "Scripts", "Keycloak", "hardware-nexus-realm.json"))
                 .WithParentRelationship(keycloakSection);
 
             return keycloak;

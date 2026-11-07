@@ -1,4 +1,5 @@
 using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 
@@ -10,45 +11,7 @@ public static class GatewayExtensions
     {
         builder.Configuration.AddEnvironmentVariables();
     }
-
-    public static void AddGatewayServices(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddOpenApi();
-
-        var keyValue = configuration["Jwt:Key"];
-        if (string.IsNullOrWhiteSpace(keyValue))
-            throw new InvalidOperationException("JWT signing key is not configured.");
-
-        services
-            .AddAuthentication("Bearer")
-            .AddJwtBearer("Bearer", options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(keyValue)),
-                    ValidateIssuer = true,
-                    ValidIssuer = configuration["Jwt:Issuer"],
-                    ValidateAudience = true,
-                    ValidAudience = configuration["Jwt:Audience"],
-                    ValidateLifetime = true,
-                    ClockSkew = TimeSpan.FromMinutes(1)
-                };
-                options.Events = new JwtBearerEvents
-                {
-                    OnMessageReceived = context =>
-                    {
-                        if (!string.IsNullOrWhiteSpace(context.Token)) return Task.CompletedTask;
-                        var token = context.Request.Cookies["access_token"];
-                        if (!string.IsNullOrWhiteSpace(token)) context.Token = token;
-
-                        return Task.CompletedTask;
-                    }
-                };
-            });
-        services.AddAuthorization();
-    }
-
+    
     public static void UseGatewayPipeline(this WebApplication app)
     {
         app.UseHttpsRedirection();
@@ -68,5 +31,51 @@ public static class GatewayExtensions
                     .AllowCredentials();
             });
         });
+    }
+
+    public static void AddAuthConfig(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddAuthentication(o =>
+            {
+                o.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                o.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie(o =>
+            {
+                o.Cookie.Name = "hn-bff";
+                o.Cookie.Path = "/gateway";
+                o.Cookie.HttpOnly = true;
+                o.Cookie.SameSite = SameSiteMode.None;
+                o.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                o.Events.OnRedirectToLogin = context =>
+                {
+                    if (context.Request.Path.StartsWithSegments("/gateway"))
+                    {
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        return Task.CompletedTask;
+                    }
+
+                    context.Response.Redirect(context.RedirectUri);
+                    return Task.CompletedTask;
+                };
+            })
+            .AddOpenIdConnect(o =>
+            {
+                o.Authority = builder.Configuration["Keycloak:Authority"];
+                o.ClientId = builder.Configuration["Keycloak:ClientId"] ?? "gateway";
+                o.ClientSecret = builder.Configuration["Keycloak:ClientSecret"];
+                o.ResponseType = "code";
+                o.UsePkce = true;
+                o.SaveTokens = true;                 
+                o.GetClaimsFromUserInfoEndpoint = true;
+                o.MapInboundClaims = false;
+                o.RequireHttpsMetadata = false;      
+                o.Scope.Clear();
+                o.Scope.Add("openid");
+                o.Scope.Add("profile");
+                o.Scope.Add("email");
+                o.Scope.Add("offline_access");      
+                o.TokenValidationParameters.NameClaimType = "preferred_username";
+            });
     }
 }

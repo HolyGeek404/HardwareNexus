@@ -20,31 +20,12 @@
       }
 
       <h2>Sign In</h2>
-      <p class="auth__hint">Use the email you registered with.</p>
-
-      <form [formGroup]="signInForm" (ngSubmit)="onSubmit()">
-        <label class="auth__label">Email</label>
-        <input formControlName="email" name="email" type="email" class="auth__input" placeholder="you@email.com" required/>
-
-        <label class="auth__label">Password</label>
-        <input formControlName="password" name="password" type="password" class="auth__input" placeholder="••••••••" required/>
-
-        @if (this.errors.length != 0) {
-          <div class="auth__notice auth__notice--error">
-            <ul>
-              @for (error of errors; track error) {
-                <li>{{error}}</li>
-              }
-            </ul>
-          </div>
-        }
-
-        <button type="submit" class="auth__primary">Sign In</button>
-      </form>
+      <p class="auth__hint">Sign in securely with your HardwareNexus account.</p>
+      <button type="button" class="auth__primary" (click)="onSubmit()">Continue with Keycloak</button>
 
       <div class="auth__foot">
         <span>New here?</span>
-        <a [routerLink]="['/user/sign-up']">Sign up instead</a>
+        <span>Create your account on the sign-in page.</span>
       </div>
     </div>
   </div>
