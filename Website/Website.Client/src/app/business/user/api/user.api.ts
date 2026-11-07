@@ -5,9 +5,14 @@ import {Observable} from "rxjs";
 @Injectable({
     providedIn: 'root',
 })
-export class UserApi extends BaseHttpService{
+export class UserApi extends BaseHttpService {
+    public signIn(email: string, password: string): Observable<any> {
+        return this.post<{ email: string, password: string }, any>(
+            `user/signin`,
+            {email, password})
+    }
 
-    // signIn(email: string, password: string): Observable<string> {
-    //     return this.http.
-    // }
+    public getUserData(): Observable<any> {
+        return this.get(`user/me`)
+    }
 }

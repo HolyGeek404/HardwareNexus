@@ -78,8 +78,8 @@ public class UserController(IMediator mediator, ILogger<UserController> logger) 
         Response.Cookies.Append("access_token", token, new CookieOptions
         {
             HttpOnly = true,
-            Secure = false,
-            SameSite = SameSiteMode.Strict,
+            Secure = true,
+            SameSite = SameSiteMode.None,
             Path = "/",
             MaxAge = TimeSpan.FromHours(1)
         });
@@ -127,13 +127,13 @@ public class UserController(IMediator mediator, ILogger<UserController> logger) 
         {
             Logs.LogSuccessfullySignedOutUserEmail(logger, email);
 
-            Response.Cookies.Delete("access_token", new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.Strict,
-                Path = "/"
-            });
+                Response.Cookies.Delete("access_token", new CookieOptions
+                {
+                    HttpOnly = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.Strict,
+                    Path = "/"
+                });
 
             return Task.FromResult<IActionResult>(Ok());
         }

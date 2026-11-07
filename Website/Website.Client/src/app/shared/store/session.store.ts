@@ -1,6 +1,9 @@
 import {User} from "../../business/user/models/model";
-import {signalStore, withComputed, withState} from '@ngrx/signals';
-import {computed} from "@angular/core";
+import {patchState, signalStore, withComputed, withMethods, withState} from '@ngrx/signals';
+import {computed, inject} from "@angular/core";
+import {UserApi} from "../../business/user/api/user.api";
+import {Router} from "@angular/router";
+import {switchMap} from "rxjs";
 
 type SessionState = {
     user: User | null;
@@ -24,4 +27,24 @@ export const SessionStore = signalStore(
         isAuthenticated: computed(() => user() !== null),
         isReady: computed(() => isInitialized()),
     })),
+    withMethods((store, api = inject(UserApi), router = inject(Router)) => ({
+        
+        login(email: string, password: string): void {
+            api.signIn(email, password).pipe(
+                switchMap(() => api.getUserData())
+            ).subscribe({
+                next: (user) => {
+                    patchState(store, {
+                        user,
+                        isInitialized: true
+                    });
+
+                    router.navigate(['/user/dashboard']);
+                },
+                error: (err) => {
+                    console.error('Error signing in.', err);
+                }
+            });
+        }
+    }))
 );

@@ -1,8 +1,9 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, inject} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {Router, RouterLink} from '@angular/router';
-import {SessionService} from '../../../../../shared/services/session.service';
 import {createSignInForm} from "../models/forms";
+import {SessionStore} from "../../../../../shared/store/session.store";
+import {UserApi} from "../../../api/user.api";
 
 @Component({
     selector: 'app-sign-in',
@@ -11,17 +12,21 @@ import {createSignInForm} from "../models/forms";
         ReactiveFormsModule,
         RouterLink
     ],
+    providers: [SessionStore],
     templateUrl: './sign-in.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './sign-in.component.css'
 })
 export class SignInComponent {
+    api = inject(UserApi);
+    session = inject(SessionStore);
+
     public stateMsg: string | null = null;
     signInForm = createSignInForm();
 
     errors: string[] = [];
 
-    constructor(private router: Router, private userSessionService: SessionService) {
+    constructor(private router: Router) {
     }
 
     ngOnInit() {
@@ -33,15 +38,13 @@ export class SignInComponent {
     }
 
     onSubmit() {
-        if (this.signInForm.valid) {
-            this.userSessionService.signIn(this.signInForm.controls.email.value!,
-                this.signInForm.controls.password.value!).subscribe({
-                next: (result) => {
-                    this.router.navigate(['/user/dashboard']);
-                },
-                error: (err) => console.error(`Error signing in.`, err)
-            });
-
+        if (this.signInForm.invalid) {
+            this.signInForm.markAllAsTouched();
+            return;
         }
+
+        const {email, password} = this.signInForm.getRawValue();
+
+        this.session.login(email!, password!);
     }
 }

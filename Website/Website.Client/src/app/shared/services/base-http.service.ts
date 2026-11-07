@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {ProductTypes} from '../models/enums';
 import {SignUpRequest} from '../../business/user/components/sign-up/models/model';
 import {AccountVerificationRequest} from '../../business/user/models/model';
-import {FilterModel} from '../../business/products/components/filter/models/filter.model';
+import {Model} from '../../business/products/components/filter/models/model';
 import {CartItemResponse} from "../../business/cart/models/CartItemResponse";
 import {environment} from "../../../environments/environment";
 
@@ -16,8 +16,8 @@ export class BaseHttpService {
     constructor(private http: HttpClient) {
     }
 
-    getProductFilters(types: ProductTypes): Observable<FilterModel> {
-        return this.http.get<FilterModel>(`${this.baseUrl}product/${types}/filters`);
+    getProductFilters(types: ProductTypes): Observable<Model> {
+        return this.http.get<Model>(`${this.baseUrl}product/${types}/filters`);
     }
 
     signUp(signUp: SignUpRequest): Observable<boolean> {
@@ -36,6 +36,10 @@ export class BaseHttpService {
     }
 
     get<TResponse>(url: string): Observable<TResponse> {
-        return this.http.get<TResponse>(`${this.baseUrl}/${url}`);
+        return this.http.get<TResponse>(`${this.baseUrl}/${url}`, {withCredentials: true});
+    }
+
+    post<TRequest, TResponse>(url: string, body: TRequest): Observable<TResponse> {
+        return this.http.post<TResponse>(`${this.baseUrl}/${url}`, body, {withCredentials: true});
     }
 }
