@@ -204,7 +204,7 @@ public class ProductController(IProductService productService, ILogger<ProductCo
         var caller = User.FindFirst("appid")?.Value ?? "Unknown";
         Logger.LogDeleteRequestReceivedByCallerIdIdTypeType(logger, caller, id, type);
 
-        if (id == Guid.Empty || type != ProductCategory.Unknow)
+        if (id == Guid.Empty || type == ProductCategory.Unknow)
         {
             Logger.LogDeleteFailedDueToMissingParametersCallerCallerIdIdTypeType(logger, caller, id, type);
             return BadRequest("Both 'id' and 'type' are required.");
