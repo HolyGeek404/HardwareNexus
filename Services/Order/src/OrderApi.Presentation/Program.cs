@@ -2,10 +2,9 @@ using OrderApi.Presentation.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSwaggerConfig(builder.Configuration);
+builder.Services.AddSwaggerConfig();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddAzureConfig(builder.Configuration);
 
 var app = builder.Build();
 
@@ -13,9 +12,6 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "HardwareNexus Order Api v1");
-        c.OAuthClientId(builder.Configuration["Swagger:SwaggerClientId"]);
-        c.OAuthUsePkce();
-        c.OAuthScopeSeparator(" ");
     }
 );
 app.UseHttpsRedirection();

@@ -6,4 +6,13 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\OrderApi.Domain\OrderApi.Domain.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation" Version="12.2.0" />
+      <PackageReference Include="MediatR" Version="15.0.0" />
+    </ItemGroup>
+
 </Project>
