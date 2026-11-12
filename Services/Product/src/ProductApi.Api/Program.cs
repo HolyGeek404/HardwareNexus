@@ -10,8 +10,11 @@ builder.Services.AddControllers();
 builder.Services.AddServices();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerConfig(builder.Configuration);
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 var app = builder.Build();
+app.UseExceptionHandler();
 
 app.UseSwagger();
 app.UseSwaggerUI(c =>

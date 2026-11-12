@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -48,5 +49,13 @@ public class ProductControllerTests
         Assert.IsType<BadRequestObjectResult>(result);
         
         _productService.Verify(service => service.Delete(It.IsAny<Guid>(), It.IsAny<ProductCategory>()), Times.Never);
+    }
+    
+    [Fact]
+    public async Task Create_WhenServiceThrows_PropagatesException()
+    {
+        var content = JsonDocument.Parse("""{"name":"Test"}""").RootElement;
+        
+        await Assert.ThrowsAsync<JsonException>(() => _controller.Create(content, ProductCategory.Cpu));
     }
 }

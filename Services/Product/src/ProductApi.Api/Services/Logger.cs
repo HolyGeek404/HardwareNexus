@@ -6,6 +6,10 @@ namespace ProductApi.Api.Services;
 
 public static partial class Logger
 {
+    [LoggerMessage(Message = "Request {Method} {Path} failed with {StatusCode}")]
+    public static partial void LogRequestFailed(
+        ILogger logger, LogLevel level, Exception exception,
+        string method, string path, int statusCode);
     [LoggerMessage(LogLevel.Information, "Calling {getByTypeName} by {unknown}. Type: {type}")]
     public static partial void LogCallingGetbytypenameByUnknownTypeType(ILogger logger, string getByTypeName,
         string unknown, ProductCategory type);

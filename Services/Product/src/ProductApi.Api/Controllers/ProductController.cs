@@ -175,18 +175,9 @@ public class ProductController(IProductService productService, ILogger<ProductCo
             Logger.LogBadRequestInCreatenameByCallerTypeTypeProductIsEmpty(logger, nameof(Create), caller, type);
             return BadRequest("Product cannot be empty.");
         }
-
-        try
-        {
-            await productService.Create(product, type);
-            return Created();
-        }
-        catch (Exception ex)
-        {
-            Logger.LogExceptionInCreatenameByCallerTypeTypeProductProduct(logger, ex, nameof(Create), caller, type,
-                product);
-            return StatusCode(StatusCodes.Status500InternalServerError);
-        }
+        
+        await productService.Create(product, type);
+        return Created();
     }
 
     /// <summary>
