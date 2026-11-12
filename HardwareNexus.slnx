@@ -21,6 +21,9 @@
         <Project Path="Services/Order/src/OrderApi.Infrastructure/OrderApi.Infrastructure.csproj" />
         <Project Path="Services/Order/src/OrderApi.Presentation/OrderApi.Presentation.csproj" />
     </Folder>
+    <Folder Name="/Services/Order/tests/">
+        <Project Path="Services/Order/tests/OrderApi.Architecture.Tests/OrderApi.Architecture.Tests.csproj" />
+    </Folder>
     <Folder Name="/Services/Product/" />
     <Folder Name="/Services/Product/src/">
         <Project Path="Services/Product/src/ProductApi.Api/ProductApi.Api.csproj" />

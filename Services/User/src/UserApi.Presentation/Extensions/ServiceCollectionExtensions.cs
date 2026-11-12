@@ -1,13 +1,6 @@
 ﻿using System.Reflection;
-using System.Text;
-using Azure.Identity;
-using FluentValidation;
-using FluentValidation.AspNetCore;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Web;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using UserApi.Application.Features;
 using UserApi.Application.Features.Validators.SignUp;
@@ -37,8 +30,6 @@ public static class ServiceCollectionExtensions
         {
             services.AddMediatR(x => x.RegisterServicesFromAssembly(typeof(SignUpCommandValidator).Assembly));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-            services.AddValidatorsFromAssemblyContaining<SignUpCommandValidator>();
-            services.AddFluentValidationAutoValidation();
         }
 
         public void AddDataBaseConfig(IConfigurationManager configuration)
