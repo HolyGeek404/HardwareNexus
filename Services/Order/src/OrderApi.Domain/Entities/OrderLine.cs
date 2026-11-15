@@ -1,17 +1,17 @@
+using OrderApi.Domain.Primitives;
 using OrderApi.Domain.ValueObjects;
 
 namespace OrderApi.Domain.Entities;
 
-public class OrderLine
+public class OrderLine  : Entity<ProductId>
 {
-    public ProductId ProductId { get; private set; }
+    public ProductId ProductId => Id;
     public Quantity Quantity { get; private set; }
     public Money Price { get; private set; }
     public Money TotalPrice { get; private set; }
 
-    private OrderLine(ProductId productId, Quantity quantity, Money price)
+    private OrderLine(ProductId productId, Quantity quantity, Money price) : base(productId)
     {
-        ProductId = productId;
         Quantity = quantity;
         Price = price;
         TotalPrice = Money.Create(price.Amount*quantity.Amount,  price.Currency);

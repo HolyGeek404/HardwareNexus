@@ -1,10 +1,10 @@
+using OrderApi.Domain.Primitives;
 using OrderApi.Domain.ValueObjects;
 
 namespace OrderApi.Domain.Entities;
 
-public class Order
+public class Order :  Entity<OrderId>
 {
-    public OrderId Id  { get; private set; }
     public DateTime OrderDate { get; private set; }
     public CustomerId CustomerId { get; private set; }
     private List<OrderLine> OrderLines { get; } = [];
@@ -12,25 +12,20 @@ public class Order
     public OrderStatus Status { get; private set; }
     public Money Total { get; private set; }
 
-    private Order(OrderId orderId ,CustomerId customer, DateTime orderDate)
+    private Order(OrderId orderId ,CustomerId customer, DateTime orderDate, Money total) : base(orderId)
     {
-        Id = orderId;
         CustomerId = customer;
         OrderDate = orderDate;
         Status = OrderStatus.Pending;
+        Total = total;
     }
     public static Order Create(OrderId orderId, CustomerId customer, DateTime orderDate, List<OrderLine> orderLines)
     {
         if (orderLines.Count == 0)
             throw new InvalidOperationException("Order cant be empty");
         
-        if(orderLines.GroupBy(x => x.Price.Currency).Count() > 1)
-            throw new InvalidOperationException("Multiple currencies are not allowed");
-        
-        var order = new Order(orderId, customer, orderDate)
-        {
-            Total = Money.Create(0, orderLines[0].Price.Currency)
-        };
+        var total = Money.Create(0, orderLines[0].Price.Currency);
+        var order = new Order(orderId, customer, orderDate, total);
 
         foreach (var orderLine in orderLines)
         {
@@ -50,11 +45,11 @@ public class Order
             if (orderLine.Price.Currency != OrderLines[0].Price.Currency)
                 throw new InvalidOperationException("Cant add order line. Currency missmatch");
             
-            if(OrderLines.Any(x => x.ProductId == orderLine.ProductId))
+            if(OrderLines.Contains(orderLine))
                 throw new InvalidOperationException("Duplicated order line");
         }
         OrderLines.Add(orderLine);
-        CalculateTotal(Money.Create(orderLine.TotalPrice.Amount, orderLine.Price.Currency));
+        CalculateTotal(orderLine.TotalPrice);
     }
     
     public void Pay()
