@@ -5,7 +5,7 @@ using OrderApi.Infrastructure;
 
 namespace OrderApi.Architecture.Tests;
 
-public class LayerDependencyTests
+public class ArchitectureTests
 {
     [Fact]
     public void Domain_ShouldOnlyDependOn_SystemAndItself()

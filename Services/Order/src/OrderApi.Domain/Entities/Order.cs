@@ -24,9 +24,6 @@ public class Order
         if (orderLines.Count == 0)
             throw new InvalidOperationException("Order cant be empty");
         
-        if(orderLines.Select(x => x.ProductId).Distinct().Count() != orderLines.Count)
-            throw new InvalidOperationException("Duplicated order line");
-        
         if(orderLines.GroupBy(x => x.Price.Currency).Count() > 1)
             throw new InvalidOperationException("Multiple currencies are not allowed");
         
@@ -45,13 +42,19 @@ public class Order
 
     public void AddOrderLine(OrderLine orderLine)
     {
+        if (Status != OrderStatus.Pending)
+            throw new InvalidOperationException("Cant add order line when order is not pending");
+        
         if (OrderLines.Count != 0) 
         {
             if (orderLine.Price.Currency != OrderLines[0].Price.Currency)
                 throw new InvalidOperationException("Cant add order line. Currency missmatch");
+            
+            if(OrderLines.Any(x => x.ProductId == orderLine.ProductId))
+                throw new InvalidOperationException("Duplicated order line");
         }
         OrderLines.Add(orderLine);
-        CalculateTotal(orderLine.Price);
+        CalculateTotal(Money.Create(orderLine.TotalPrice.Amount, orderLine.Price.Currency));
     }
     
     public void Pay()
