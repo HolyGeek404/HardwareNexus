@@ -1,3 +1,4 @@
+using OrderApi.Domain.Errors;
 using OrderApi.Domain.ValueObjects;
 using static OrderApi.Domain.Tests.TestData.OrderMother;
 
@@ -10,9 +11,9 @@ public class OrderStatusTransitionTests
     {
         var order = PendingOrder();
 
-        order.Pay();
-        order.Ship();
-        order.Deliver();
+        Assert.True(order.Pay().IsSuccess);
+        Assert.True(order.Ship().IsSuccess);
+        Assert.True(order.Deliver().IsSuccess);
 
         Assert.Equal(OrderStatus.Delivered, order.Status);
     }
@@ -22,11 +23,14 @@ public class OrderStatusTransitionTests
     [InlineData(OrderStatus.Shipped)]
     [InlineData(OrderStatus.Delivered)]
     [InlineData(OrderStatus.Cancelled)]
-    public void Pay_WhenNotPending_Throws(OrderStatus status)
+    public void Pay_WhenNotPending_ReturnsCannotPayAndKeepsStatus(OrderStatus status)
     {
         var order = OrderWithStatus(status);
 
-        Assert.Throws<InvalidOperationException>(order.Pay);
+        var result = order.Pay();
+
+        Assert.Equal(DomainErrors.Order.CannotPay, result.Error);
+        Assert.Equal(status, order.Status);
     }
 
     [Theory]
@@ -34,11 +38,14 @@ public class OrderStatusTransitionTests
     [InlineData(OrderStatus.Shipped)]
     [InlineData(OrderStatus.Delivered)]
     [InlineData(OrderStatus.Cancelled)]
-    public void Ship_WhenNotPaid_Throws(OrderStatus status)
+    public void Ship_WhenNotPaid_ReturnsCannotShipAndKeepsStatus(OrderStatus status)
     {
         var order = OrderWithStatus(status);
 
-        Assert.Throws<InvalidOperationException>(order.Ship);
+        var result = order.Ship();
+
+        Assert.Equal(DomainErrors.Order.CannotShip, result.Error);
+        Assert.Equal(status, order.Status);
     }
 
     [Theory]
@@ -46,11 +53,14 @@ public class OrderStatusTransitionTests
     [InlineData(OrderStatus.Paid)]
     [InlineData(OrderStatus.Delivered)]
     [InlineData(OrderStatus.Cancelled)]
-    public void Deliver_WhenNotShipped_Throws(OrderStatus status)
+    public void Deliver_WhenNotShipped_ReturnsCannotDeliverAndKeepsStatus(OrderStatus status)
     {
         var order = OrderWithStatus(status);
 
-        Assert.Throws<InvalidOperationException>(order.Deliver);
+        var result = order.Deliver();
+
+        Assert.Equal(DomainErrors.Order.CannotDeliver, result.Error);
+        Assert.Equal(status, order.Status);
     }
 
     [Theory]
@@ -60,8 +70,9 @@ public class OrderStatusTransitionTests
     {
         var order = OrderWithStatus(status);
 
-        order.Cancel();
+        var result = order.Cancel();
 
+        Assert.True(result.IsSuccess);
         Assert.Equal(OrderStatus.Cancelled, order.Status);
     }
 
@@ -69,10 +80,13 @@ public class OrderStatusTransitionTests
     [InlineData(OrderStatus.Shipped)]
     [InlineData(OrderStatus.Delivered)]
     [InlineData(OrderStatus.Cancelled)]
-    public void Cancel_WhenShippedDeliveredOrCancelled_Throws(OrderStatus status)
+    public void Cancel_WhenShippedDeliveredOrCancelled_ReturnsCannotCancelAndKeepsStatus(OrderStatus status)
     {
         var order = OrderWithStatus(status);
 
-        Assert.Throws<InvalidOperationException>(order.Cancel);
+        var result = order.Cancel();
+
+        Assert.Equal(DomainErrors.Order.CannotCancel, result.Error);
+        Assert.Equal(status, order.Status);
     }
 }

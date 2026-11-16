@@ -1,5 +1,5 @@
 using OrderApi.Domain.Entities;
-using OrderApi.Domain.Tests.TestData;
+using OrderApi.Domain.Errors;
 using OrderApi.Domain.ValueObjects;
 using static OrderApi.Domain.Tests.TestData.OrderMother;
 
@@ -7,49 +7,48 @@ namespace OrderApi.Domain.Tests;
 
 public class OrderCreateTests
 {
-    private static Order CreateOrder(List<OrderLine> lines) =>
-        Order.Create(
-            OrderId.Create(Guid.NewGuid()),
-            CustomerId.Create(Guid.NewGuid()),
-            OrderMother.OrderDate,
-            lines);
-
     [Fact]
     public void Create_WithValidLines_ReturnsPendingOrderWithAllLines()
     {
-        var order = CreateOrder([Line(), Line()]);
+        var result = CreateOrder([Line(), Line()]);
 
-        Assert.Equal(OrderStatus.Pending, order.Status);
-        Assert.Equal(2, order.Lines.Count);
+        Assert.True(result.IsSuccess);
+        Assert.Equal(OrderStatus.Pending, result.Value.Status);
+        Assert.Equal(2, result.Value.Lines.Count);
     }
 
     [Fact]
-    public void Create_WithNoLines_Throws()
+    public void Create_WithNoLines_ReturnsEmptyError()
     {
-        Assert.Throws<InvalidOperationException>(() => CreateOrder([]));
+        var result = CreateOrder([]);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal(DomainErrors.Order.Empty, result.Error);
     }
 
     [Fact]
-    public void Create_WithSameProductTwice_Throws()
+    public void Create_WithSameProductTwice_ReturnsDuplicateProductError()
     {
         var productId = Guid.NewGuid();
 
-        Assert.Throws<InvalidOperationException>(() =>
-            CreateOrder([Line(productId: productId), Line(productId: productId)]));
+        var result = CreateOrder([Line(productId: productId), Line(productId: productId)]);
+
+        Assert.Equal(DomainErrors.Order.DuplicateProduct, result.Error);
     }
 
     [Fact]
-    public void Create_WithMixedCurrencies_Throws()
+    public void Create_WithMixedCurrencies_ReturnsCurrencyMismatchError()
     {
-        Assert.Throws<InvalidOperationException>(() =>
-            CreateOrder([Line(currency: Currency.PLN), Line(currency: Currency.EUR)]));
+        var result = CreateOrder([Line(currency: Currency.PLN), Line(currency: Currency.EUR)]);
+
+        Assert.Equal(DomainErrors.Order.CurrencyMismatch, result.Error);
     }
 
     [Fact]
     public void Create_WhenCallerModifiesListAfterwards_OrderIsUnaffected()
     {
         var lines = new List<OrderLine> { Line() };
-        var order = CreateOrder(lines);
+        var order = CreateOrder(lines).Value;
 
         lines.Clear();
 

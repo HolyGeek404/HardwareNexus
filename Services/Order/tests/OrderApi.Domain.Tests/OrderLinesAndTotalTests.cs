@@ -1,3 +1,5 @@
+using OrderApi.Domain.Entities;
+using OrderApi.Domain.Errors;
 using OrderApi.Domain.ValueObjects;
 using static OrderApi.Domain.Tests.TestData.OrderMother;
 
@@ -20,28 +22,44 @@ public class OrderLinesAndTotalTests
     {
         var order = PendingOrder(Line(unitPrice: 100m, quantity: 1));
 
-        order.AddOrderLine(Line(unitPrice: 20m, quantity: 2));
+        var result = order.AddOrderLine(Line(unitPrice: 20m, quantity: 2));
 
+        Assert.True(result.IsSuccess);
         Assert.Equal(Money.Create(140m, Currency.PLN), order.Total);
     }
 
     [Fact]
-    public void AddOrderLine_WithDifferentCurrency_Throws()
+    public void AddOrderLine_WithDifferentCurrency_ReturnsCurrencyMismatchError()
     {
         var order = PendingOrder(Line(currency: Currency.PLN));
 
-        Assert.Throws<InvalidOperationException>(() =>
-            order.AddOrderLine(Line(currency: Currency.EUR)));
+        var result = order.AddOrderLine(Line(currency: Currency.EUR));
+
+        Assert.Equal(DomainErrors.Order.CurrencyMismatch, result.Error);
     }
 
     [Fact]
-    public void AddOrderLine_WithProductAlreadyInOrder_Throws()
+    public void AddOrderLine_WithProductAlreadyInOrder_ReturnsDuplicateProductError()
     {
         var productId = Guid.NewGuid();
         var order = PendingOrder(Line(productId: productId));
 
-        Assert.Throws<InvalidOperationException>(() =>
-            order.AddOrderLine(Line(productId: productId)));
+        var result = order.AddOrderLine(Line(productId: productId));
+
+        Assert.Equal(DomainErrors.Order.DuplicateProduct, result.Error);
+    }
+
+    [Fact]
+    public void AddOrderLine_WhenRejected_DoesNotChangeOrder()
+    {
+        var productId = Guid.NewGuid();
+        var order = PendingOrder(Line(unitPrice: 100m, productId: productId));
+
+        order.AddOrderLine(Line(unitPrice: 999m, productId: productId));
+
+        // Porażka nie może zostawić agregatu w połowie zmiany.
+        Assert.Single(order.Lines);
+        Assert.Equal(Money.Create(100m, Currency.PLN), order.Total);
     }
 
     [Theory]
@@ -49,11 +67,13 @@ public class OrderLinesAndTotalTests
     [InlineData(OrderStatus.Shipped)]
     [InlineData(OrderStatus.Delivered)]
     [InlineData(OrderStatus.Cancelled)]
-    public void AddOrderLine_WhenOrderIsNotPending_Throws(OrderStatus status)
+    public void AddOrderLine_WhenOrderIsNotPending_ReturnsNotPendingError(OrderStatus status)
     {
         var order = OrderWithStatus(status);
 
-        Assert.Throws<InvalidOperationException>(() => order.AddOrderLine(Line()));
+        var result = order.AddOrderLine(Line());
+
+        Assert.Equal(DomainErrors.Order.NotPending, result.Error);
     }
 
     [Fact]
@@ -62,6 +82,6 @@ public class OrderLinesAndTotalTests
         var order = PendingOrder();
 
         // Rzutowanie z powrotem na listę to klasyczny sposób na obejście enkapsulacji.
-        Assert.False(order.Lines is List<Entities.OrderLine>);
+        Assert.False(order.Lines is List<OrderLine>);
     }
 }

@@ -1,4 +1,5 @@
 using OrderApi.Domain.Entities;
+using OrderApi.Domain.Primitives;
 using OrderApi.Domain.ValueObjects;
 
 namespace OrderApi.Domain.Tests.TestData;
@@ -21,15 +22,19 @@ internal static class OrderMother
             Quantity.Create(quantity),
             Money.Create(unitPrice, currency));
 
+    public static Result<Order> CreateOrder(List<OrderLine> lines) =>
+        Order.Create(
+            OrderId.Create(Guid.NewGuid()),
+            CustomerId.Create(Guid.NewGuid()),
+            OrderDate,
+            lines);
+
     public static Order PendingOrder(params OrderLine[] lines)
     {
         var orderLines = lines.Length == 0 ? new List<OrderLine> { Line() } : lines.ToList();
 
-        return Order.Create(
-            OrderId.Create(Guid.NewGuid()),
-            CustomerId.Create(Guid.NewGuid()),
-            OrderDate,
-            orderLines);
+        // .Value rzuci wyjątek, jeśli dane testowe są błędne – i dobrze, test od razu to pokaże.
+        return CreateOrder(orderLines).Value;
     }
 
     /// <summary>
@@ -40,27 +45,21 @@ internal static class OrderMother
     {
         var order = PendingOrder();
 
-        switch (status)
+        var steps = status switch
         {
-            case OrderStatus.Pending:
-                break;
-            case OrderStatus.Paid:
-                order.Pay();
-                break;
-            case OrderStatus.Shipped:
-                order.Pay();
-                order.Ship();
-                break;
-            case OrderStatus.Delivered:
-                order.Pay();
-                order.Ship();
-                order.Deliver();
-                break;
-            case OrderStatus.Cancelled:
-                order.Cancel();
-                break;
-            default:
-                throw new ArgumentOutOfRangeException(nameof(status), status, "Status not reachable in tests");
+            OrderStatus.Pending => [],
+            OrderStatus.Paid => new Func<Result>[] { order.Pay },
+            OrderStatus.Shipped => [order.Pay, order.Ship],
+            OrderStatus.Delivered => [order.Pay, order.Ship, order.Deliver],
+            OrderStatus.Cancelled => [order.Cancel],
+            _ => throw new ArgumentOutOfRangeException(nameof(status), status, "Status not reachable in tests")
+        };
+
+        foreach (var step in steps)
+        {
+            var result = step();
+            if (result.IsFailure)
+                throw new InvalidOperationException($"Test setup failed: {result.Error.Code}");
         }
 
         return order;
