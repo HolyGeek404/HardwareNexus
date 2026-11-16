@@ -24,6 +24,7 @@
     <Folder Name="/Services/Order/tests/">
         <Project Path="Services/Order/tests/OrderApi.Architecture.Tests/OrderApi.Architecture.Tests.csproj" />
         <Project Path="Services\Order\tests\OrderApi.Domain.Tests\OrderApi.Domain.Tests.csproj" />
+        <Project Path="Services/Order/tests/OrderApi.Application.Tests/OrderApi.Application.Tests.csproj" />
     </Folder>
     <Folder Name="/Services/Product/" />
     <Folder Name="/Services/Product/src/">

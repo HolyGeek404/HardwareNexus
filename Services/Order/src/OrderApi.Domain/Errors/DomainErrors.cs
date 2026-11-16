@@ -6,7 +6,6 @@ public static class DomainErrors
 {
     public static class Order
     {
-        // Validation: żądanie jest złe – po poprawieniu danych przejdzie.
         public static readonly Error Empty =
             Error.Validation("Order.Empty", "Order must contain at least one line.");
 
