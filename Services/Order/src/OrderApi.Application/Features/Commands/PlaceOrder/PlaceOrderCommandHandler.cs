@@ -1,16 +1,16 @@
-using MediatR;
+using OrderApi.Application.Abstractions;
 using OrderApi.Application.Errors;
 using OrderApi.Application.Interfaces;
 using OrderApi.Domain.Entities;
 using OrderApi.Domain.Primitives;
 using OrderApi.Domain.ValueObjects;
 
-namespace OrderApi.Application.Features.Commands;
+namespace OrderApi.Application.Features.Commands.PlaceOrder;
 
 public class PlaceOrderCommandHandler(IOrderRepository orderRepository, 
     IProductCatalog productCatalog, 
     IUnitOfWork uow,
-    TimeProvider timeProvider) : IRequestHandler<PlaceOrderCommand, Result<Guid>>
+    TimeProvider timeProvider) : ICommandHandler<PlaceOrderCommand,Guid>
 {
     public async Task<Result<Guid>> Handle(PlaceOrderCommand request, CancellationToken cancellationToken)
     {

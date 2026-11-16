@@ -1,6 +1,7 @@
 using Moq;
 using OrderApi.Application.Errors;
 using OrderApi.Application.Features.Commands;
+using OrderApi.Application.Features.Commands.PlaceOrder;
 using OrderApi.Application.Interfaces;
 using OrderApi.Domain.Entities;
 using OrderApi.Domain.Errors;
