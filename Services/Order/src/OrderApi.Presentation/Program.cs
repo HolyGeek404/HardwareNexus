@@ -1,3 +1,4 @@
+using OrderApi.Application;
 using OrderApi.Presentation.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSwaggerConfig();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddApplication();
 
 var app = builder.Build();
 
