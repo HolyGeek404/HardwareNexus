@@ -1,10 +1,11 @@
 using OrderApi.Domain.Errors;
+using OrderApi.Domain.Events;
 using OrderApi.Domain.Primitives;
 using OrderApi.Domain.ValueObjects;
 
 namespace OrderApi.Domain.Entities;
 
-public class Order :  Entity<OrderId>
+public class Order : AggregateRoot<OrderId>
 {
     public DateTime OrderDate { get; private set; }
     public CustomerId CustomerId { get; private set; }
@@ -35,6 +36,8 @@ public class Order :  Entity<OrderId>
             if (result.IsFailure)
                 return result.Error;
         }
+
+        order.Raise(new OrderPlacedDomainEvent(order.Id, order.CustomerId, order.Total, orderDate));
 
         return order;
     }
