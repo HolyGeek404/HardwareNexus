@@ -1,8 +1,16 @@
 namespace OrderApi.Domain.Primitives;
 
-public abstract class AggregateRoot<TId>(TId id) : Entity<TId>(id)
+public abstract class AggregateRoot<TId> : Entity<TId>
     where TId : notnull
 {
+    protected AggregateRoot(TId id) : base(id)
+    {
+    }
+
+    protected AggregateRoot()
+    {
+    }
+
     private readonly List<IDomainEvent> _domainEvents = [];
 
     public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();

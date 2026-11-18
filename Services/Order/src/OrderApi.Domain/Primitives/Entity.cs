@@ -8,6 +8,11 @@ public abstract class Entity<TId> : IEquatable<Entity<TId>>
         Id = id;
     }
 
+    protected Entity()
+    {
+        Id = default!;
+    }
+
     public TId Id { get; private init; }
 
     public bool Equals(Entity<TId>? other)

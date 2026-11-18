@@ -14,6 +14,12 @@ public class Order : AggregateRoot<OrderId>
     public OrderStatus Status { get; private set; }
     public Money Total { get; private set; }
 
+#pragma warning disable CS8618
+    private Order()
+    {
+    }
+#pragma warning restore CS8618
+
     private Order(OrderId orderId ,CustomerId customer, DateTime orderDate, Money total) : base(orderId)
     {
         CustomerId = customer;

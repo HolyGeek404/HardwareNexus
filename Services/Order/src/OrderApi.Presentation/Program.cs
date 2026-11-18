@@ -1,4 +1,5 @@
 using OrderApi.Application;
+using OrderApi.Infrastructure;
 using OrderApi.Presentation.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,6 +8,7 @@ builder.Services.AddSwaggerConfig();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("OrderDb"));
 
 var app = builder.Build();
 
