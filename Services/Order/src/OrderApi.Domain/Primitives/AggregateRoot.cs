@@ -1,6 +1,6 @@
 namespace OrderApi.Domain.Primitives;
 
-public abstract class AggregateRoot<TId> : Entity<TId>
+public abstract class AggregateRoot<TId> : Entity<TId>, IHasDomainEvents
     where TId : notnull
 {
     protected AggregateRoot(TId id) : base(id)

@@ -5,7 +5,8 @@ using OrderApi.Infrastructure.Persistence.Repositories;
 
 namespace OrderApi.Infrastructure.Tests;
 
-public class OrderRepositoryTests(SqlServerFixture fixture) : IClassFixture<SqlServerFixture>
+[Collection(SqlServerCollection.Name)]
+public class OrderRepositoryTests(SqlServerFixture fixture)
 {
     private static readonly DateTime OrderDate = new(2026, 11, 17, 9, 30, 0, DateTimeKind.Utc);
 

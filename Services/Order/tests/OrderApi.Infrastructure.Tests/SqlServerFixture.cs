@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OrderApi.Infrastructure.Outbox;
 using OrderApi.Infrastructure.Persistence;
 using Testcontainers.MsSql;
 
@@ -12,6 +13,7 @@ public sealed class SqlServerFixture : IAsyncLifetime
     public OrderDbContext CreateDbContext() =>
         new(new DbContextOptionsBuilder<OrderDbContext>()
             .UseSqlServer(_container.GetConnectionString())
+            .AddInterceptors(new InsertOutboxMessagesInterceptor())
             .Options);
 
     public async Task InitializeAsync()
@@ -23,4 +25,10 @@ public sealed class SqlServerFixture : IAsyncLifetime
     }
 
     public Task DisposeAsync() => _container.DisposeAsync().AsTask();
+}
+
+[CollectionDefinition(Name)]
+public sealed class SqlServerCollection : ICollectionFixture<SqlServerFixture>
+{
+    public const string Name = "SqlServer";
 }
