@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using OrderApi.Application.Interfaces;
+using OrderApi.Infrastructure.Messaging;
 using OrderApi.Infrastructure.Outbox;
 using OrderApi.Infrastructure.Persistence;
 using OrderApi.Infrastructure.Persistence.Repositories;
@@ -21,6 +23,12 @@ public static class DependencyInjection
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<OrderDbContext>());
         services.AddScoped<IOrderRepository, OrderRepository>();
+
+        services.TryAddSingleton(TimeProvider.System);
+        services.AddSingleton(new OutboxOptions());
+        services.AddSingleton<IMessagePublisher, LoggingMessagePublisher>();
+        services.AddScoped<OutboxProcessor>();
+        services.AddHostedService<OutboxBackgroundService>();
 
         return services;
     }
