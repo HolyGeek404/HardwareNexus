@@ -52,6 +52,7 @@ internal sealed class InsertOutboxMessagesInterceptor : SaveChangesInterceptor
     {
         Id = integrationEvent.EventId,
         Type = integrationEvent.GetType().Name,
+        Key = integrationEvent.AggregateId.ToString(),
         Content = JsonSerializer.Serialize(integrationEvent, integrationEvent.GetType()),
         OccurredOnUtc = integrationEvent.OccurredOnUtc
     };

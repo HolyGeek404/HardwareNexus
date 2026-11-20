@@ -12,19 +12,22 @@ public class OutboxProcessorTests(SqlServerFixture fixture) : IAsyncLifetime
 {
     private static readonly OutboxOptions Options = new() { BatchSize = 50, MaxAttempts = 3 };
 
-    private sealed class RecordingPublisher(TimeSpan delay = default, bool fail = false) : IMessagePublisher
+    private sealed class RecordingPublisher(
+        TimeSpan delay = default,
+        bool fail = false,
+        Func<OutgoingMessage, bool>? failWhen = null) : IMessagePublisher
     {
         public ConcurrentBag<Guid> Published { get; } = [];
 
-        public async Task PublishAsync(Guid messageId, string type, string content, CancellationToken cancellationToken)
+        public async Task PublishAsync(OutgoingMessage message, CancellationToken cancellationToken)
         {
             if (delay > TimeSpan.Zero)
                 await Task.Delay(delay, cancellationToken);
 
-            if (fail)
+            if (fail || failWhen?.Invoke(message) == true)
                 throw new InvalidOperationException("Broker unavailable");
 
-            Published.Add(messageId);
+            Published.Add(message.MessageId);
         }
     }
 
@@ -41,15 +44,20 @@ public class OutboxProcessorTests(SqlServerFixture fixture) : IAsyncLifetime
 
     public Task DisposeAsync() => Task.CompletedTask;
 
-    private async Task<List<Guid>> SeedMessagesAsync(int count)
+    private Task<List<Guid>> SeedMessagesAsync(int count) =>
+        SeedMessagesAsync(Enumerable.Range(0, count).Select(_ => Guid.NewGuid().ToString()).ToArray());
+
+    private async Task<List<Guid>> SeedMessagesAsync(string[] keys, int attemptCountOfFirst = 0)
     {
-        var messages = Enumerable.Range(0, count)
-            .Select(i => new OutboxMessage
+        var messages = keys
+            .Select((key, i) => new OutboxMessage
             {
                 Id = Guid.NewGuid(),
                 Type = "TestEvent",
+                Key = key,
                 Content = "{}",
-                OccurredOnUtc = DateTime.UtcNow.AddSeconds(i)
+                OccurredOnUtc = DateTime.UtcNow.AddSeconds(i),
+                AttemptCount = i == 0 ? attemptCountOfFirst : 0
             })
             .ToList();
 
@@ -126,6 +134,48 @@ public class OutboxProcessorTests(SqlServerFixture fixture) : IAsyncLifetime
 
         Assert.Empty(afterLimit.Published);
         Assert.Equal(Options.MaxAttempts, (await LoadAsync(id)).AttemptCount);
+    }
+
+    [Fact]
+    public async Task FailedMessage_HoldsBackLaterMessagesWithSameKey_ButNotOtherKeys()
+    {
+        var ids = await SeedMessagesAsync(["order-A", "order-A", "order-B"]);
+        var (placedA, paidA, placedB) = (ids[0], ids[1], ids[2]);
+        var publisher = new RecordingPublisher(failWhen: m => m.MessageId == placedA);
+
+        await using (var db = fixture.CreateDbContext())
+            await Processor(db, publisher).ProcessAsync(CancellationToken.None);
+
+        Assert.Equal([placedB], publisher.Published);
+        Assert.Null((await LoadAsync(paidA)).ProcessedOnUtc);
+        Assert.Equal(0, (await LoadAsync(paidA)).AttemptCount);
+    }
+
+    [Fact]
+    public async Task HeldBackMessages_ArePublishedInOrderOnNextCycle()
+    {
+        var ids = await SeedMessagesAsync(["order-A", "order-A"]);
+
+        await using (var db = fixture.CreateDbContext())
+            await Processor(db, new RecordingPublisher(failWhen: m => m.MessageId == ids[0])).ProcessAsync(CancellationToken.None);
+
+        var nextCycle = new RecordingPublisher();
+        await using (var db = fixture.CreateDbContext())
+            await Processor(db, nextCycle).ProcessAsync(CancellationToken.None);
+
+        Assert.Equal(ids, nextCycle.Published.Reverse());
+    }
+
+    [Fact]
+    public async Task PoisonMessage_BlocksLaterMessagesWithSameKey()
+    {
+        var ids = await SeedMessagesAsync(["order-A", "order-A", "order-B"], attemptCountOfFirst: Options.MaxAttempts);
+        var publisher = new RecordingPublisher();
+
+        await using (var db = fixture.CreateDbContext())
+            await Processor(db, publisher).ProcessAsync(CancellationToken.None);
+
+        Assert.Equal([ids[2]], publisher.Published);
     }
 
     [Fact]

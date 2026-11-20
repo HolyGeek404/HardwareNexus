@@ -13,8 +13,13 @@ internal sealed class OutboxMessageConfiguration : IEntityTypeConfiguration<Outb
         builder.Property(m => m.Id).ValueGeneratedNever();
 
         builder.Property(m => m.Type).HasMaxLength(200);
+        builder.Property(m => m.Key).HasMaxLength(100);
         builder.Property(m => m.Content);
         builder.Property(m => m.Error).HasMaxLength(2000);
+
+        builder.HasIndex(m => m.Key)
+            .HasFilter("[ProcessedOnUtc] IS NULL")
+            .HasDatabaseName("IX_OutboxMessages_Unprocessed_Key");
 
         builder.HasIndex(m => m.OccurredOnUtc)
             .HasFilter("[ProcessedOnUtc] IS NULL")

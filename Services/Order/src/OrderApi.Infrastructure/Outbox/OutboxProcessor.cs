@@ -18,18 +18,31 @@ internal sealed class OutboxProcessor(
 
         var messages = await db.Set<OutboxMessage>()
             .FromSql($"""
-                SELECT TOP ({options.BatchSize}) *
-                FROM OutboxMessages WITH (UPDLOCK, READPAST, ROWLOCK)
-                WHERE ProcessedOnUtc IS NULL AND AttemptCount < {options.MaxAttempts}
-                ORDER BY OccurredOnUtc
+                SELECT TOP ({options.BatchSize}) m.*
+                FROM OutboxMessages m WITH (UPDLOCK, READPAST, ROWLOCK)
+                WHERE m.ProcessedOnUtc IS NULL
+                  AND m.AttemptCount < {options.MaxAttempts}
+                  AND NOT EXISTS (
+                      SELECT 1 FROM OutboxMessages dead
+                      WHERE dead.[Key] = m.[Key]
+                        AND dead.ProcessedOnUtc IS NULL
+                        AND dead.AttemptCount >= {options.MaxAttempts})
+                ORDER BY m.OccurredOnUtc
                 """)
             .ToListAsync(cancellationToken);
 
+        var blockedKeys = new HashSet<string>();
+
         foreach (var message in messages)
         {
+            if (blockedKeys.Contains(message.Key))
+                continue;
+
             try
             {
-                await publisher.PublishAsync(message.Id, message.Type, message.Content, cancellationToken);
+                await publisher.PublishAsync(
+                    new OutgoingMessage(message.Id, message.Type, message.Key, message.Content),
+                    cancellationToken);
                 message.ProcessedOnUtc = timeProvider.GetUtcNow().UtcDateTime;
                 message.Error = null;
             }
@@ -37,6 +50,7 @@ internal sealed class OutboxProcessor(
             {
                 message.AttemptCount++;
                 message.Error = exception.Message;
+                blockedKeys.Add(message.Key);
 
                 logger.LogWarning(exception,
                     "Publishing outbox message {MessageId} ({MessageType}) failed, attempt {Attempt}/{MaxAttempts}",

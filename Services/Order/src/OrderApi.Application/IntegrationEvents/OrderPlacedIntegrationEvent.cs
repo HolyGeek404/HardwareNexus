@@ -6,4 +6,7 @@ public sealed record OrderPlacedIntegrationEvent(
     Guid CustomerId,
     decimal TotalAmount,
     string Currency,
-    DateTime OccurredOnUtc) : IIntegrationEvent;
+    DateTime OccurredOnUtc) : IIntegrationEvent
+{
+    public Guid AggregateId => OrderId;
+}

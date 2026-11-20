@@ -4,9 +4,10 @@ namespace OrderApi.Infrastructure.Messaging;
 
 internal sealed class LoggingMessagePublisher(ILogger<LoggingMessagePublisher> logger) : IMessagePublisher
 {
-    public Task PublishAsync(Guid messageId, string type, string content, CancellationToken cancellationToken)
+    public Task PublishAsync(OutgoingMessage message, CancellationToken cancellationToken)
     {
-        logger.LogInformation("Published {MessageType} {MessageId}: {Content}", type, messageId, content);
+        logger.LogInformation("Published {MessageType} {MessageId} with key {Key}: {Content}",
+            message.Type, message.MessageId, message.Key, message.Content);
         return Task.CompletedTask;
     }
 }

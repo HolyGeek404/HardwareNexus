@@ -42,6 +42,7 @@
         <Project Path="Services\User\src\UserApi.Presentation\UserApi.Presentation.csproj" />
     </Folder>
     <Folder Name="/Services/User/tests/">
+        <Project Path="Services/User/tests/UserApi.Architecture.Tests/UserApi.Architecture.Tests.csproj" />
         <Project Path="Services\User\tests\UserApi.Application.Tests\UserApi.Application.Tests.csproj" />
         <Project Path="Services\User\tests\UserApi.Presentation.Tests\UserApi.Presentation.Tests.csproj" />
     </Folder>

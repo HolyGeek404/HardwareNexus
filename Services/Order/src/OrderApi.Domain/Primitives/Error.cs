@@ -9,7 +9,6 @@ public enum ErrorType
     Failure
 }
 
-// Nie sealed: Application dziedziczy z niego ValidationError (lista błędów pól).
 public record Error(string Code, string Message, ErrorType Type)
 {
     public static readonly Error None = new(string.Empty, string.Empty, ErrorType.None);

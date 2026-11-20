@@ -8,7 +8,7 @@ builder.Services.AddSwaggerConfig();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("OrderDb"));
+builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
